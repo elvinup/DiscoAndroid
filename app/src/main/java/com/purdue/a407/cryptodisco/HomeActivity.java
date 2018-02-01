@@ -13,8 +13,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import butterknife.BindColor;
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -27,6 +30,7 @@ public class HomeActivity extends AppCompatActivity
 
     @BindView(R.id.nav_view)
     NavigationView navigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

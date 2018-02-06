@@ -10,6 +10,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.provider.Settings.Secure;
+import android.util.Log;
+
+
 public class StartActivity extends AppCompatActivity {
 
     @Override
@@ -17,20 +21,31 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        ApiBuilder.getInstance().userExists("").enqueue(new Callback<LoginResponse>() {
+        String android_id = Secure.getString(getContentResolver(),
+                Secure.ANDROID_ID);
+
+        Log.d("UID", android_id);
+
+
+
+
+        ApiBuilder.getInstance().userExists(android_id).enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.code() != 200) {
                     // Error
+                    Log.d("Result", String.valueOf(response.code()));
                 }
                 else {
                     // Success
+                    Log.d("Result", "Works");
                 }
             }
 
             @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 // Failure
+                Log.d("Failure", "Exception");
             }
         });
     }

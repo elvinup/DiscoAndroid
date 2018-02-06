@@ -10,7 +10,7 @@ public class ApiBuilder {
     public static CDApi getInstance() {
         if(cdApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.github.com/")
+                    .baseUrl("http://ec2-54-165-180-155.compute-1.amazonaws.com:3825/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             cdApi = retrofit.create(CDApi.class);

@@ -10,6 +10,5 @@ import retrofit2.http.Query;
 public interface CDApi {
 
     @GET("/user/exists")
-    Call<LoginResponse> userExists(@Query("uid") String uid);
-
+    Call<Void> userExists(@Query("uuid") String uid);
 }

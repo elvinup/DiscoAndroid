@@ -1,4 +1,4 @@
-package com.purdue.a407.cryptodisco.Models.Requests;
+package com.purdue.a407.cryptodisco.HttpModels.Requests;
 
 public class LoginRequest {
     String uuid;

@@ -1,8 +1,13 @@
-package com.purdue.a407.cryptodisco.Dependencies.Modules;
+package com.purdue.a407.cryptodisco;
 
+import android.app.Activity;
 import android.app.Application;
 
-import com.purdue.a407.cryptodisco.Dependencies.Components.NetComponent;
+import com.purdue.a407.cryptodisco.DependencyInjection.Components.DaggerNetComponent;
+import com.purdue.a407.cryptodisco.DependencyInjection.Components.NetComponent;
+import com.purdue.a407.cryptodisco.DependencyInjection.Modules.AppModule;
+
+import javax.inject.Inject;
 
 public class App extends Application {
 
@@ -14,7 +19,6 @@ public class App extends Application {
 
         mNetComponent = DaggerNetComponent.builder()
                 .appModule(new AppModule(this))
-                .netModule(new NetModule("https://jsonplaceholder.typicode.com/"))
                 .build();
     }
 

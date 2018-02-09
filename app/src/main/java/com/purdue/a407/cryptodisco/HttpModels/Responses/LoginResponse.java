@@ -1,4 +1,4 @@
-package com.purdue.a407.cryptodisco.Models.Responses;
+package com.purdue.a407.cryptodisco.HttpModels.Responses;
 
 public class LoginResponse {
 

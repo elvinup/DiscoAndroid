@@ -32,6 +32,7 @@ public class StartActivity extends AppCompatActivity {
         ((App)getApplication()).getNetComponent().inject(this);
 
 
+
         cdApi.userExists("jonah").enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

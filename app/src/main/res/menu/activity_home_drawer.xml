@@ -7,19 +7,19 @@
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:title="Account" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:title="Exchanges" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="Newsfeed" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="Watched Coins" />
     </group>
 
     <item android:title="Communicate">
@@ -31,8 +31,28 @@
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="Chat Rooms" />
+
         </menu>
     </item>
+
+    <item android:title="History">
+        <menu>
+            <item
+                android:id="@+id/nav_trades"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Trades" />
+            <item
+                android:id="@+id/nav_pending"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Pending Orders" />
+            <item
+                android:id="@+id/nav_arbitrage"
+                android:title="Arbitrage Alerts" />
+
+        </menu>
+    </item>
+
+
 
 </menu>

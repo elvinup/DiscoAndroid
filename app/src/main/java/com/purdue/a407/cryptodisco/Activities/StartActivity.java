@@ -25,6 +25,7 @@ public class StartActivity extends AppCompatActivity {
     @Inject
     CDApi cdApi;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +33,9 @@ public class StartActivity extends AppCompatActivity {
         ((App)getApplication()).getNetComponent().inject(this);
 
 
-
-        cdApi.userExists("jonah").enqueue(new Callback<Void>() {
+        String UID = deviceID.getDeviceID();
+        Log.d("UUID", UID);
+        cdApi.userExists(UID).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.code() != 200) {

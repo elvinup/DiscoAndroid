@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Account Settings">
+
+        <SwitchPreference
+            android:key="key1"
+            android:title="Store Device UUID"
+            android:summary="This allows you to backup your settings if you sign into another device"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Arbitrage">
+        <SwitchPreference
+            android:key="key1"
+            android:title="Arbitrage Alerts"
+            android:summary="You will be alerted with arbitrage opportunities at a > 10% profit "
+            android:defaultValue="false"
+            />
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -10,7 +10,7 @@ import retrofit2.http.Query;
 
 public interface CDApi {
 
-    @GET("/user/exists")
+    @GET("/user/")
     Call<Void> userExists(@Query("uuid") String uid);
 
     @GET("/exchanges")

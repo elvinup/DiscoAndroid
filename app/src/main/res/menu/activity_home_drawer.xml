@@ -20,6 +20,10 @@
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="Watched Coins" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Settings" />
     </group>
 
     <item android:title="Communicate">
@@ -52,6 +56,8 @@
 
         </menu>
     </item>
+
+
 
 
 

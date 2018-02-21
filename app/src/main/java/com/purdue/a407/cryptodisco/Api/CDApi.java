@@ -1,5 +1,6 @@
 package com.purdue.a407.cryptodisco.Api;
 
+import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
 
@@ -19,5 +20,9 @@ public interface CDApi {
 
     @GET("/chatrooms")
     Call<List<ChatRoomEntity>> getChatRooms();
+
+    @GET("/chatmessages")
+    Call<List<ChatMessageEntity>> getChatMessages();
+
 
 }

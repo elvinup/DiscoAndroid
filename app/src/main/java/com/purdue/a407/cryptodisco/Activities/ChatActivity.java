@@ -86,7 +86,7 @@ public class ChatActivity extends AppCompatActivity
             // display in listView
             String[] groupName = stringBuilderName.toString().split("\n");
             ListView groupNameListView = (ListView) findViewById(R.id.group_list);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.room_list, groupName);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.room_list, R.id.room_list_group_name, groupName);
             groupNameListView.setAdapter(adapter);
 
         });

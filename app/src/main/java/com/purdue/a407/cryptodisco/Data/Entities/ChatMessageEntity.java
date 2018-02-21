@@ -22,6 +22,47 @@ public class ChatMessageEntity {
     private String message;
     private String UID;
     private String nickname;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getUID() {
+        return UID;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setUID(String UID) {
+        this.UID = UID;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setChatroomId(int chatroomId) {
+        this.chatroomId = chatroomId;
+    }
+
+    public int getChatroomId() {
+        return chatroomId;
+    }
+
     private int chatroomId;
 
     public ChatMessageEntity(String message, String uid, String nickname, int chatroomId) {

@@ -14,48 +14,46 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@drawable/top_bar"
         android:id="@+id/topBar"
         android:weightSum="1"
-        android:layout_alignParentTop="true"
-        >
+        android:layout_alignParentTop="true">
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="330dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Group"
-            android:textAlignment="center"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="27dp"
-            tools:layout_editor_absoluteY="45dp" />
-
+        <!--<TextView-->
+            <!--android:id="@+id/textView3"-->
+            <!--android:layout_width="330dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="Group"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textSize="30sp"-->
+            <!--android:textStyle="bold"-->
+            <!--tools:layout_editor_absoluteX="27dp"-->
+            <!--tools:layout_editor_absoluteY="45dp" />-->
 
     </LinearLayout>
 
 
     <ListView
+        android:id="@+id/group_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/group_list"
-        android:layout_below="@+id/topBar"
-        android:layout_above="@+id/bottomBar" />
+        android:layout_above="@+id/bottomBar"
+        android:layout_below="@+id/topBar" />
 
     <include
         layout="@layout/app_bar_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_home"
-        app:menu="@menu/activity_home_drawer" />
+    <!--<android.support.design.widget.NavigationView-->
+        <!--android:id="@+id/nav_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="start"-->
+        <!--android:fitsSystemWindows="true"-->
+        <!--app:headerLayout="@layout/nav_header_home"-->
+        <!--app:menu="@menu/activity_home_drawer" />-->
+
 
 
 </android.support.v4.widget.DrawerLayout>

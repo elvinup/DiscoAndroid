@@ -58,6 +58,7 @@
             app:srcCompat="@drawable/send_message" />
     </LinearLayout>
 
+
     <ListView
         android:id="@+id/chat_messages"
         android:layout_width="391dp"

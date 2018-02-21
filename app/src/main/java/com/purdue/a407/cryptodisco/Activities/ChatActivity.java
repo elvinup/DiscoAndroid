@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.purdue.a407.cryptodisco.App;
@@ -65,13 +67,28 @@ public class ChatActivity extends AppCompatActivity
             }
             else
                 progressDialog.cancel();
-            StringBuilder stringBuilder = new StringBuilder();
+
+            StringBuilder stringBuilderName = new StringBuilder();
+            StringBuilder stringBuilderDescription = new StringBuilder();
+
             for(ChatRoomEntity room: listResponse.getData()) {
-                stringBuilder.append(room.getName() + "\n");
+                stringBuilderName.append(room.getName() + "\n");
             }
 
+            for(ChatRoomEntity room: listResponse.getData()) {
+                stringBuilderDescription.append(room.getDescription() + "\n");
+            }
 
-            Toast.makeText(ChatActivity.this, stringBuilder.toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(ChatActivity.this, stringBuilderName.toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(ChatActivity.this, stringBuilderDescription.toString(),Toast.LENGTH_SHORT).show();
+
+
+            // display in listView
+            String[] groupName = stringBuilderName.toString().split("\n");
+            ListView groupNameListView = (ListView) findViewById(R.id.group_list);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.room_list, groupName);
+            groupNameListView.setAdapter(adapter);
+
         });
 
     }

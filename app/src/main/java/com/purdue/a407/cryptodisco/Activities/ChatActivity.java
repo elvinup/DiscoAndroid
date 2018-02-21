@@ -33,7 +33,7 @@ public class ChatActivity extends AppCompatActivity
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.drawer_layout)
+    @BindView(R.id.chatrooms_layout)
     DrawerLayout drawer;
 
     @BindView(R.id.nav_view)

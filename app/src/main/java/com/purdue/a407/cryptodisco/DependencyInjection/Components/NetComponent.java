@@ -1,5 +1,6 @@
 package com.purdue.a407.cryptodisco.DependencyInjection.Components;
 
+import com.purdue.a407.cryptodisco.Activities.ChatActivity;
 import com.purdue.a407.cryptodisco.DependencyInjection.Modules.AppModule;
 import com.purdue.a407.cryptodisco.DependencyInjection.Modules.DBModule;
 import com.purdue.a407.cryptodisco.DependencyInjection.Modules.NetModule;
@@ -17,4 +18,5 @@ public interface NetComponent {
     void inject(HomeActivity activity);
     void inject(StartActivity activity);
     void inject(DummyFragment dummyFragment);
+    void inject(ChatActivity activity);
 }

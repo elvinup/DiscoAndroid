@@ -1,6 +1,7 @@
 package com.purdue.a407.cryptodisco.ViewModels;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModel;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class ChatRoomsViewModel {
+public class ChatRoomsViewModel extends ViewModel{
     @NonNull
     private final ChatRoomRepository repository;
 

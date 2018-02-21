@@ -73,6 +73,7 @@ public class ChatActivity extends AppCompatActivity
         progressDialog = LoadingDialog.create();
 
 
+
         viewModel.getChatroomsList().observe(this, listResponse -> {
             if(listResponse.isLoading()) {
                 progressDialog.show(getSupportFragmentManager());
@@ -129,15 +130,13 @@ public class ChatActivity extends AppCompatActivity
 
 
 
-        /*
+
         //For checking chat messages to show up
         chatMsgViewModel.getChatmessagesList().observe(this, listResponse -> {
             if(listResponse.isLoading()) {
-                progressDialog.show(getSupportFragmentManager());
+                //progressDialog.show(getSupportFragmentManager());
                 return;
             }
-            else
-                progressDialog.cancel();
 
             StringBuilder stringBuilderName = new StringBuilder();
 
@@ -145,9 +144,9 @@ public class ChatActivity extends AppCompatActivity
                 stringBuilderName.append(msg.getMessage() + "\n");
             }
 
-            Toast.makeText(ChatActivity.this, listResponse.getData().size(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ChatActivity.this, stringBuilderName.toString(), Toast.LENGTH_SHORT).show();
         });
-*/
+
 
     }
 

@@ -5,6 +5,7 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.os.AsyncTask;
 import android.support.annotation.MainThread;
 import android.support.annotation.WorkerThread;
+import android.util.Log;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
@@ -49,6 +50,10 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
 
     @MainThread
     private void saveResultAndReInit(RequestType response) {
+        if (response == null) {
+            Log.d("Query Response", "It's null, well shiet");
+        }
+        Log.d("Query Response", response.toString());
         new AsyncTask<Void, Void, Void>() {
 
             @Override

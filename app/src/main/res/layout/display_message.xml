@@ -9,13 +9,16 @@
     <TextView
         android:id="@+id/nick_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.05" />
+        android:layout_height="0dp"
+        android:layout_weight="0.05"
+        android:text="Nickname" />
 
     <TextView
         android:id="@+id/text_message"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.05" />
+        android:layout_height="9dp"
+        android:layout_weight="0.05"
+        android:text="Message"
+        android:textSize="20sp" />
 
 </LinearLayout>

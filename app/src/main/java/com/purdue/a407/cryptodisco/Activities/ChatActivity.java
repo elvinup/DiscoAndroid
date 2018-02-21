@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 //import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
+import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
@@ -71,7 +72,7 @@ public class ChatActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         progressDialog = LoadingDialog.create();
 
-        /*
+
         viewModel.getChatroomsList().observe(this, listResponse -> {
             if(listResponse.isLoading()) {
                 progressDialog.show(getSupportFragmentManager());
@@ -125,9 +126,10 @@ public class ChatActivity extends AppCompatActivity
             //listView.setAdapter(descriptionAdapter);
 
         });
-        */
 
 
+
+        /*
         //For checking chat messages to show up
         chatMsgViewModel.getChatmessagesList().observe(this, listResponse -> {
             if(listResponse.isLoading()) {
@@ -145,7 +147,7 @@ public class ChatActivity extends AppCompatActivity
 
             Toast.makeText(ChatActivity.this, listResponse.getData().size(), Toast.LENGTH_SHORT).show();
         });
-
+*/
 
     }
 

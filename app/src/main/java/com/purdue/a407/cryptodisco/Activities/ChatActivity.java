@@ -1,6 +1,7 @@
 package com.purdue.a407.cryptodisco.Activities;
 
 import android.arch.lifecycle.ViewModelProvider;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,6 +10,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -99,7 +102,16 @@ public class ChatActivity extends AppCompatActivity
             }
 
             ChatRoomAdapter chatRoomAdapter = new ChatRoomAdapter(this, R.layout.room_list, chatRoomList);
-            listView.setAdapter(chatRoomAdapter);
+            listView.setAdapter(chatRoomAdapter); // display items in group page
+
+            // group onclick
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Intent intent = new Intent(ChatActivity.this, MessageActivity.class);
+                    startActivity(intent);
+                }
+            });
 
             //ArrayAdapter<String> groupNameAdapter = new ArrayAdapter<String>(this, R.layout.room_list, R.id.room_list_group_name, groupName);
             //ArrayAdapter<String> descriptionAdapter = new ArrayAdapter<String>(this, R.layout.room_list, R.id.room_list_description, description);

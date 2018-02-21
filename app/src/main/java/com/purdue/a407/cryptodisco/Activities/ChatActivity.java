@@ -13,13 +13,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
 import com.purdue.a407.cryptodisco.App;
+import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
 import com.purdue.a407.cryptodisco.Helpers.LoadingDialog;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.ViewModels.ChatRoomsViewModel;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangesViewModel;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -79,15 +83,29 @@ public class ChatActivity extends AppCompatActivity
                 stringBuilderDescription.append(room.getDescription() + "\n");
             }
 
-            Toast.makeText(ChatActivity.this, stringBuilderName.toString(),Toast.LENGTH_SHORT).show();
-            Toast.makeText(ChatActivity.this, stringBuilderDescription.toString(),Toast.LENGTH_SHORT).show();
+            //Toast.makeText(ChatActivity.this, stringBuilderName.toString(),Toast.LENGTH_SHORT).show();
+            //Toast.makeText(ChatActivity.this, stringBuilderDescription.toString(),Toast.LENGTH_SHORT).show();
 
 
-            // display in listView
+            // display group name and description
+            ListView listView = (ListView) findViewById(R.id.group_list);
             String[] groupName = stringBuilderName.toString().split("\n");
-            ListView groupNameListView = (ListView) findViewById(R.id.group_list);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.room_list, R.id.room_list_group_name, groupName);
-            groupNameListView.setAdapter(adapter);
+            String[] description = stringBuilderDescription.toString().split("\n");
+            ArrayList<ChatRoomEntity> chatRoomList = new ArrayList<>();
+
+            for (int i = 0; i < groupName.length; i++) {
+                ChatRoomEntity chatRoom = new ChatRoomEntity(description[i], groupName[i]);
+                chatRoomList.add(chatRoom);
+            }
+
+            ChatRoomAdapter chatRoomAdapter = new ChatRoomAdapter(this, R.layout.room_list, chatRoomList);
+            listView.setAdapter(chatRoomAdapter);
+
+            //ArrayAdapter<String> groupNameAdapter = new ArrayAdapter<String>(this, R.layout.room_list, R.id.room_list_group_name, groupName);
+            //ArrayAdapter<String> descriptionAdapter = new ArrayAdapter<String>(this, R.layout.room_list, R.id.room_list_description, description);
+
+            //listView.setAdapter(groupNameAdapter);
+            //listView.setAdapter(descriptionAdapter);
 
         });
 

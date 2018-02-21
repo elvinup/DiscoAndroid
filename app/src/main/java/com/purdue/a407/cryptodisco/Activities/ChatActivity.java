@@ -16,13 +16,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
+//import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
 import com.purdue.a407.cryptodisco.Helpers.LoadingDialog;
 import com.purdue.a407.cryptodisco.R;
+import com.purdue.a407.cryptodisco.ViewModels.ChatMsgViewModel;
 import com.purdue.a407.cryptodisco.ViewModels.ChatRoomsViewModel;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangesViewModel;
 
@@ -51,6 +52,9 @@ public class ChatActivity extends AppCompatActivity
     @Inject
     ChatRoomsViewModel viewModel;
 
+    @Inject
+    ChatMsgViewModel chatMsgViewModel;
+
     private LoadingDialog progressDialog;
 
 
@@ -67,6 +71,7 @@ public class ChatActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         progressDialog = LoadingDialog.create();
 
+        /*
         viewModel.getChatroomsList().observe(this, listResponse -> {
             if(listResponse.isLoading()) {
                 progressDialog.show(getSupportFragmentManager());
@@ -120,6 +125,27 @@ public class ChatActivity extends AppCompatActivity
             //listView.setAdapter(descriptionAdapter);
 
         });
+        */
+
+
+        //For checking chat messages to show up
+        chatMsgViewModel.getChatmessagesList().observe(this, listResponse -> {
+            if(listResponse.isLoading()) {
+                progressDialog.show(getSupportFragmentManager());
+                return;
+            }
+            else
+                progressDialog.cancel();
+
+            StringBuilder stringBuilderName = new StringBuilder();
+
+            for(ChatMessageEntity msg: listResponse.getData()) {
+                stringBuilderName.append(msg.getMessage() + "\n");
+            }
+
+            Toast.makeText(ChatActivity.this, listResponse.getData().size(), Toast.LENGTH_SHORT).show();
+        });
+
 
     }
 

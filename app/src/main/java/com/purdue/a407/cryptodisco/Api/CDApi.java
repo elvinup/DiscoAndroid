@@ -23,6 +23,4 @@ public interface CDApi {
 
     @GET("/chatmessages")
     Call<List<ChatMessageEntity>> getChatMessages();
-
-
 }

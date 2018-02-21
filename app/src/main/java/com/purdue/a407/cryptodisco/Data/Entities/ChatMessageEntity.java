@@ -16,12 +16,12 @@ import android.arch.persistence.room.PrimaryKey;
 public class ChatMessageEntity {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    int id;
 
-
-    private String message;
-    private String UID;
-    private String nickname;
+    String message;
+    String nickname;
+    String UID;
+    int chatroom_id;
 
     public int getId() {
         return id;
@@ -39,6 +39,8 @@ public class ChatMessageEntity {
         return nickname;
     }
 
+    public int getChatroom_id() { return chatroom_id; }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -55,20 +57,16 @@ public class ChatMessageEntity {
         this.nickname = nickname;
     }
 
-    public void setChatroomId(int chatroomId) {
-        this.chatroomId = chatroomId;
+    public void setChatroom_id(int chatroom_id) {
+        this.chatroom_id = chatroom_id;
     }
 
-    public int getChatroomId() {
-        return chatroomId;
-    }
 
-    private int chatroomId;
 
-    public ChatMessageEntity(String message, String uid, String nickname, int chatroomId) {
+    public ChatMessageEntity(String message, String UID, String nickname, int chatroom_id) {
         this.message = message;
-        UID = uid;
+        this.UID = UID;
         this.nickname = nickname;
-        this.chatroomId = chatroomId;
+        this.chatroom_id = chatroom_id;
     }
 }

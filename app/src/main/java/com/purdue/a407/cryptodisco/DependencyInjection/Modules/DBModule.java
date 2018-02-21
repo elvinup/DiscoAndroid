@@ -5,9 +5,11 @@ import android.arch.persistence.room.Room;
 
 import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
+import com.purdue.a407.cryptodisco.Data.DAOs.ChatmsgDao;
 import com.purdue.a407.cryptodisco.Data.DAOs.ChatroomDao;
 import com.purdue.a407.cryptodisco.Data.DAOs.ExchangeDao;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
+import com.purdue.a407.cryptodisco.Repos.ChatMsgRepository;
 import com.purdue.a407.cryptodisco.Repos.ChatRoomRepository;
 import com.purdue.a407.cryptodisco.Repos.ExchangeRepository;
 
@@ -37,6 +39,10 @@ public class DBModule {
 
     @Provides
     @Singleton
+    public ChatmsgDao provideChatmsgDao(AppDatabase db) { return db.chatmsgDao(); }
+
+    @Provides
+    @Singleton
     public ExchangeRepository provideExchangeRepository(CDApi cdApi, ExchangeDao exchangeDao) {
         return new ExchangeRepository(cdApi, exchangeDao);
     }
@@ -45,6 +51,12 @@ public class DBModule {
     @Singleton
     public ChatRoomRepository provideChatroomRepository(CDApi cdApi, ChatroomDao chatroomDao) {
         return new ChatRoomRepository(cdApi, chatroomDao);
+    }
+
+    @Provides
+    @Singleton
+    public ChatMsgRepository provideChatmsgRepository(CDApi cdApi, ChatmsgDao chatMsgDao) {
+        return new ChatMsgRepository(cdApi, chatMsgDao);
     }
 
 }

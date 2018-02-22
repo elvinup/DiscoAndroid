@@ -80,15 +80,7 @@ public class MessageActivity extends AppCompatActivity
         //You need this to connect to the database
         ((App) getApplication()).getNetComponent().inject(this);
 
-
-        //For checking chat messages to show up
-
-//        LiveData<CDResource<List<ChatMessageEntity>>> Messages = chatMsgViewModel.getChatmessagesList();
-//        for(ChatMessageEntity msg: listResponse.getData()) {
-//            stringBuilderName.append(msg.getMessage() + "\n");
-//        }
-
-
+        //Just testing to see if we can retrieve the chat messages
         chatMsgViewModel.getChatmessagesList().observe(this, listResponse -> {
             if(listResponse.isLoading()) {
                 //progressDialog.show(getSupportFragmentManager());
@@ -105,8 +97,10 @@ public class MessageActivity extends AppCompatActivity
         });
 
 
-
+        //@Kenny, To send a message, just do cdApi.sendMessage(ChatMessageEntity msg);
         ChatMessageEntity msg = new ChatMessageEntity("yo", "SOMEID12345", "testMonkey", 4);
+
+        //This is just expanded to test for response codes
         cdApi.sendMessage(msg).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

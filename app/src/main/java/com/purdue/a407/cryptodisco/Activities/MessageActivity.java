@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 //import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
 import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
+import com.purdue.a407.cryptodisco.Adapter.MessageAdapter;
 import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.CacheData.CDResource;
@@ -87,13 +88,33 @@ public class MessageActivity extends AppCompatActivity
                 return;
             }
 
-            StringBuilder stringBuilderName = new StringBuilder();
+            StringBuilder stringBuilderMessage = new StringBuilder();
+            StringBuilder stringBuilderNickname = new StringBuilder();
 
             for(ChatMessageEntity msg: listResponse.getData()) {
-                stringBuilderName.append(msg.getId() + msg.getMessage() + "\n");
+                stringBuilderMessage.append(msg.getMessage() + "\n");
             }
 
-            Toast.makeText(MessageActivity.this, stringBuilderName.toString(), Toast.LENGTH_SHORT).show();
+            for(ChatMessageEntity msg: listResponse.getData()) {
+                stringBuilderNickname.append(msg.getNickname() + "\n");
+            }
+
+            //Toast.makeText(MessageActivity.this, stringBuilderMessage.toString(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(MessageActivity.this, stringBuilderNickname.toString(), Toast.LENGTH_SHORT).show();
+
+            // display message and id
+            ListView listView = (ListView) findViewById(R.id.chat_messages);
+            String[] message = stringBuilderMessage.toString().split("\n");
+            String[] nickname = stringBuilderNickname.toString().split("\n");
+            ArrayList<ChatMessageEntity> chatMessageList = new ArrayList<>();
+
+            for (int i = 0; i < message.length; i++) {
+                ChatMessageEntity messageEntity = new ChatMessageEntity(message[i], nickname[i]);
+                chatMessageList.add(messageEntity);
+            }
+
+            MessageAdapter messageAdapter = new MessageAdapter(this, R.layout.display_message, chatMessageList);
+            listView.setAdapter(messageAdapter); // display items in group page
         });
 
 

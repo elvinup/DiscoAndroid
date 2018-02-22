@@ -1,6 +1,7 @@
 package com.purdue.a407.cryptodisco.Data.Entities;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
@@ -62,11 +63,16 @@ public class ChatMessageEntity {
     }
 
 
-
+    @Ignore // might need to delete that
     public ChatMessageEntity(String message, String uid, String nickname, int chatroom_id) {
         this.message = message;
         this.uid = uid;
         this.nickname = nickname;
         this.chatroom_id = chatroom_id;
+    }
+
+    public ChatMessageEntity(String message, String nickname) {
+        this.message = message;
+        this.nickname = nickname;
     }
 }

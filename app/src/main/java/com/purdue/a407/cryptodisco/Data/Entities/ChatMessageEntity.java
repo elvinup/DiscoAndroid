@@ -20,7 +20,7 @@ public class ChatMessageEntity {
 
     String message;
     String nickname;
-    String UID;
+    String uid;
     int chatroom_id;
 
     public int getId() {
@@ -31,8 +31,8 @@ public class ChatMessageEntity {
         return message;
     }
 
-    public String getUID() {
-        return UID;
+    public String getUid() {
+        return uid;
     }
 
     public String getNickname() {
@@ -49,8 +49,8 @@ public class ChatMessageEntity {
         this.message = message;
     }
 
-    public void setUID(String UID) {
-        this.UID = UID;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public void setNickname(String nickname) {
@@ -63,9 +63,9 @@ public class ChatMessageEntity {
 
 
 
-    public ChatMessageEntity(String message, String UID, String nickname, int chatroom_id) {
+    public ChatMessageEntity(String message, String uid, String nickname, int chatroom_id) {
         this.message = message;
-        this.UID = UID;
+        this.uid = uid;
         this.nickname = nickname;
         this.chatroom_id = chatroom_id;
     }

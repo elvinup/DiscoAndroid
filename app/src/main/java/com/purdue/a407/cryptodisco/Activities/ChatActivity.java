@@ -127,27 +127,6 @@ public class ChatActivity extends AppCompatActivity
             //listView.setAdapter(descriptionAdapter);
 
         });
-
-
-
-
-        //For checking chat messages to show up
-        chatMsgViewModel.getChatmessagesList().observe(this, listResponse -> {
-            if(listResponse.isLoading()) {
-                //progressDialog.show(getSupportFragmentManager());
-                return;
-            }
-
-            StringBuilder stringBuilderName = new StringBuilder();
-
-            for(ChatMessageEntity msg: listResponse.getData()) {
-                stringBuilderName.append(msg.getMessage() + "\n");
-            }
-
-            Toast.makeText(ChatActivity.this, stringBuilderName.toString(), Toast.LENGTH_SHORT).show();
-        });
-
-
     }
 
     @Override

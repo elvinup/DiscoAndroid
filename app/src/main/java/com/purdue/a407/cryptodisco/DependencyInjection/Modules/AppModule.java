@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
+import android.support.v7.preference.PreferenceManager;
 
 import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 
@@ -36,6 +37,6 @@ public class AppModule {
     @Singleton
     @Provides
     public SharedPreferences provideSharedPreferences(Application application) {
-        return application.getSharedPreferences("test_app_shared_prefs", Context.MODE_PRIVATE);
+        return PreferenceManager.getDefaultSharedPreferences(application);
     }
 }

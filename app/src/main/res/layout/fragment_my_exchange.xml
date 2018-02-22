@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    tools:context=".Fragments.MyExchangeFragment">
+
+    <include layout="@layout/content_layout_title" android:id="@+id/layout_title"/>
+
+    <android.support.v7.widget.AppCompatAutoCompleteTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchText"
+        android:textSize="20dp"
+        android:hint="Search Coin Pairings" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/coinPairing" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sellOrder"
+        android:text="Sell Order"/>
+
+</LinearLayout>

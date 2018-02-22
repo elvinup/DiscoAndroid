@@ -14,8 +14,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class ExchangesViewModel extends ViewModel {
-//    @NonNull
-//    private final MutableLiveData<Boolean> loadingLiveData = new MutableLiveData<>();
 
     @NonNull
     private final ExchangeRepository repository;

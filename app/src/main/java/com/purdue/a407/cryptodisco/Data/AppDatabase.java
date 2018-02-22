@@ -3,10 +3,17 @@ package com.purdue.a407.cryptodisco.Data;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
+import com.purdue.a407.cryptodisco.Data.DAOs.CoinPairingDao;
 import com.purdue.a407.cryptodisco.Data.DAOs.ExchangeDao;
+import com.purdue.a407.cryptodisco.Data.DAOs.UserExchangeDao;
+import com.purdue.a407.cryptodisco.Data.Entities.CoinPairingEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
+import com.purdue.a407.cryptodisco.Data.Entities.UserExchangeEntity;
 
-@Database(entities = {ExchangeEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {ExchangeEntity.class, UserExchangeEntity.class,
+        CoinPairingEntity.class}, version = 4, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract ExchangeDao exchangeDao();
+    public abstract UserExchangeDao userExchangeDao();
+    public abstract CoinPairingDao coinPairingDao();
 }

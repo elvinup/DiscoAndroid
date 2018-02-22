@@ -2,23 +2,31 @@ package com.purdue.a407.cryptodisco.CacheData;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
 import android.os.AsyncTask;
 import android.support.annotation.MainThread;
 import android.support.annotation.WorkerThread;
+import android.util.Log;
 
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.Single;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public abstract class NetworkBoundResource<ResultType, RequestType> {
-    private final MediatorLiveData<CDResource<ResultType>> result = new MediatorLiveData<>();
+public abstract class NetworkBoundResource<Local, Remote> {
+    private final MediatorLiveData<CDResource<Local>> result = new MediatorLiveData<>();
 
     @MainThread
     public NetworkBoundResource() {
         result.setValue(CDResource.loading(null));
-        LiveData<ResultType> dbSource = loadFromDb();
+        LiveData<Local> dbSource = loadFromDb();
         result.addSource(dbSource, data -> {
             result.removeSource(dbSource);
             if (shouldFetch(data)) {
@@ -29,17 +37,24 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
         });
     }
 
-    private void fetchFromNetwork(final LiveData<ResultType> dbSource) {
+    private void fetchFromNetwork(final LiveData<Local> dbSource) {
         result.addSource(dbSource, newData -> result.setValue(CDResource.loading(newData)));
-        createCall().enqueue(new Callback<RequestType>() {
+        createCall().enqueue(new Callback<Remote>() {
             @Override
-            public void onResponse(Call<RequestType> call, Response<RequestType> response) {
+            public void onResponse(Call<Remote> call, Response<Remote> response) {
+                if(response.code() != 200) {
+                    Log.d("ERROR CODE", String.valueOf(response.code()));
+                    onFetchFailed();
+                    result.removeSource(dbSource);
+                    result.addSource(dbSource, newData -> result.setValue(CDResource.error(newData, null)));
+                    return;
+                }
                 result.removeSource(dbSource);
                 saveResultAndReInit(response.body());
             }
 
             @Override
-            public void onFailure(Call<RequestType> call, Throwable t) {
+            public void onFailure(Call<Remote> call, Throwable t) {
                 onFetchFailed();
                 result.removeSource(dbSource);
                 result.addSource(dbSource, newData -> result.setValue(CDResource.error(newData, t)));
@@ -48,7 +63,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     }
 
     @MainThread
-    private void saveResultAndReInit(RequestType response) {
+    private void saveResultAndReInit(Remote response) {
         new AsyncTask<Void, Void, Void>() {
 
             @Override
@@ -65,26 +80,26 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     }
 
     @WorkerThread
-    protected abstract void saveCallResult(@NonNull RequestType item);
+    protected abstract void saveCallResult(@NonNull Remote item);
 
     @MainThread
-    protected boolean shouldFetch(@Nullable ResultType data) {
+    protected boolean shouldFetch(@Nullable Local data) {
         return true;
     }
 
     @NonNull
     @MainThread
-    protected abstract LiveData<ResultType> loadFromDb();
+    protected abstract LiveData<Local> loadFromDb();
 
     @NonNull
     @MainThread
-    protected abstract Call<RequestType> createCall();
+    protected abstract Call<Remote> createCall();
 
     @MainThread
     protected void onFetchFailed() {
     }
 
-    public final LiveData<CDResource<ResultType>> getAsLiveData() {
+    public final LiveData<CDResource<Local>> getAsLiveData() {
         return result;
     }
 }

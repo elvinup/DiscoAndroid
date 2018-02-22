@@ -9,4 +9,19 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="onboarding_title1">Hello1</string>
+    <string name="onboarding_title2">Hello2</string>
+    <string name="onboarding_title3">Hello3</string>
+    <string name="onboarding_title4">Hello4</string>
+
+    <string name="onboarding_description1">Description1</string>
+    <string name="onboarding_description2">Description2</string>
+    <string name="onboarding_description3">Description3</string>
+    <string name="onboarding_description4">Description4</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_first">FirstActivity</string>
+
 </resources>

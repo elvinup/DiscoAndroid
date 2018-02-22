@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".Activities.HomeActivity"
-    tools:showIn="@layout/app_bar_home">
+    tools:showIn="@layout/app_bar_home"
+    android:id="@+id/replaceView">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,6 +20,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/watermark"
             android:src="@drawable/app_initials_blue"
             android:layout_centerInParent="true"
             android:alpha=".2"/>

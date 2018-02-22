@@ -5,21 +5,21 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
-import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
+import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 
 import java.util.List;
 
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
 @Dao
-public interface ChatroomDao {
+public interface ChatmsgDao {
 
-    @Query("SELECT * FROM ChatRoomEntity")
-    LiveData<List<ChatRoomEntity>> chatRooms();
+    @Query("SELECT * FROM ChatMessageEntity")
+    LiveData<List<ChatMessageEntity>> chatMessages();
 
     @Insert(onConflict = REPLACE)
-    void saveAll(List<ChatRoomEntity> chatRoomEntities);
+    void saveAll(List<ChatMessageEntity> chatMessageEntities);
 
-    @Query("DELETE FROM ChatRoomEntity")
+    @Query("DELETE FROM ChatMessageEntity")
     void clear();
 }

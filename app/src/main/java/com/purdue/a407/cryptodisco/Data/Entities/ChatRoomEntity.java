@@ -2,25 +2,24 @@ package com.purdue.a407.cryptodisco.Data.Entities;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
 
 @Entity
 public class ChatRoomEntity {
 
 
-    @NonNull
-    @PrimaryKey
-    private String name;
+    @PrimaryKey(autoGenerate = true)
+    int id;
 
-    private String description;
+    String name;
 
+    String description;
 
-    public ChatRoomEntity(String identification, String name) {
-        this.description = identification;
+    public ChatRoomEntity(String description, String name) {
+        this.description = description;
         this.name = name;
     }
 
-    public String getdescription() {
+    public String getDescription() {
         return description;
     }
 
@@ -28,11 +27,18 @@ public class ChatRoomEntity {
         return name;
     }
 
-    public void setdescription(String description) {
+    public int getId() {
+        return id;
+    }
+
+
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setname(String name) {
+    public void setName(String name) {
         this.name = name;
     }
+
+    public void setId(int id) {this.id = id; }
 }

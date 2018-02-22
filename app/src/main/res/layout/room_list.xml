@@ -4,24 +4,18 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.06"
-        android:orientation="vertical">
-
         <TextView
             android:id="@+id/room_list_group_name"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:text="Group Name"
-            android:textSize="24sp" />
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/room_list_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description" />
-    </LinearLayout>
+            android:text="Description"
+            android:textSize="18sp" />
 
 </LinearLayout>

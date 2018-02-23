@@ -64,6 +64,11 @@ public abstract class NetworkBoundResource<Local, Remote> {
 
     @MainThread
     private void saveResultAndReInit(Remote response) {
+
+        if (response == null) {
+            Log.d("Query Response", "It's null, well shiet");
+        }
+        Log.d("Query Response", response.toString());
         new AsyncTask<Void, Void, Void>() {
 
             @Override

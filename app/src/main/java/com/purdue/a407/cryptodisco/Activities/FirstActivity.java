@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.purdue.a407.cryptodisco.R;
@@ -37,6 +38,19 @@ public class FirstActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+    String[] headersArr = new String[]{"Welcome to CryptoDisco!","Search",
+            "Advanced Trading Features", "Social Media!", "Click below to get started!"};
+    String[] descriptionsArr = new String[]{"CryptoDisco is a trading application that allows access " +
+            "to the most popular exchanges in crypto. This app allows you to create Limit/Stop/Market orders," +
+            " along with watching trends of coins, incorporating social media, etc.",
+            "To begin looking for new crypto " +
+            "currency you can search for coins across our supported exchanges " +
+            "or browse an exchange.","Want to place stop and trailing stops even " +
+            "on exchanges that don’t support them by default? Go to the Exchanges tab on " +
+            "the home screen and insert your API Keys for the necessary exchanges.", "See what's going " +
+            "on around the world of cryptocurrency, along with the chat rooms associated with different " +
+            "exchanges! Go to the communication section of the navigation list!",""};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,20 +60,13 @@ public class FirstActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), headersArr,
+                descriptionsArr);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
     }
 
@@ -96,6 +103,7 @@ public class FirstActivity extends AppCompatActivity {
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
+        FloatingActionButton fab;
         public PlaceholderFragment() {
         }
 
@@ -103,10 +111,12 @@ public class FirstActivity extends AppCompatActivity {
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
+        public static PlaceholderFragment newInstance(String header, String description, boolean isLast) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            args.putString("header", header);
+            args.putString("desc", description);
+            args.putBoolean("isLast", isLast);
             fragment.setArguments(args);
             return fragment;
         }
@@ -115,8 +125,21 @@ public class FirstActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_first, container, false);
+            String head = getArguments().getString("header");
+            String descript = getArguments().getString("desc");
+            boolean isLast = getArguments().getBoolean("isLast");
+            LinearLayout layout = rootView.findViewById(R.id.linLayout);
+            fab = (FloatingActionButton)rootView.findViewById(R.id.fab);
+            if(isLast) {
+                fab.setVisibility(View.VISIBLE);
+                fab = rootView.findViewById(R.id.fab);
+                fab.setOnClickListener(view -> getActivity().finish());
+                layout.setVisibility(View.INVISIBLE);
+            }
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            TextView textView1 = (TextView) rootView.findViewById(R.id.description);
+            textView.setText(head);
+            textView1.setText(descript);
             return rootView;
         }
     }
@@ -126,22 +149,27 @@ public class FirstActivity extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        String[] headers;
+        String[] descriptions;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public SectionsPagerAdapter(FragmentManager fm, String[] headers, String[] descriptions) {
             super(fm);
+            this.headers = headers;
+            this.descriptions = descriptions;
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            return PlaceholderFragment.newInstance(headers[position], descriptions[position],
+                    position == headers.length - 1);
         }
 
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return headers.length;
         }
     }
 }

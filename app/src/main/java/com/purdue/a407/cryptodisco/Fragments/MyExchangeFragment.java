@@ -29,9 +29,12 @@ import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.ExchangeSpecification.*;
+import org.knowm.xchange.binance.BinanceExchange;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.trade.LimitOrder;
+import org.knowm.xchange.dto.trade.MarketOrder;
+import org.knowm.xchange.dto.trade.StopOrder;
 import org.knowm.xchange.gateio.GateioExchange;
 import org.knowm.xchange.service.trade.TradeService;
 
@@ -156,34 +159,41 @@ public class MyExchangeFragment extends Fragment {
     public void onSell() {
         ExchangeSpecification exchangeSpecification =
                 new GateioExchange().getDefaultExchangeSpecification();
-        String gate_key = "E397098B-F9AD-4131-A72A-88AB2C8DD844";
-        String gate_secret = "a86b716063adacacc4b8785d9896a4031a33cf2c5c69ec03bff22a535af5843a";
-        exchangeSpecification.setApiKey(gate_key);
-        exchangeSpecification.setSecretKey(gate_secret);
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... voids) {
-                Exchange gateio = ExchangeFactory.INSTANCE.createExchange(exchangeSpecification);
-                LimitOrder.Builder limitBuilder = new LimitOrder.Builder(
-                        Order.OrderType.ASK,CurrencyPair.ETH_BTC);
-                limitBuilder.id("new_thing");
-                Date date = new Date();
-                limitBuilder.timestamp(date);
-                limitBuilder.limitPrice(new BigDecimal(0.01));
-                limitBuilder.originalAmount(new BigDecimal(1));
-                limitBuilder.remainingAmount(new BigDecimal(.01));
-                try {
-                    String str = gateio.
-                            getTradeService().placeLimitOrder(limitBuilder.build());
-                    return str;
-                } catch (Exception e) {
-                    return e.getMessage();
-                }
-            }
-            protected void onPostExecute(String feed) {
-                Toast.makeText(context, feed, Toast.LENGTH_SHORT).show();
-            }
-        }.execute();
+        String gate_key = "BE35D93F-C891-43CD-BB2E-44DBB60351E7";
+        String gate_secret = "245fb23f0558f84f8d282a90cef8d762cc2fb9aa59761b87509538492307dad9";
+//        exchangeSpecification.setApiKey(gate_key);
+//        exchangeSpecification.setSecretKey(gate_secret);
+//        new AsyncTask<Void, Void, String>() {
+//            @Override
+//            protected String doInBackground(Void... voids) {
+//                Exchange gateio = ExchangeFactory.INSTANCE.createExchange(exchangeSpecification);
+//                LimitOrder.Builder limitBuilder = new LimitOrder.Builder(
+//                        Order.OrderType.ASK,CurrencyPair.ETH_BTC);
+//                limitBuilder.id("new_thin2g");
+//                Date date = new Date();
+//                limitBuilder.timestamp(date);
+//                limitBuilder.limitPrice(new BigDecimal(.01));
+//                limitBuilder.originalAmount(new BigDecimal(1));
+//                limitBuilder.remainingAmount(new BigDecimal(.01));
+//                try {
+//                    String str = gateio.
+//                            getTradeService().placeLimitOrder(limitBuilder.build());
+//                    return str;
+//                } catch (Exception e) {
+//                    return e.getMessage();
+//                }
+//            }
+//            protected void onPostExecute(String feed) {
+//                Toast.makeText(context, feed, Toast.LENGTH_SHORT).show();
+//            }
+//        }.execute();
+        OrderDialog dialog = new OrderDialog();
+        String[] coins = currentPairing.split("->");
+        String coin = coins[0].trim();
+        String mark = coins[1].trim();
+        dialog.setCurrencyPair(coin + "/" + mark);
+        getActivity().getSupportFragmentManager().beginTransaction().
+                replace(R.id.replaceView, dialog).addToBackStack("order_dialog").commit();
     }
 
 }

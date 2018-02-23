@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.purdue.a407.cryptodisco"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -76,6 +76,10 @@ dependencies {
     compile 'com.kyleohanian.databinding:ModelBindingForms:1.0.0'
     compile group: 'org.knowm.xchange', name: 'xchange-core', version: '4.3.3'
     compile group: 'org.knowm.xchange', name: 'xchange-gateio', version: '4.3.3'
+    compile group: 'org.knowm.xchange', name: 'xchange-binance', version: '4.3.3'
 
+    compile group: 'com.github.machinarius', name: 'preferencefragment', version: '0.1'
+
+    compile 'com.rockerhieu.emojicon:library:1.3.3' // emoji
 
 }

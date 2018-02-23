@@ -3,6 +3,8 @@ package com.purdue.a407.cryptodisco.DependencyInjection.Modules;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
+import com.purdue.a407.cryptodisco.ViewModels.ChatMsgViewModel;
+import com.purdue.a407.cryptodisco.ViewModels.ChatRoomsViewModel;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangesViewModel;
 import com.purdue.a407.cryptodisco.ViewModels.Factories.BaseViewModelFactory;
 import com.purdue.a407.cryptodisco.ViewModels.UserExchangesViewModel;
@@ -22,6 +24,16 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(UserExchangesViewModel.class)
     public abstract ViewModel bindUserExchangeViewModel(UserExchangesViewModel postsViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ChatRoomsViewModel.class)
+    public abstract ViewModel bindChatRoomsViewModel(ChatRoomsViewModel chatRoomsViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ChatMsgViewModel.class)
+    public abstract ViewModel bindChatMsgViewModel(ChatMsgViewModel chatMsgViewModel);
 
 
     @Binds

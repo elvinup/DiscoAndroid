@@ -2,6 +2,7 @@ package com.purdue.a407.cryptodisco.Activities;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Fragments.ExchangesFragment;
+import com.purdue.a407.cryptodisco.Fragments.SettingsFragment;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangesViewModel;
 import javax.inject.Inject;
@@ -88,19 +90,29 @@ public class HomeActivity extends AppCompatActivity
             getSupportFragmentManager().popBackStack(0, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
         if (id == R.id.nav_camera) {
+//            Intent intent = new Intent(this, FirstActivity.class);
+//            startActivity(intent);
+        }
+        else if (id == R.id.nav_gallery) {
             ExchangesFragment fragment = new ExchangesFragment();
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.replaceView,fragment).addToBackStack("exchanges").commit();
 
-        } else if (id == R.id.nav_gallery) {
+        }
+//        else if (id == R.id.nav_slideshow) {
+//
+//        } else if (id == R.id.nav_manage) {
+//
+//        } else if (id == R.id.nav_share) {
+//
+//        }
+        else if (id == R.id.nav_chat) {
+            Intent intent = new Intent(this, ChatActivity.class);
+            startActivity(intent);
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
 
         }
         drawer.closeDrawer(GravityCompat.START);

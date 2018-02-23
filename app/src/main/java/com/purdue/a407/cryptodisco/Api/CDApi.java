@@ -3,6 +3,7 @@ package com.purdue.a407.cryptodisco.Api;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
+import com.purdue.a407.cryptodisco.Data.Entities.SettingsEntity;
 
 import java.util.List;
 
@@ -28,4 +29,10 @@ public interface CDApi {
 
     @POST("/sendmessage")
     Call<Void> sendMessage(@Body ChatMessageEntity message);
+
+    @POST("/insertbackup")
+    Call<Void> insertBackup(@Body SettingsEntity settings);
+
+    @GET("/removebackup")
+    Call<Void> removeBackup(@Query("uuid") String uuid);
 }

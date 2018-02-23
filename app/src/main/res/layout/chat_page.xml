@@ -16,38 +16,47 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <LinearLayout
-        android:id="@+id/bottomBar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/bottom_bar"
-        android:orientation="horizontal"
+    <TextView
+        android:id="@+id/groupNameChatPage"
+        android:layout_width="118dp"
+        android:layout_height="43dp"
+        android:text="Groupname"
+        android:textSize="30sp"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="452dp">
+        tools:layout_editor_absoluteY="7dp" />
 
-        <EditText
-            android:id="@+id/enterMessage"
-            android:layout_width="300dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:ems="10"
-            android:inputType="text"
-            android:textAlignment="center"
-            android:textColor="?android:attr/textColorPrimaryInverseNoDisable"
-            android:windowSoftInputMode="stateHidden"/>
+    <!--<LinearLayout-->
+        <!--android:id="@+id/bottomBar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="60dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@drawable/bottom_bar"-->
+        <!--android:orientation="horizontal"-->
+        <!--tools:layout_editor_absoluteX="0dp"-->
+        <!--tools:layout_editor_absoluteY="452dp">-->
 
-        <ImageButton
-            android:id="@+id/send_message"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginTop="15dp"
-            android:layout_weight="1"
-            android:background="@null"
-            android:scaleType="centerInside"
-            app:srcCompat="@drawable/send_message" />
-    </LinearLayout>
+        <!--<EditText-->
+            <!--android:id="@+id/enterMessage"-->
+            <!--android:layout_width="300dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:ems="10"-->
+            <!--android:inputType="text"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textColor="?android:attr/textColorPrimaryInverseNoDisable"-->
+            <!--android:windowSoftInputMode="stateHidden"/>-->
+
+        <!--<ImageButton-->
+            <!--android:id="@+id/send_message"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_marginRight="0dp"-->
+            <!--android:layout_marginTop="15dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="@null"-->
+            <!--android:scaleType="centerInside"-->
+            <!--app:srcCompat="@drawable/send_message" />-->
+    <!--</LinearLayout>-->
 
 
 

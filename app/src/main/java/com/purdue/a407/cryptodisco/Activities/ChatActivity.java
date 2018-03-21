@@ -69,6 +69,7 @@ public class ChatActivity extends AppCompatActivity {
 
             StringBuilder stringBuilderName = new StringBuilder();
             StringBuilder stringBuilderDescription = new StringBuilder();
+            StringBuilder stringBuilderID = new StringBuilder();
 
             for(ChatRoomEntity room: listResponse.getData()) {
                 stringBuilderName.append(room.getName() + "\n");
@@ -78,10 +79,21 @@ public class ChatActivity extends AppCompatActivity {
                 stringBuilderDescription.append(room.getDescription() + "\n");
             }
 
+            for(ChatRoomEntity room: listResponse.getData()) {
+                stringBuilderID.append(room.getId() + "\n");
+            }
+
+            //Toast.makeText(ChatActivity.this, stringBuilderName.toString(),Toast.LENGTH_SHORT).show();
+            //Toast.makeText(ChatActivity.this, stringBuilderDescription.toString(),Toast.LENGTH_SHORT).show();
+            //Toast.makeText(ChatActivity.this, stringBuilderID.toString(),Toast.LENGTH_SHORT).show();
+
+
             // display group name and description
             ListView listView = (ListView) findViewById(R.id.group_list);
             String[] groupName = stringBuilderName.toString().split("\n");
             String[] description = stringBuilderDescription.toString().split("\n");
+            String[] id = stringBuilderID.toString().split("\n");
+
             ArrayList<ChatRoomEntity> chatRoomList = new ArrayList<>();
 
             for (int i = 0; i < groupName.length; i++) {
@@ -93,12 +105,13 @@ public class ChatActivity extends AppCompatActivity {
             listView.setAdapter(chatRoomAdapter); // display items in group page
 
             // group onclick
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Intent intent = new Intent(ChatActivity.this, MessageActivity.class);
-                    startActivity(intent);
-                }
+            listView.setOnItemClickListener((adapterView, view, i, l) -> {
+
+                //Toast.makeText(ChatActivity.this, groupName[i].toString(),Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ChatActivity.this, MessageActivity.class);
+                intent.putExtra("groupName", groupName[i]);
+                intent.putExtra("groupID", id[i]);
+                startActivity(intent);
             });
 
             //ArrayAdapter<String> groupNameAdapter = new ArrayAdapter<String>(this, R.layout.room_list, R.id.room_list_group_name, groupName);

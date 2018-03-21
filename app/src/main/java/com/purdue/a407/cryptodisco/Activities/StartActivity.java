@@ -45,46 +45,63 @@ public class StartActivity extends AppCompatActivity {
 
         Log.d("UUID", deviceID.getDeviceID());
 
-        new Handler().postDelayed(() -> {
-            if(!sharedPreferences.getBoolean(
-                    "firstTime", false)) {
-                sharedPreferences.edit().putBoolean("firstTime", true).apply();
-                Intent intent = new Intent(this, FirstActivity.class);
-                startActivity(intent);
-            }
-            else {
-                Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
-                Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getApplication(),
-                        android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
-                StartActivity.this.startActivity(myIntent, bundle);
-            }
-        }, 1000);
-        String UID = deviceID.getDeviceID();
-        Log.d("UUID", UID);
-        cdApi.userExists(UID).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.code() != 200) {
-                    // Error
-                    Log.d("Result", String.valueOf(response.code()));
-                    Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
-                    startActivity(myIntent);
-                }
-                else {
-                    // Success
-                    Log.d("Result", "Success");
-                    Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
-                    startActivity(myIntent);
-                }
-            }
+        appDatabase.coinPairingDao().deleteAll();
+        appDatabase.userExchangeDao().clear();
+        appDatabase.exchangeDao().clear();
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                // Failure
-                Log.d("Result", "Failure");
-                Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
-                startActivity(myIntent);
-            }
-        });
+//        new Handler().postDelayed(() -> {
+//            if(!sharedPreferences.getBoolean(
+//                    "firstTime", false)) {
+//                sharedPreferences.edit().putBoolean("firstTime", true).apply();
+//                Intent intent = new Intent(this, FirstActivity.class);
+//                startActivity(intent);
+//            }
+//            else {
+//                Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
+//                Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getApplication(),
+//                        android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+//                StartActivity.this.startActivity(myIntent, bundle);
+//            }
+//        }, 1000);
+
+        if(!sharedPreferences.getBoolean(
+                "firstTime", false)) {
+            sharedPreferences.edit().putBoolean("firstTime", true).apply();
+            Intent intent = new Intent(this, FirstActivity.class);
+            startActivity(intent);
+        }
+        else {
+            Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
+            Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getApplication(),
+                    android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+            StartActivity.this.startActivity(myIntent, bundle);
+        }
+//        String UID = deviceID.getDeviceID();
+//        Log.d("UUID", UID);
+//        cdApi.userExists(UID).enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {
+//                if(response.code() != 200) {
+//                    // Error
+//                    Log.d("Result", String.valueOf(response.code()));
+//                    Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
+//                    startActivity(myIntent);
+//                }
+//                else {
+//                    // Success
+//                    Log.d("Result", "Success");
+//                    Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
+//                    startActivity(myIntent);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable t) {
+//                // Failure
+//                Log.d("Result", "Failure");
+//                Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
+//                startActivity(myIntent);
+//            }
+//        });
     }
 }

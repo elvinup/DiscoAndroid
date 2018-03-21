@@ -11,6 +11,7 @@ import com.purdue.a407.cryptodisco.Fragments.DummyFragment;
 import com.purdue.a407.cryptodisco.Fragments.ExchangeFragment;
 import com.purdue.a407.cryptodisco.Fragments.ExchangesFragment;
 import com.purdue.a407.cryptodisco.Fragments.MyExchangeFragment;
+import com.purdue.a407.cryptodisco.Fragments.SettingsFragment;
 
 import javax.inject.Singleton;
 
@@ -27,4 +28,5 @@ public interface NetComponent {
     void inject(MyExchangeFragment exchangeFragment);
     void inject(ChatActivity activity);
     void inject(MessageActivity activity);
+    void inject(SettingsFragment fragment);
 }

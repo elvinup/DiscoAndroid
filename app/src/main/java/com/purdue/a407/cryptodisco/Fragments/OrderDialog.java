@@ -18,11 +18,12 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.purdue.a407.cryptodisco.R;
-
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.binance.BinanceExchange;
+import org.knowm.xchange.binance.dto.trade.OrderSide;
+import org.knowm.xchange.binance.dto.trade.OrderType;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.meta.CurrencyPairMetaData;
@@ -45,6 +46,7 @@ public class OrderDialog extends Fragment {
     Schema schema;
     Order.OrderType orderType;
     CurrencyPair currencyPair;
+    ExchType exchType;
     String error;
     Exchange exchange;
 
@@ -62,6 +64,12 @@ public class OrderDialog extends Fragment {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
+//                if(exchType == ExchType.BINANCE)
+//                    exchange = ApiHelpers.binance("","");
+//                else if(exchType == ExchType.GATEIO)
+//                    exchange = ApiHelpers.gateio("","");
+//                else
+//                    exchange = ApiHelpers.binance("","");
                 exchange = ApiHelpers.binance("","");
                 String s = getResult();
                 return s;
@@ -75,12 +83,14 @@ public class OrderDialog extends Fragment {
                 Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
             }
         }.execute();
+
     }
 
     public OrderDialog() {}
 
-    public void setCurrencyPair(String currencyString) {
+    public void setCurrencyPair(String currencyString, ExchType exchType) {
         currencyPair = new CurrencyPair(currencyString);
+        this.exchType = exchType;
     }
 
     @Override
@@ -93,13 +103,6 @@ public class OrderDialog extends Fragment {
     }
 
     public String getResult() {
-//        ExchangeSpecification exchangeSpecification =
-//                new GateioExchange().getDefaultExchangeSpecification();
-//        String gate_key = "E397098B-F9AD-4131-A72A-88AB2C8DD844";
-//        String gate_secret = "a86b716063adacacc4b8785d9896a4031a33cf2c5c69ec03bff22a535af5843a";
-//        exchangeSpecification.setApiKey(gate_key);
-//        exchangeSpecification.setSecretKey(gate_secret);
-//        Exchange exchange = ExchangeFactory.INSTANCE.createExchange(exchangeSpecification);
         if(schema == null) {
             return null;
         }
@@ -168,7 +171,7 @@ public class OrderDialog extends Fragment {
 
     }
 
-    @OnClick({R.id.marketOrderBtn, R.id.limitOrderBtn, R.id.stopOrderBtn})
+     @OnClick({R.id.marketOrderBtn, R.id.limitOrderBtn, R.id.stopOrderBtn})
     public void onSchemaTypeClicked(RadioButton radioButton) {
         // Is the button now checked?
         boolean checked = radioButton.isChecked();

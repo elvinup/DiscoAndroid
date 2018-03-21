@@ -157,10 +157,10 @@ public class MyExchangeFragment extends Fragment {
 
     @OnClick(R.id.sellOrder)
     public void onSell() {
-        ExchangeSpecification exchangeSpecification =
-                new GateioExchange().getDefaultExchangeSpecification();
-        String gate_key = "BE35D93F-C891-43CD-BB2E-44DBB60351E7";
-        String gate_secret = "245fb23f0558f84f8d282a90cef8d762cc2fb9aa59761b87509538492307dad9";
+//        ExchangeSpecification exchangeSpecification =
+//                new GateioExchange().getDefaultExchangeSpecification();
+//        String gate_key = "BE35D93F-C891-43CD-BB2E-44DBB60351E7";
+//        String gate_secret = "245fb23f0558f84f8d282a90cef8d762cc2fb9aa59761b87509538492307dad9";
 //        exchangeSpecification.setApiKey(gate_key);
 //        exchangeSpecification.setSecretKey(gate_secret);
 //        new AsyncTask<Void, Void, String>() {
@@ -191,7 +191,14 @@ public class MyExchangeFragment extends Fragment {
         String[] coins = currentPairing.split("->");
         String coin = coins[0].trim();
         String mark = coins[1].trim();
-        dialog.setCurrencyPair(coin + "/" + mark);
+        ExchType type;
+        if(exchange.equals("binance"))
+            type = ExchType.BINANCE;
+        else if(exchange.equals("gateio"))
+            type = ExchType.GATEIO;
+        else
+            type = ExchType.BINANCE;
+        dialog.setCurrencyPair(coin + "/" + mark, type);
         getActivity().getSupportFragmentManager().beginTransaction().
                 replace(R.id.replaceView, dialog).addToBackStack("order_dialog").commit();
     }

@@ -28,7 +28,7 @@ public class CoinPairingRepository {
     }
 
     public void setExchange(String exchange) {
-        this.exchange = exchange;
+        this.exchange = exchange.toLowerCase();
     }
 
     @NonNull
@@ -53,7 +53,7 @@ public class CoinPairingRepository {
                     return cdApi.getCoinPairingsFromExchange(exchange);
                 }
                 else
-                    return cdApi.getCoinPairingsFromExchange("Binance");
+                    return cdApi.getCoinPairingsFromExchange("binance");
             }
         }.getAsLiveData();
     }

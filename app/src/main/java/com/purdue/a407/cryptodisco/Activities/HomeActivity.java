@@ -97,7 +97,6 @@ public class HomeActivity extends AppCompatActivity
             ExchangesFragment fragment = new ExchangesFragment();
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.replaceView,fragment).addToBackStack("exchanges").commit();
-
         }
 //        else if (id == R.id.nav_slideshow) {
 //

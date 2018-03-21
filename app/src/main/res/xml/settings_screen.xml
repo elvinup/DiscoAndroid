@@ -21,4 +21,8 @@
             />
     </PreferenceCategory>
 
+    <Preference android:title="Acts like a button"
+        android:key="Backup"
+        android:summary="Click here to start backup"/>
+
 </PreferenceScreen>

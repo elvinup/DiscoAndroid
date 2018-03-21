@@ -62,6 +62,11 @@ public class ChatMessageEntity {
     }
 
 
+    public ChatMessageEntity(String message, String nickname) {
+        this.message = message;
+        this.nickname = nickname;
+    }
+
     @Ignore // might need to delete that
     public ChatMessageEntity(String message, String uid, String nickname, int chatroom_id) {
         this.message = message;
@@ -70,8 +75,4 @@ public class ChatMessageEntity {
         this.chatroom_id = chatroom_id;
     }
 
-    public ChatMessageEntity(String message, String nickname) {
-        this.message = message;
-        this.nickname = nickname;
-    }
 }

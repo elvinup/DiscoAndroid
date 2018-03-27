@@ -16,11 +16,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kyleohanian.databinding.modelbindingforms.Listeners.OnBindDialogCancelListener;
 import com.kyleohanian.databinding.modelbindingforms.Listeners.OnBindDialogCreateListener;
 import com.kyleohanian.databinding.modelbindingforms.UIObjects.ModelForm;
+import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
+import com.purdue.a407.cryptodisco.Adapters.ExchangesAdapter;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.CacheData.CDResource;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
@@ -47,6 +52,12 @@ public class ExchangeFragment extends Fragment {
 
 
     String titleString;
+
+    @BindView(R.id.exchange_sort)
+    Button exchangeSortButton;
+
+    @BindView(R.id.exchangeLists)
+    ListView exchangeLists;
 
     @BindView(R.id.title)
     TextView title;
@@ -77,7 +88,6 @@ public class ExchangeFragment extends Fragment {
         exchangeFragment.setTitle(title);
         return exchangeFragment;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,11 +124,24 @@ public class ExchangeFragment extends Fragment {
             List<CoinPairingEntity> coinPairingEntities = listCDResource.getData();
             ArrayList<String> strings = new ArrayList<>();
             for(CoinPairingEntity entity: coinPairingEntities) {
-                strings.add(entity.getCoin_short() + " -> " + entity.getMarket_short());
+                if (entity.getCoin_short().length() > 0 && entity.getMarket_short().length() > 0) {
+                    strings.add(entity.getCoin_short() + " -> " + entity.getMarket_short());
+                }
             }
             arrayAdapter = new ArrayAdapter<>(context,
                     android.R.layout.simple_dropdown_item_1line,strings.toArray());
             searchText.setAdapter(arrayAdapter);
+
+            exchangeLists.setAdapter(arrayAdapter);
+
+            // sort button clicked
+            exchangeSortButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    //searchText.setText("test");
+                }
+            });
         });
 
     }

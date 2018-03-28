@@ -82,6 +82,7 @@ dependencies {
 
     compile 'com.rockerhieu.emojicon:library:1.3.3' // emoji
 
+    compile 'org.jsoup:jsoup:1.11.2'
 
 
 }

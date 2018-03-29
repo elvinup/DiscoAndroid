@@ -16,13 +16,19 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.purdue.a407.cryptodisco.App;
+import com.purdue.a407.cryptodisco.Fragments.ExchangeFragment;
 import com.purdue.a407.cryptodisco.Fragments.ExchangesFragment;
+import com.purdue.a407.cryptodisco.Fragments.MyExchangeFragment;
 import com.purdue.a407.cryptodisco.Fragments.SettingsFragment;
+import com.purdue.a407.cryptodisco.Fragments.WatchlistFragment;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangesViewModel;
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -77,6 +83,9 @@ public class HomeActivity extends AppCompatActivity
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 getSupportFragmentManager().popBackStack();
             }
+            else {
+                finish();
+            }
         }
     }
 
@@ -89,18 +98,34 @@ public class HomeActivity extends AppCompatActivity
         if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack(0, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
-        if (id == R.id.nav_camera) {
-//            Intent intent = new Intent(this, FirstActivity.class);
-//            startActivity(intent);
-        }
-        else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_account) {
             ExchangesFragment fragment = new ExchangesFragment();
+
+            //Notify fragment this is the account tab
+            Bundle args = new Bundle();
+            args.putBoolean("isAccount", TRUE);
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.replaceView,fragment).addToBackStack("myExchanges").commit();
+        }
+        else if (id == R.id.nav_exchanges) {
+            ExchangesFragment fragment = new ExchangesFragment();
+
+            //Notify fragment this is the exchange tab
+            Bundle args = new Bundle();
+            args.putBoolean("isAccount", FALSE);
+            fragment.setArguments(args);
+
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.replaceView,fragment).addToBackStack("exchanges").commit();
         }
-//        else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
+        else if (id == R.id.nav_watchlist) {
+            WatchlistFragment fragment = new WatchlistFragment();
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.replaceView,fragment).addToBackStack("watchlist").commit();
+        }
+        //else if (id == R.id.nav_manage) {
 //
 //        } else if (id == R.id.nav_share) {
 //

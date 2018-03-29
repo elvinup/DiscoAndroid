@@ -53,8 +53,8 @@ public class ExchangeFragment extends Fragment {
 
     String titleString;
 
-    @BindView(R.id.exchange_sort)
-    Button exchangeSortButton;
+    @BindView(R.id.coin_sort)
+    Button coinSortButton;
 
     @BindView(R.id.exchangeLists)
     ListView exchangeLists;
@@ -135,7 +135,7 @@ public class ExchangeFragment extends Fragment {
             exchangeLists.setAdapter(arrayAdapter);
 
             // sort button clicked
-            exchangeSortButton.setOnClickListener(new View.OnClickListener() {
+            coinSortButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 

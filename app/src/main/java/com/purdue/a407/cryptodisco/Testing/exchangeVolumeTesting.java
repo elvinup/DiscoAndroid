@@ -19,6 +19,8 @@ public class exchangeVolumeTesting {
 
     static ArrayList<exchangeVolumeTesting> exchanges = new ArrayList<exchangeVolumeTesting>();
 
+
+
     @Override
     public String toString() {
         return "Exchange: " + this.exchange + '\n'

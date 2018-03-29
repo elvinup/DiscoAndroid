@@ -8,7 +8,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 
 public class DiscoFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
-    private static final String TAG = "MyFirebaseIIDService";
+    private static final String TAG = "DiscoFirebaseIIDService";
 
     /**
      * Called if InstanceID token is updated. This may occur if the security of
@@ -38,6 +38,6 @@ public class DiscoFirebaseInstanceIDService extends FirebaseInstanceIdService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        // TODO: Implement this method to send token to your app server.
+
     }
 }

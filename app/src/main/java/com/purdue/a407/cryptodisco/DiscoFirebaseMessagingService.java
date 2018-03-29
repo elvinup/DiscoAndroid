@@ -11,14 +11,14 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.purdue.a407.cryptodisco.Activities.HomeActivity;
-import com.purdue.a407.cryptodisco.Activities.StartActivity;
 
 public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "MyFirebaseMsgService";
+    private static final String TAG = "DiscoFirebaseMsgService";
 
     /**
      * Called when message is received.
@@ -59,6 +59,7 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+            Log.d(TAG, "\n\n\nSO THE REG TOKEN IS: " + FirebaseInstanceId.getInstance().getToken() + "\n\n\n\n" );
             sendNotification(remoteMessage.getNotification().getBody());
         }
 

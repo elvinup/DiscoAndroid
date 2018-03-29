@@ -81,6 +81,8 @@ dependencies {
     compile group: 'com.github.machinarius', name: 'preferencefragment', version: '0.1'
 
     compile 'com.rockerhieu.emojicon:library:1.3.3' // emoji
+    compile 'com.jjoe64:graphview:4.2.1'
+
 
 
 

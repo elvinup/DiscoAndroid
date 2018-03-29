@@ -45,9 +45,9 @@ public class StartActivity extends AppCompatActivity {
 
         Log.d("UUID", deviceID.getDeviceID());
 
-        appDatabase.coinPairingDao().deleteAll();
-        appDatabase.userExchangeDao().clear();
-        appDatabase.exchangeDao().clear();
+//        appDatabase.coinPairingDao().deleteAll();
+//        appDatabase.userExchangeDao().clear();
+//        appDatabase.exchangeDao().clear();
 
 //        new Handler().postDelayed(() -> {
 //            if(!sharedPreferences.getBoolean(

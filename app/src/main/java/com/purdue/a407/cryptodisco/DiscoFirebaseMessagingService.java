@@ -13,6 +13,7 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.purdue.a407.cryptodisco.Activities.HomeActivity;
 import com.purdue.a407.cryptodisco.Activities.StartActivity;
 
 public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
@@ -58,6 +59,7 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+            sendNotification(remoteMessage.getNotification().getBody());
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
@@ -93,7 +95,7 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
      * @param messageBody FCM message body received.
      */
     private void sendNotification(String messageBody) {
-        Intent intent = new Intent(this, StartActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -102,7 +104,7 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
-                        //.setSmallIcon(R.drawable.ic_stat_ic_notification)
+                        .setSmallIcon(R.drawable.app_initials_blue)
                         .setContentTitle("FCM Message")
                         .setContentText(messageBody)
                         .setAutoCancel(true)

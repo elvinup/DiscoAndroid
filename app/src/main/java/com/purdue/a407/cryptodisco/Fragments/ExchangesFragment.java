@@ -24,10 +24,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.purdue.a407.cryptodisco.Activities.HomeActivity;
 import com.purdue.a407.cryptodisco.Adapters.ExchangesAdapter;
 import com.purdue.a407.cryptodisco.Adapters.UserExchangesAdapter;
 import com.purdue.a407.cryptodisco.App;
@@ -35,6 +38,9 @@ import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.UserExchangeEntity;
 import com.purdue.a407.cryptodisco.R;
+import com.purdue.a407.cryptodisco.Testing.exchangeVolume;
+import com.purdue.a407.cryptodisco.Testing.exchangeVolumeTesting;
+import com.purdue.a407.cryptodisco.ViewModels.ExchangesViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +68,12 @@ public class ExchangesFragment extends Fragment {
     @BindView(R.id.title)
     TextView title;
 
+    @BindView(R.id.exchange_sort)
+    Button exchangeSortButton;
+
     UserExchangesAdapter exchangesAdapter;
+
+    ExchangesAdapter eAdapter;
 
     List<ExchangeEntity> searchEntities = new ArrayList<>();
     List<String> searchesByExchange = new ArrayList<>();
@@ -70,8 +81,10 @@ public class ExchangesFragment extends Fragment {
     ArrayAdapter<Object> arrayAdapter;
     Context context;
 
+    List<ExchangeEntity> test;
 
     public ExchangesFragment() {
+
         // Required empty public constructor
     }
 
@@ -79,18 +92,44 @@ public class ExchangesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //Check if Account tab was selected
+        Bundle args = getArguments();
+        boolean isAccount = args.getBoolean("isAccount");
+        //Log.d("ISACCOUNT: ", Boolean.toString(isAccount));
+
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_exchanges, container, false);
         ButterKnife.bind(this, view);
         ((App) getActivity().getApplication()).getNetComponent().inject(this);
         context = getActivity();
-        title.setText("My Exchanges");
-        exchangesAdapter = new UserExchangesAdapter(getActivity(), new ArrayList<>());
-        exchangesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        exchangesRecycler.setAdapter(exchangesAdapter);
 
-        appDatabase.userExchangeDao().userExchanges().observe(getActivity(), exchangeEntities ->
-            exchangesAdapter.addAll(exchangeEntities));
+        if (isAccount)
+        {
+            title.setText("My Exchanges");
+            exchangesAdapter = new UserExchangesAdapter(getActivity(), new ArrayList<>());
+            exchangesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+            exchangesRecycler.setAdapter(exchangesAdapter);
+
+            appDatabase.userExchangeDao().userExchanges().observe(getActivity(), exchangeEntities ->
+                    exchangesAdapter.addAll(exchangeEntities));
+            //Remove search bar
+            //searchText.setVisibility(View.GONE);
+            container.removeView(container.findViewById(R.id.searchText));
+
+
+        }
+        //Otherwise we are in the exchanges tab
+        else
+        {
+            title.setText("Exchanges");
+            eAdapter = new ExchangesAdapter(getActivity(), new ArrayList<>());
+            exchangesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+            exchangesRecycler.setAdapter(eAdapter);
+            appDatabase.exchangeDao().exchanges().observe(getActivity(), exchangeEntities ->
+                    eAdapter.addAll(exchangeEntities));
+        }
+
 
         searchText.setOnItemClickListener((adapterView, view12, i, l) -> {
             View view1 = getActivity().getCurrentFocus();
@@ -104,9 +143,47 @@ public class ExchangesFragment extends Fragment {
                     replace(R.id.replaceView,fragment).addToBackStack("exchange").commit();
         });
 
+        //Sort button clicked
+        exchangeSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_sort, popupMenu.getMenu());
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        //Toast.makeText(context, "" + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        if (item.getTitle().equals("Sort by Volume (Popularity)"))
+                        {
+                            Log.d("Check Menu", "Sort by Volume was pressed");
+                            List<ExchangeEntity> ents = appDatabase.exchangeDao().exchangesNotLive();
+
+                            eAdapter.clear();
+                            Log.d("Size of ents " ,Integer.toString(ents.size()));
+                            eAdapter.addAll(test);
+                            //exchangeVolumeTesting v = new exchangeVolumeTesting();
+                            //List<exchangeVolumeTesting> a = v.getExchangesByVolume(ents);
+                            //System.out.println(a);
+
+                        }
+                        return true;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
+
         new AsyncTask<Void, Void, List<ExchangeEntity>>() {
             @Override
             protected List<ExchangeEntity> doInBackground(Void... params) {
+                exchangeVolumeTesting v = new exchangeVolumeTesting();
+                test = v.getExchangesbyVolume(appDatabase.exchangeDao()
+                        .exchangesNotLive());
+
+                //System.out.println(test);
+
                 return appDatabase.exchangeDao()
                         .exchangesNotLive();
             }
@@ -119,6 +196,7 @@ public class ExchangesFragment extends Fragment {
                 arrayAdapter = new ArrayAdapter<>(context,
                         android.R.layout.simple_dropdown_item_1line,strings.toArray());
                 searchText.setAdapter(arrayAdapter);
+
             }
         }.execute();
 

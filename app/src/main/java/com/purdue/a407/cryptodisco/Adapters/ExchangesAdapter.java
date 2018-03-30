@@ -68,6 +68,11 @@ public class ExchangesAdapter extends RecyclerView.Adapter<ExchangesAdapter.Exch
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        exchanges.clear();
+        notifyDataSetChanged();
+    }
+
     public class ExchangeHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.exchangeNameText)

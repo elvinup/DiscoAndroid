@@ -28,7 +28,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.purdue.a407.cryptodisco.Activities.HomeActivity;
 import com.purdue.a407.cryptodisco.Adapters.ExchangesAdapter;
 import com.purdue.a407.cryptodisco.Adapters.UserExchangesAdapter;
 import com.purdue.a407.cryptodisco.App;
@@ -36,6 +38,8 @@ import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.UserExchangeEntity;
 import com.purdue.a407.cryptodisco.R;
+import com.purdue.a407.cryptodisco.Testing.exchangeVolumeTesting;
+import com.purdue.a407.cryptodisco.ViewModels.ExchangesViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +112,9 @@ public class ExchangesFragment extends Fragment {
             appDatabase.userExchangeDao().userExchanges().observe(getActivity(), exchangeEntities ->
                     exchangesAdapter.addAll(exchangeEntities));
             //Remove search bar
-            searchText.setVisibility(View.GONE);
+            //searchText.setVisibility(View.GONE);
+            container.removeView(container.findViewById(R.id.searchText));
+
 
         }
         //Otherwise we are in the exchanges tab
@@ -135,12 +141,35 @@ public class ExchangesFragment extends Fragment {
                     replace(R.id.replaceView,fragment).addToBackStack("exchange").commit();
         });
 
-        // sort button clicked
+        //Sort button clicked
         exchangeSortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("HELLO", "hi");
-                //searchText.setText("test");
+                PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_sort, popupMenu.getMenu());
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        //Toast.makeText(context, "" + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        if (item.getTitle().equals("Sort by Volume (Popularity)"))
+                        {
+                            Log.d("Check Menu", "Sort by Volume was pressed");
+                            List<ExchangeEntity> ents = appDatabase.exchangeDao().exchangesNotLive();
+
+                            eAdapter.clear();
+                            Log.d("Size of ents " ,Integer.toString(ents.size()));
+
+                            exchangeVolumeTesting v = new exchangeVolumeTesting();
+                            List<exchangeVolumeTesting> a = v.getExchangesByVolume(ents);
+                            System.out.println(a);
+
+                        }
+                        return true;
+                    }
+                });
+                popupMenu.show();
             }
         });
 

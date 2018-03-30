@@ -26,11 +26,18 @@ public interface CoinDao {
     List<CoinEntity> coinsNotLive();
 
     @Query("SELECT * FROM CoinEntity WHERE id = :id")
-    LiveData<List<CoinEntity>> coinById(String id);
+    LiveData<List<CoinEntity>> coinById(int id);
 
     @Insert(onConflict = REPLACE)
     void saveAll(List<CoinEntity> coinEntities);
 
     @Query("DELETE FROM CoinEntity")
     void clear();
+
+    @Query("SELECT id FROM CoinEntity WHERE short_name = :shortName")
+    int getID(String shortName);
+
+    @Query("SELECT COUNT (*) FROM WatchListEntity WHERE user = :user AND coin = :coin")
+    int getTimeUserLikedCoin(String user, int coin);
+
 }

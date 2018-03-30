@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +27,15 @@ import com.kyleohanian.databinding.modelbindingforms.Listeners.OnBindDialogCreat
 import com.kyleohanian.databinding.modelbindingforms.UIObjects.ModelForm;
 import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
 import com.purdue.a407.cryptodisco.Adapters.ExchangesAdapter;
+import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.CacheData.CDResource;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.Data.Entities.CoinPairingEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.UserExchangeEntity;
+import com.purdue.a407.cryptodisco.Data.Entities.WatchListEntity;
+import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.Repos.CoinPairingRepository;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangeViewModel;
@@ -44,6 +48,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +60,9 @@ public class CoinFragment extends Fragment {
 
     String titleString;
 
+    @Inject
+    DeviceID deviceID;
+
     @BindView(R.id.coin_like)
     Button coinLike;
 
@@ -61,6 +71,9 @@ public class CoinFragment extends Fragment {
 
     @Inject
     AppDatabase appDatabase;
+
+    @Inject
+    CDApi cdApi;
 
 
     ExchangeViewModel viewModel;
@@ -91,10 +104,36 @@ public class CoinFragment extends Fragment {
         coinLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int coinNum = appDatabase.coinDao().getID(titleString);
+                int numliked = appDatabase.coinDao().getTimeUserLikedCoin(deviceID.getDeviceID(), coinNum);
+
+                Log.d("NUM LIKED ", Integer.toString(numliked));
 
                 String likeStatus = coinLike.getText().toString().toLowerCase();
 
+
                 if (likeStatus.equals("like")) {
+
+
+                    WatchListEntity watchListEntity = new WatchListEntity(deviceID.getDeviceID(), coinNum);
+
+                    cdApi.insertLikedCoin(watchListEntity).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (response.code() != 200) {
+                                Log.d("Coin Result", String.valueOf(response.code()));
+                            } else {
+                                Log.d("Coin Result", "Success");
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Log.d("Coin Result", "Failure");
+
+                        }
+                    });
 
                     coinLike.setText("Unlike");
                 } else {

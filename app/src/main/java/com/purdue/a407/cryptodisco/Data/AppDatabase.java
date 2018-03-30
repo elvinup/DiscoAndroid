@@ -16,9 +16,10 @@ import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.UserExchangeEntity;
+import com.purdue.a407.cryptodisco.Data.Entities.WatchListEntity;
 
 @Database(entities = {ExchangeEntity.class, UserExchangeEntity.class,
-        CoinPairingEntity.class, ChatRoomEntity.class, ChatMessageEntity.class, CoinEntity.class}, version = 6, exportSchema = false)
+        CoinPairingEntity.class, ChatRoomEntity.class, ChatMessageEntity.class, CoinEntity.class, WatchListEntity.class}, version = 7, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract ExchangeDao exchangeDao();
 

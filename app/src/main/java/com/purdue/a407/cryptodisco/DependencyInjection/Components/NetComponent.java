@@ -9,13 +9,14 @@ import com.purdue.a407.cryptodisco.Activities.HomeActivity;
 import com.purdue.a407.cryptodisco.Activities.StartActivity;
 import com.purdue.a407.cryptodisco.DiscoFirebaseMessagingService;
 import com.purdue.a407.cryptodisco.FCM.DiscoFirebaseInstanceIDService;
+import com.purdue.a407.cryptodisco.Fragments.CoinFragment;
 import com.purdue.a407.cryptodisco.Fragments.DummyFragment;
 import com.purdue.a407.cryptodisco.Fragments.ExchangeFragment;
 import com.purdue.a407.cryptodisco.Fragments.ExchangesFragment;
 import com.purdue.a407.cryptodisco.Fragments.MyExchangeFragment;
 import com.purdue.a407.cryptodisco.Fragments.NotificationsFragment;
 import com.purdue.a407.cryptodisco.Fragments.SettingsFragment;
-import com.purdue.a407.cryptodisco.ViewModels.NotificationsViewModel;
+import com.purdue.a407.cryptodisco.Fragments.WatchlistFragment;
 
 import javax.inject.Singleton;
 
@@ -36,4 +37,6 @@ public interface NetComponent {
     void inject(NotificationsFragment fragment);
     void inject(DiscoFirebaseInstanceIDService service);
     void inject(DiscoFirebaseMessagingService service);
+    void inject(WatchlistFragment watchlistFragment);
+    void inject(CoinFragment coinFragment);
 }

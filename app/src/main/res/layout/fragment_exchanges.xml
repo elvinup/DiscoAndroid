@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,18 +7,35 @@
     android:background="@android:color/white"
     tools:context=".Fragments.ExchangesFragment">
 
-    <android.support.v7.widget.AppCompatAutoCompleteTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/searchText"
-        android:textSize="20dp"
-        android:hint="Search Exchanges"/>
+    <include
+        layout="@layout/content_layout_title"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
-    <include layout="@layout/content_layout_title" />
+    <Button
+        android:id="@+id/exchange_sort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="20dp"
+        android:text="Sort" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/myExchangeRecycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/myExchangeRecycler" />
+        android:layout_height="410dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/searchText"/>
 
-</LinearLayout>
+    <android.support.v7.widget.AppCompatAutoCompleteTextView
+        android:id="@+id/searchText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/exchange_sort"
+        android:hint="Search Exchanges"
+        android:textSize="20dp" />
+
+</RelativeLayout>

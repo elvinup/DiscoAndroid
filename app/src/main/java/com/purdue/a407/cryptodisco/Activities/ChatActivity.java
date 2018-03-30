@@ -57,8 +57,6 @@ public class ChatActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         progressDialog = LoadingDialog.create();
 
-
-
         viewModel.getChatroomsList().observe(this, listResponse -> {
             if(listResponse.isLoading()) {
                 progressDialog.show(getSupportFragmentManager());

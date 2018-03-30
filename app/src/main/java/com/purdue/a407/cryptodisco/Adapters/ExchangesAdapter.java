@@ -1,6 +1,8 @@
 package com.purdue.a407.cryptodisco.Adapters;
 
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
+import com.purdue.a407.cryptodisco.Fragments.ExchangeFragment;
+import com.purdue.a407.cryptodisco.Fragments.MyExchangeFragment;
 import com.purdue.a407.cryptodisco.Interfaces.RecyclerViewFilterInterface;
 import com.purdue.a407.cryptodisco.R;
 
@@ -44,6 +48,13 @@ public class ExchangesAdapter extends RecyclerView.Adapter<ExchangesAdapter.Exch
     public void onBindViewHolder(ExchangeHolder holder, int position) {
         ExchangeEntity exchange = exchanges.get(position);
         holder.exchangeName.setText(exchange.getName());
+        holder.cardView.setOnClickListener(view -> {
+            ExchangeFragment fragment = ExchangeFragment.newInstance(exchange.getName());
+            AppCompatActivity activity = (AppCompatActivity)context;
+            activity.getSupportFragmentManager().beginTransaction().
+                    replace(R.id.replaceView,fragment).addToBackStack("" +
+                    "exchange").commit();
+        });
     }
 
     @Override
@@ -57,10 +68,18 @@ public class ExchangesAdapter extends RecyclerView.Adapter<ExchangesAdapter.Exch
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        exchanges.clear();
+        notifyDataSetChanged();
+    }
+
     public class ExchangeHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.exchangeNameText)
         TextView exchangeName;
+
+        @BindView(R.id.cv)
+        CardView cardView;
 
         public ExchangeHolder(View itemView) {
             super(itemView);

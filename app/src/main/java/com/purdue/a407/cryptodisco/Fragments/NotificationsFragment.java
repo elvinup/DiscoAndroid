@@ -18,6 +18,7 @@ import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.ViewModels.NotificationsViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.inject.Inject;
 
@@ -48,10 +49,12 @@ public class NotificationsFragment extends Fragment {
         viewModel = new NotificationsViewModel(getActivity().getApplication(),
                 appDatabase);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        notificationsAdapter = new NotificationsAdapter(getActivity(), new ArrayList<>());
+        notificationsAdapter = new NotificationsAdapter(getActivity(), new ArrayList<>(), appDatabase);
         recyclerView.setAdapter(notificationsAdapter);
-        viewModel.getNotifications().observe(getActivity(), notificationsEntities ->
-                notificationsAdapter.addAll(notificationsEntities));
+        viewModel.getNotifications().observe(getActivity(), notificationsEntities -> {
+            Collections.reverse(notificationsEntities);
+            notificationsAdapter.addAll(notificationsEntities);
+        });
         return view;
     }
 }

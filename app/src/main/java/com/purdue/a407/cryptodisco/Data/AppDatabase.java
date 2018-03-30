@@ -23,7 +23,7 @@ import com.purdue.a407.cryptodisco.Data.Entities.WatchListEntity;
 
 @Database(entities = {ExchangeEntity.class, UserExchangeEntity.class,
         CoinPairingEntity.class, ChatRoomEntity.class, ChatMessageEntity.class,
-        CoinEntity.class, WatchListEntity.class, NotificationsEntity.class}, version = 7, exportSchema = false)
+        CoinEntity.class, WatchListEntity.class, NotificationsEntity.class}, version = 9, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract ExchangeDao exchangeDao();
 

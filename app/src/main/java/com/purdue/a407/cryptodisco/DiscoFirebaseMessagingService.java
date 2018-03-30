@@ -18,6 +18,8 @@ import com.purdue.a407.cryptodisco.Activities.HomeActivity;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.Data.Entities.NotificationsEntity;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 
 public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
@@ -96,7 +98,8 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
                 PendingIntent.FLAG_ONE_SHOT);
         ((App)getApplication()).getNetComponent().inject(this);
         appDatabase.notificationsDao().
-                insert(new NotificationsEntity(messageBody, ""));
+                insert(new NotificationsEntity(messageBody, String.valueOf(new Date().getTime()), false));
+
         String channelId = getString(R.string.default_notification_channel_id);
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =

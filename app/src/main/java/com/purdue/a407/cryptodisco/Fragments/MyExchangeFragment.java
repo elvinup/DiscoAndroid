@@ -8,9 +8,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -19,6 +23,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.mikephil.charting.charts.CandleStickChart;
@@ -86,6 +91,8 @@ public class MyExchangeFragment extends TabbedFragment {
     TextView title;
 
     private String exchange = "N/A";
+
+    public static final int RES_DETAILS = 10000;
 
     @BindView(R.id.searchText)
     AppCompatAutoCompleteTextView searchText;
@@ -254,21 +261,26 @@ public class MyExchangeFragment extends TabbedFragment {
 
     }
 
-//    @OnClick(R.id.sellOrder)
-//    public void onSell() {
-//        OrderDialog dialog = new OrderDialog();
-//        String[] coins = currentPairing.split("->");
-//        String coin = coins[0].trim();
-//        String mark = coins[1].trim();
-//        ExchType type;
-//        if(exchange.equals("binance"))
-//            type = ExchType.BINANCE;
-//        else if(exchange.equals("gateio"))
-//            type = ExchType.GATEIO;
-//        else
-//            type = ExchType.BINANCE;
-//        dialog.setCurrencyPair(coin + "/" + mark, type);
-//        getActivity().getSupportFragmentManager().beginTransaction().
-//                replace(R.id.replaceView, dialog).addToBackStack("order_dialog").commit();
-//    }
+
+    @OnClick(R.id.createOrder)
+    public void onOrder() {
+        OrderDialog dialog = new OrderDialog();
+        String[] coins = currentPairing.split("->");
+        if(coins.length != 2) {
+            Toast.makeText(getActivity(), "Please choose a coin pairing", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String coin = coins[0].trim();
+        String mark = coins[1].trim();
+        ExchType type;
+        if(exchange.equals("binance"))
+            type = ExchType.BINANCE;
+        else if(exchange.equals("gateio"))
+            type = ExchType.GATEIO;
+        else
+            type = ExchType.BINANCE;
+        dialog.setCurrencyPair(coin + "/" + mark, type);
+        getActivity().getSupportFragmentManager().beginTransaction().
+                replace(R.id.replaceView, dialog).addToBackStack("order_dialog").commit();
+    }
 }

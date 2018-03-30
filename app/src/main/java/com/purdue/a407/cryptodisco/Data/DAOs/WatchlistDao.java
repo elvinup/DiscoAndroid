@@ -27,5 +27,12 @@ public interface WatchlistDao {
 
     @Insert(onConflict = REPLACE)
     void saveAll(List<WatchListEntity> watchListEntities);
-    
+
+    @Query("DELETE FROM WatchListEntity")
+    void clear();
+
+    @Query("DELETE FROM WatchListEntity WHERE user = :user AND coin = :coin")
+    void removeLike(String user, int coin);
+
+
 }

@@ -12,6 +12,8 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -56,6 +58,10 @@ public interface CDApi {
     @GET("/userlikedcoin")
     Call<List<WatchListEntity>> getWatchListEntities();
 
-    //@DELETE
+    @POST("/removewatchlist")
+    Call<Void> removeWatchList(@Body WatchListEntity watchListEntity);
+
+    @POST("/numberoflikedcoins")
+    Call<List<SqlCount>> numberOfLikedCoins(@Body WatchListEntity watchListEntity);
 
 }

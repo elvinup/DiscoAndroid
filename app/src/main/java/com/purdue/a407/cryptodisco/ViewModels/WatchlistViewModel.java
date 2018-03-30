@@ -9,6 +9,7 @@ import com.purdue.a407.cryptodisco.CacheData.CDResource;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.WatchListEntity;
 import com.purdue.a407.cryptodisco.Repos.ExchangeRepository;
+import com.purdue.a407.cryptodisco.Repos.WatchlistRepository;
 
 import java.util.List;
 
@@ -20,20 +21,20 @@ import javax.inject.Inject;
 
 public class WatchlistViewModel extends ViewModel {
     @NonNull
-    private final ExchangeRepository repository;
+    private final WatchlistRepository repository;
 
 
-    private final LiveData<CDResource<List<ExchangeEntity>>> exchanges;
+    private final LiveData<CDResource<List<WatchListEntity>>> watchList;
 
     @Inject
-    public WatchlistViewModel(@NonNull WatchListRepository repository) {
+    public WatchlistViewModel(@NonNull WatchlistRepository repository) {
         this.repository = repository;
-        exchanges = repository.exchanges();
+        watchList = repository.watchLists();
     }
 
     @MainThread
     @NonNull
-    public LiveData<CDResource<List<ExchangeEntity>>> getExchangesList() {
-        return exchanges;
+    public LiveData<CDResource<List<WatchListEntity>>> getWatchList() {
+        return watchList;
     }
 }

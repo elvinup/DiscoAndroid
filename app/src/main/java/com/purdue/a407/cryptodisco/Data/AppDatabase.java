@@ -7,6 +7,7 @@ import com.purdue.a407.cryptodisco.Data.DAOs.CoinDao;
 import com.purdue.a407.cryptodisco.Data.DAOs.CoinPairingDao;
 import com.purdue.a407.cryptodisco.Data.DAOs.ExchangeDao;
 import com.purdue.a407.cryptodisco.Data.DAOs.UserExchangeDao;
+import com.purdue.a407.cryptodisco.Data.DAOs.WatchlistDao;
 import com.purdue.a407.cryptodisco.Data.Entities.CoinEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.CoinPairingEntity;
 import com.purdue.a407.cryptodisco.Data.DAOs.ChatmsgDao;
@@ -32,4 +33,6 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ChatmsgDao chatmsgDao();
 
     public abstract CoinDao coinDao();
+
+    public abstract WatchlistDao watchlistDao();
 }

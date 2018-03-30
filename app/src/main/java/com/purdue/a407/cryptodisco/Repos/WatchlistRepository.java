@@ -31,11 +31,12 @@ public class WatchlistRepository {
     }
 
     @NonNull
-    public LiveData<CDResource<List<WatchListEntity>>> coins() {
+    public LiveData<CDResource<List<WatchListEntity>>> watchLists() {
         return new NetworkBoundResource<List<WatchListEntity>, List<WatchListEntity>>() {
 
             @Override
             protected void saveCallResult(@NonNull List<WatchListEntity> items) {
+                wlDao.clear();
                 wlDao.saveAll(items);
             }
 

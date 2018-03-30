@@ -22,12 +22,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.kyleohanian.databinding.modelbindingforms.Listeners.OnBindDialogCancelListener;
 import com.kyleohanian.databinding.modelbindingforms.Listeners.OnBindDialogCreateListener;
 import com.kyleohanian.databinding.modelbindingforms.UIObjects.ModelForm;
 import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
 import com.purdue.a407.cryptodisco.Adapters.ExchangesAdapter;
 import com.purdue.a407.cryptodisco.Api.CDApi;
+import com.purdue.a407.cryptodisco.Api.SqlCount;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.CacheData.CDResource;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
@@ -40,6 +42,7 @@ import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.Repos.CoinPairingRepository;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangeViewModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +51,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -100,45 +104,89 @@ public class CoinFragment extends Fragment {
         ((App) getActivity().getApplication()).getNetComponent().inject(this);
         context = getActivity();
 
+        int coinNum = appDatabase.coinDao().getID(titleString);
+        int numliked = appDatabase.watchlistDao().getTimeUserLikedCoin(deviceID.getDeviceID(), coinNum);
+        Log.d("COINNUM", Integer.toString(coinNum));
+        Log.d("NUMLIKED", Integer.toString(numliked));
+        if (numliked > 0) {
+            coinLike.setText("Unlike");
+        } else if (numliked == 0){
+            coinLike.setText("Like");
+        }
 
         coinLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                WatchListEntity watchListEntity = new WatchListEntity(deviceID.getDeviceID(), coinNum);
+
+
                 int coinNum = appDatabase.coinDao().getID(titleString);
-                int numliked = appDatabase.coinDao().getTimeUserLikedCoin(deviceID.getDeviceID(), coinNum);
-
-                Log.d("NUM LIKED ", Integer.toString(numliked));
-
-                String likeStatus = coinLike.getText().toString().toLowerCase();
-
-
-                if (likeStatus.equals("like")) {
-
-
-                    WatchListEntity watchListEntity = new WatchListEntity(deviceID.getDeviceID(), coinNum);
-
-                    cdApi.insertLikedCoin(watchListEntity).enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            if (response.code() != 200) {
-                                Log.d("Coin Result", String.valueOf(response.code()));
-                            } else {
-                                Log.d("Coin Result", "Success");
-
-                            }
+                //numliked = appDatabase.watchlistDao().getTimeUserLikedCoin(deviceID.getDeviceID(), coinNum);
+                //int numliked = 0;
+                cdApi.numberOfLikedCoins(watchListEntity).enqueue(new Callback<List<SqlCount>>() {
+                    @Override
+                    public void onResponse(Call<List<SqlCount>> call, Response<List<SqlCount>> response) {
+                        if (response.code() != 200) {
+                            Log.d("Not 200", String.valueOf(response.code()));
+                            return;
                         }
 
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Log.d("Coin Result", "Failure");
+                        int numliked =  response.body().get(0).count;
+                        if (numliked == 0) {
 
+                            cdApi.insertLikedCoin(watchListEntity).enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    if (response.code() != 200) {
+                                        Log.d("error ", String.valueOf(response.code()));
+                                    } else {
+                                        Log.d("error ", "Sucesss");
+
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    Log.d("error ", "Fail");
+
+                                }
+                            });
+                            //appDatabase.watchlistDao().insertLike(deviceID.getDeviceID(), coinNum);
+
+                            coinLike.setText("Unlike");
+                        } else if (numliked > 0) {
+                            coinLike.setText("Like");
+                            appDatabase.watchlistDao().removeLike(deviceID.getDeviceID(), coinNum);
+
+                            cdApi.removeWatchList(watchListEntity).enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    if (response.code() != 200) {
+                                        Log.d("error ", String.valueOf(response.code()));
+                                    } else {
+                                        Log.d("error ", "Sucesss");
+
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    Log.d("error ", t.getLocalizedMessage());
+
+                                }
+                            });
                         }
-                    });
+                    }
 
-                    coinLike.setText("Unlike");
-                } else {
-                    coinLike.setText("Like");
-                }
+                    @Override
+                    public void onFailure(Call<List<SqlCount>> call, Throwable t) {
+                        Log.d("error", t.getLocalizedMessage());
+                    }
+                });
+                Log.d("COINNUM", Integer.toString(coinNum));
+                Log.d("NUMLIKED", Integer.toString(numliked));
+
 
             }
         });

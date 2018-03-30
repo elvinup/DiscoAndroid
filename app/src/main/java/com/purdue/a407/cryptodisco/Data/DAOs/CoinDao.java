@@ -37,7 +37,6 @@ public interface CoinDao {
     @Query("SELECT id FROM CoinEntity WHERE short_name = :shortName")
     int getID(String shortName);
 
-    @Query("SELECT COUNT (*) FROM WatchListEntity WHERE user = :user AND coin = :coin")
-    int getTimeUserLikedCoin(String user, int coin);
+
 
 }

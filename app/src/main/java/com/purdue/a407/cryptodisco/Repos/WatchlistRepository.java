@@ -7,6 +7,7 @@ import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.CacheData.CDResource;
 import com.purdue.a407.cryptodisco.CacheData.NetworkBoundResource;
 import com.purdue.a407.cryptodisco.Data.DAOs.CoinDao;
+import com.purdue.a407.cryptodisco.Data.DAOs.WatchlistDao;
 import com.purdue.a407.cryptodisco.Data.Entities.CoinEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.WatchListEntity;
 
@@ -21,12 +22,12 @@ import retrofit2.Call;
 public class WatchlistRepository {
 
     CDApi cdApi;
-    CoinDao coinDao;
+    WatchlistDao wlDao;
 
 
-    public WatchlistRepository(CDApi cdApi, CoinDao coinDao) {
+    public WatchlistRepository(CDApi cdApi, WatchlistDao wlDao) {
         this.cdApi = cdApi;
-        this.coinDao = coinDao;
+        this.wlDao = wlDao;
     }
 
     @NonNull
@@ -35,19 +36,19 @@ public class WatchlistRepository {
 
             @Override
             protected void saveCallResult(@NonNull List<WatchListEntity> items) {
-                coinDao.saveAll(items);
+                wlDao.saveAll(items);
             }
 
             @NonNull
             @Override
             protected LiveData<List<WatchListEntity>> loadFromDb() {
-                return coinDao.getCoins();
+                return wlDao.getWatchLists();
             }
 
             @NonNull
             @Override
             protected Call<List<WatchListEntity>> createCall() {
-                return cdApi.getCoins();
+                return cdApi.getWatchListEntities();
             }
         }.getAsLiveData();
     }

@@ -54,7 +54,7 @@ public interface CDApi {
     Call<Void> insertLikedCoin(@Body WatchListEntity watchlist);
 
     @GET("/userlikedcoin")
-    Call<Integer> getUserLikedCoin(@Query("user") String user);
+    Call<List<WatchListEntity>> getWatchListEntities();
 
     //@DELETE
 

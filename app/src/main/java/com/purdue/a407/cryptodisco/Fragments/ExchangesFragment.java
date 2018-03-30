@@ -38,6 +38,7 @@ import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.UserExchangeEntity;
 import com.purdue.a407.cryptodisco.R;
+import com.purdue.a407.cryptodisco.Testing.exchangeVolume;
 import com.purdue.a407.cryptodisco.Testing.exchangeVolumeTesting;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangesViewModel;
 
@@ -80,6 +81,7 @@ public class ExchangesFragment extends Fragment {
     ArrayAdapter<Object> arrayAdapter;
     Context context;
 
+    List<ExchangeEntity> test;
 
     public ExchangesFragment() {
 
@@ -160,10 +162,10 @@ public class ExchangesFragment extends Fragment {
 
                             eAdapter.clear();
                             Log.d("Size of ents " ,Integer.toString(ents.size()));
-
-                            exchangeVolumeTesting v = new exchangeVolumeTesting();
-                            List<exchangeVolumeTesting> a = v.getExchangesByVolume(ents);
-                            System.out.println(a);
+                            eAdapter.addAll(test);
+                            //exchangeVolumeTesting v = new exchangeVolumeTesting();
+                            //List<exchangeVolumeTesting> a = v.getExchangesByVolume(ents);
+                            //System.out.println(a);
 
                         }
                         return true;
@@ -176,6 +178,12 @@ public class ExchangesFragment extends Fragment {
         new AsyncTask<Void, Void, List<ExchangeEntity>>() {
             @Override
             protected List<ExchangeEntity> doInBackground(Void... params) {
+                exchangeVolumeTesting v = new exchangeVolumeTesting();
+                test = v.getExchangesbyVolume(appDatabase.exchangeDao()
+                        .exchangesNotLive());
+
+                //System.out.println(test);
+
                 return appDatabase.exchangeDao()
                         .exchangesNotLive();
             }
@@ -188,6 +196,7 @@ public class ExchangesFragment extends Fragment {
                 arrayAdapter = new ArrayAdapter<>(context,
                         android.R.layout.simple_dropdown_item_1line,strings.toArray());
                 searchText.setAdapter(arrayAdapter);
+
             }
         }.execute();
 

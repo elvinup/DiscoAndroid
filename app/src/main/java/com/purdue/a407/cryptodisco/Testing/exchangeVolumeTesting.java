@@ -1,6 +1,7 @@
 package com.purdue.a407.cryptodisco.Testing;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,25 +24,19 @@ import javax.inject.Inject;
 
 public class exchangeVolumeTesting{
 
-    String exchange;
-    double volume;
 
-    static ArrayList<exchangeVolumeTesting> exchanges = new ArrayList<exchangeVolumeTesting>();
+    static ArrayList<exchangeVolume> exchanges = new ArrayList<exchangeVolume>();
 
-    @Override
-    public String toString() {
-        return "Exchange: " + this.exchange + '\n'
-                + "Volume: " + this.volume + '\n';
-    }
 
-    public ArrayList<exchangeVolumeTesting> getExchangesByVolume(List<ExchangeEntity> exchangeList) {
+
+    public List<ExchangeEntity> getExchangesbyVolume(List<ExchangeEntity> exchangeList) {
         boolean skip = false;
 
+        exchangeVolume entry = new exchangeVolume();
 
         try {
             URL url = new URL("https://coinmarketcap.com/exchanges/volume/24-hour/");
             Document doc = Jsoup.parse(url, 3000);
-            System.out.println(doc.title());
 
             //Grab the table
             Element table = doc.select("table[class=table table-condensed]").get(0);
@@ -48,26 +44,32 @@ public class exchangeVolumeTesting{
             Elements rows = table.select("tr");
 
             //Create exchange Volume object
-            exchangeVolumeTesting entry = new exchangeVolumeTesting();
-
+            outerloop:
             for (Element row : rows) {
+                //System.out.println("Skip value " + Boolean.toString(skip));
                 //If there's no id, check to see if it is the total US$ row
                 if (row.attr("id").length() != 0)
                 {
                     String name = row.attr("id");
 
+                    //Use this for finding names of exchanges
+                    //Log.d("OUR EXCHANGE ", name);
                     for(ExchangeEntity e : exchangeList) {
-                        if (e.getName().equals(name)) {
+                        //System.out.println("Exchange NAME: " + e.getName());
+                        //System.out.println("NAME: " + name);
+
+                        if (e.getName().equals(name.toLowerCase())) {
 
                             entry.exchange = row.attr("id");
                             skip = false;
-                            continue;
+                            continue outerloop;
                         }
                     }
 
                     skip = true;
 
                 }
+
                 //Checks if is on row with "Total"
                 else if (row.child(0).text().equals("Total") && !skip)
                 {
@@ -79,9 +81,10 @@ public class exchangeVolumeTesting{
                         continue;
 
                     entry.volume = Double.valueOf(row.child(1).attr("data-usd"));
-                    exchanges.add(entry);
+                    if (!exchanges.contains(entry))
+                        exchanges.add(entry);
                     //Reset entry
-                    entry = new exchangeVolumeTesting();
+                    entry = new exchangeVolume();
                 }
             }
 
@@ -89,12 +92,29 @@ public class exchangeVolumeTesting{
             e.printStackTrace();
         }
 
-        System.out.println(exchanges.size());
+        //System.out.println(exchanges.size());
         //Prints an exchange
-        for (exchangeVolumeTesting entr: exchanges) {
-            System.out.println(entr);
+        for (exchangeVolume entr: exchanges) {
+            System.out.println(entr.exchange);
+
         }
-        return exchanges;
+
+        ArrayList<ExchangeEntity> retExchangeList = new ArrayList<>();
+        for (exchangeVolume entr: exchanges) {
+            for (ExchangeEntity i: exchangeList) {
+                if ((entr.exchange).equals(i.getName()))
+                {
+                    if (!retExchangeList.contains(i))
+                        retExchangeList.add(i);
+                }
+            }
+        }
+
+        for (ExchangeEntity entr: retExchangeList) {
+            System.out.println(entr.getName());
+        }
+
+        return retExchangeList;
 
     }
 

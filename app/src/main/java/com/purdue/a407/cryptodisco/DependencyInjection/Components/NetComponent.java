@@ -7,6 +7,7 @@ import com.purdue.a407.cryptodisco.DependencyInjection.Modules.DBModule;
 import com.purdue.a407.cryptodisco.DependencyInjection.Modules.NetModule;
 import com.purdue.a407.cryptodisco.Activities.HomeActivity;
 import com.purdue.a407.cryptodisco.Activities.StartActivity;
+import com.purdue.a407.cryptodisco.Fragments.CoinFragment;
 import com.purdue.a407.cryptodisco.Fragments.DummyFragment;
 import com.purdue.a407.cryptodisco.Fragments.ExchangeFragment;
 import com.purdue.a407.cryptodisco.Fragments.ExchangesFragment;
@@ -31,4 +32,5 @@ public interface NetComponent {
     void inject(MessageActivity activity);
     void inject(SettingsFragment fragment);
     void inject(WatchlistFragment watchlistFragment);
+    void inject(CoinFragment coinFragment);
 }

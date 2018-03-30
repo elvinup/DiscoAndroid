@@ -1,5 +1,6 @@
 package com.purdue.a407.cryptodisco.Api;
 
+import com.purdue.a407.cryptodisco.Data.Entities.CoinEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.CoinPairingEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
@@ -28,6 +29,7 @@ public interface CDApi {
     @GET("/exchange/{exchange}/allPairs")
     Call<List<CoinPairingEntity>> getCoinPairingsFromExchange(
             @Path("exchange") String exchange);
+
     @GET("/chatrooms")
     Call<List<ChatRoomEntity>> getChatRooms();
 
@@ -42,4 +44,9 @@ public interface CDApi {
 
     @GET("/removebackup")
     Call<Void> removeBackup(@Query("uuid") String uuid);
+
+    @GET("/coins")
+    Call<List<CoinEntity>> getCoins();
+
+
 }

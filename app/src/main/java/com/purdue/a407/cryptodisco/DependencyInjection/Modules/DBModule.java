@@ -5,6 +5,7 @@ import android.arch.persistence.room.Room;
 
 import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
+import com.purdue.a407.cryptodisco.Data.DAOs.CoinDao;
 import com.purdue.a407.cryptodisco.Data.DAOs.CoinPairingDao;
 import com.purdue.a407.cryptodisco.Data.DAOs.ExchangeDao;
 import com.purdue.a407.cryptodisco.Repos.CoinPairingRepository;
@@ -14,6 +15,7 @@ import com.purdue.a407.cryptodisco.Data.DAOs.ExchangeDao;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
 import com.purdue.a407.cryptodisco.Repos.ChatMsgRepository;
 import com.purdue.a407.cryptodisco.Repos.ChatRoomRepository;
+import com.purdue.a407.cryptodisco.Repos.CoinRepository;
 import com.purdue.a407.cryptodisco.Repos.ExchangeRepository;
 
 import javax.inject.Singleton;
@@ -56,6 +58,13 @@ public class DBModule {
     public CoinPairingRepository provideCoinPairingRepository(CDApi cdApi, AppDatabase database) {
         CoinPairingDao dao = database.coinPairingDao();
         return new CoinPairingRepository(cdApi, dao);
+    }
+
+    @Provides
+    @Singleton
+    public CoinRepository provideCoinRepository(CDApi cdApi, AppDatabase database) {
+        CoinDao dao = database.coinDao();
+        return new CoinRepository(cdApi, dao);
     }
 
     @Provides

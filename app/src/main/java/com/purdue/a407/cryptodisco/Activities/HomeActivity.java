@@ -22,6 +22,7 @@ import com.purdue.a407.cryptodisco.Fragments.MyExchangeFragment;
 import com.purdue.a407.cryptodisco.Fragments.SettingsFragment;
 import com.purdue.a407.cryptodisco.Fragments.WatchlistFragment;
 import com.purdue.a407.cryptodisco.R;
+import com.purdue.a407.cryptodisco.ViewModels.CoinViewModel;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangesViewModel;
 import javax.inject.Inject;
 import butterknife.BindView;
@@ -37,6 +38,9 @@ public class HomeActivity extends AppCompatActivity
 
     @Inject
     ExchangesViewModel viewModel;
+
+    @Inject
+    CoinViewModel coinsvm;
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -67,7 +71,10 @@ public class HomeActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         viewModel.getExchangesList().observe(this, listCDResource -> {
-
+            //viewModel.getExchangesList().removeObservers(this);
+        });
+        coinsvm.getCoins().observe(this, listCDResource -> {
+            //coinsvm.getCoins().removeObservers(this);
         });
 
 

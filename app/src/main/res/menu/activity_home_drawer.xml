@@ -40,22 +40,15 @@
         </menu>
     </item>
 
-    <!--<item android:title="History">-->
-        <!--<menu>-->
-            <!--<item-->
-                <!--android:id="@+id/nav_trades"-->
-                <!--android:icon="@drawable/ic_menu_share"-->
-                <!--android:title="Trades" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_pending"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="Pending Orders" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_arbitrage"-->
-                <!--android:title="Arbitrage Alerts" />-->
+    <item android:title="History">
+        <menu>
+            <item
+                android:id="@+id/nav_notifications"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Notifications" />
 
-        <!--</menu>-->
-    <!--</item>-->
+        </menu>
+    </item>
 
 
 

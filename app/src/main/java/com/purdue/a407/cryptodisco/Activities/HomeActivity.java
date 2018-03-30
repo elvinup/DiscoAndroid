@@ -17,6 +17,7 @@ import android.widget.ImageView;
 
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Fragments.ExchangesFragment;
+import com.purdue.a407.cryptodisco.Fragments.NotificationsFragment;
 import com.purdue.a407.cryptodisco.Fragments.SettingsFragment;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangesViewModel;
@@ -113,6 +114,10 @@ public class HomeActivity extends AppCompatActivity
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
 
+        } else if(id == R.id.nav_notifications) {
+            NotificationsFragment fragment = new NotificationsFragment();
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.replaceView,fragment).addToBackStack("notifications").commit();
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;

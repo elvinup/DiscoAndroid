@@ -1,12 +1,16 @@
 package com.purdue.a407.cryptodisco.DependencyInjection.Modules;
 
+import android.app.Application;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
+import com.purdue.a407.cryptodisco.Adapters.NotificationsAdapter;
+import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.ViewModels.ChatMsgViewModel;
 import com.purdue.a407.cryptodisco.ViewModels.ChatRoomsViewModel;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangesViewModel;
 import com.purdue.a407.cryptodisco.ViewModels.Factories.BaseViewModelFactory;
+import com.purdue.a407.cryptodisco.ViewModels.NotificationsViewModel;
 import com.purdue.a407.cryptodisco.ViewModels.UserExchangesViewModel;
 
 import dagger.Binds;
@@ -34,7 +38,6 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ChatMsgViewModel.class)
     public abstract ViewModel bindChatMsgViewModel(ChatMsgViewModel chatMsgViewModel);
-
 
     @Binds
     public abstract ViewModelProvider.Factory bindViewModelFactory(BaseViewModelFactory factory);

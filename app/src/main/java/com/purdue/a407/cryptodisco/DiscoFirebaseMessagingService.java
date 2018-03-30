@@ -15,17 +15,24 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.purdue.a407.cryptodisco.Activities.HomeActivity;
+import com.purdue.a407.cryptodisco.Data.AppDatabase;
+import com.purdue.a407.cryptodisco.Data.Entities.NotificationsEntity;
+
+import javax.inject.Inject;
 
 public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "DiscoFirebaseMsgService";
-
     /**
      * Called when message is received.
      *
      * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
      */
     // [START receive_message]
+
+    @Inject
+    AppDatabase appDatabase;
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
@@ -87,7 +94,9 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
-
+        ((App)getApplication()).getNetComponent().inject(this);
+        appDatabase.notificationsDao().
+                insert(new NotificationsEntity(messageBody, ""));
         String channelId = getString(R.string.default_notification_channel_id);
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
@@ -109,6 +118,8 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
                     NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
         }
+
+
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }

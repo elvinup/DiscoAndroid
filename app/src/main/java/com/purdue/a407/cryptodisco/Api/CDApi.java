@@ -24,8 +24,9 @@ import retrofit2.http.Query;
 
 public interface CDApi {
 
-    @GET("/user/")
-    Call<Void> userExists(@Query("uuid") String uid);
+    @GET("/user")
+    Call<Void> userExists(@Query("uuid") String uid,
+                          @Query("fcm_token") String fcm_token);
 
     @GET("/exchanges")
     Call<List<ExchangeEntity>> getExchanges();

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1062684648427",
+    "firebase_url": "https://discoandroid-198722.firebaseio.com",
+    "project_id": "discoandroid-198722",
+    "storage_bucket": "discoandroid-198722.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1062684648427:android:0d026334eb10c37f",
+        "android_client_info": {
+          "package_name": "com.purdue.a407.cryptodisco"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1062684648427-vj4arkb8nb40oj4310olr1t9d34e7qmk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMAcxk0hWwad2DPURfe0I3PWfrw7tJhd0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

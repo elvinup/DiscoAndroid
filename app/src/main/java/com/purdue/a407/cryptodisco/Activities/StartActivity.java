@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
@@ -45,9 +47,9 @@ public class StartActivity extends AppCompatActivity {
 
         Log.d("UUID", deviceID.getDeviceID());
 
-        appDatabase.coinPairingDao().deleteAll();
-        appDatabase.userExchangeDao().clear();
-        appDatabase.exchangeDao().clear();
+//        appDatabase.coinPairingDao().deleteAll();
+//        appDatabase.userExchangeDao().clear();
+//        appDatabase.exchangeDao().clear();
 
 //        new Handler().postDelayed(() -> {
 //            if(!sharedPreferences.getBoolean(
@@ -64,6 +66,36 @@ public class StartActivity extends AppCompatActivity {
 //            }
 //        }, 1000);
 
+        String UID = deviceID.getDeviceID();
+        String FCMToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d("UUID", UID);
+        Log.d("FCMToken", FCMToken);
+        cdApi.userExists(UID, FCMToken).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.code() != 200) {
+                    // Error
+                    Log.d("Result", String.valueOf(response.code()));
+                    Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
+                    startActivity(myIntent);
+                }
+                else {
+                    // Success
+                    Log.d("Result", "Success");
+                    Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
+                    startActivity(myIntent);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // Failure
+                Log.d("Result", "Failure");
+                Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
+                startActivity(myIntent);
+            }
+        });
+
         if(!sharedPreferences.getBoolean(
                 "firstTime", false)) {
             sharedPreferences.edit().putBoolean("firstTime", true).apply();
@@ -76,32 +108,5 @@ public class StartActivity extends AppCompatActivity {
                     android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
             StartActivity.this.startActivity(myIntent, bundle);
         }
-//        String UID = deviceID.getDeviceID();
-//        Log.d("UUID", UID);
-//        cdApi.userExists(UID).enqueue(new Callback<Void>() {
-//            @Override
-//            public void onResponse(Call<Void> call, Response<Void> response) {
-//                if(response.code() != 200) {
-//                    // Error
-//                    Log.d("Result", String.valueOf(response.code()));
-//                    Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
-//                    startActivity(myIntent);
-//                }
-//                else {
-//                    // Success
-//                    Log.d("Result", "Success");
-//                    Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
-//                    startActivity(myIntent);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Void> call, Throwable t) {
-//                // Failure
-//                Log.d("Result", "Failure");
-//                Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
-//                startActivity(myIntent);
-//            }
-//        });
     }
 }

@@ -8,6 +8,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.purdue.a407.cryptodisco.Activities.HomeActivity;
 import com.purdue.a407.cryptodisco.Activities.StartActivity;
 import com.purdue.a407.cryptodisco.Api.CDApi;
+import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 
 import javax.inject.Inject;
@@ -38,7 +39,7 @@ public class DiscoFirebaseInstanceIDService extends FirebaseInstanceIdService {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
-
+        ((App)getApplication()).getNetComponent().inject(this);
         String UID = deviceID.getDeviceID();
         String FCMToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("UUID", UID);

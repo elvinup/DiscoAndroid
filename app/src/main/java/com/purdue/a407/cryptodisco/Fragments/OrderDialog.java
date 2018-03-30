@@ -70,7 +70,7 @@ public class OrderDialog extends Fragment {
 //                    exchange = ApiHelpers.gateio("","");
 //                else
 //                    exchange = ApiHelpers.binance("","");
-                exchange = ApiHelpers.binance("","");
+                exchange = ApiHelpers.binance(getContext(),"","");
                 String s = getResult();
                 return s;
             }

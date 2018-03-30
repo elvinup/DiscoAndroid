@@ -27,9 +27,23 @@
         android:id="@+id/sellOrder"
         android:text="Sell Order"/>
 
-    <com.jjoe64.graphview.GraphView
-        android:id="@+id/askBidChart"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="300dp" />
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/askBidChart"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
+            <com.github.mikephil.charting.charts.CandleStickChart
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:id="@+id/candlestick">
 
+            </com.github.mikephil.charting.charts.CandleStickChart>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

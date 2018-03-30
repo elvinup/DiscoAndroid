@@ -2,11 +2,12 @@ package com.purdue.a407.cryptodisco.Fragments;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,46 +17,47 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.charts.CandleStickChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.CandleData;
+import com.github.mikephil.charting.data.CandleDataSet;
+import com.github.mikephil.charting.data.CandleEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-import com.kyleohanian.databinding.modelbindingforms.UIObjects.ModelForm;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.Data.Entities.CoinPairingEntity;
-import com.purdue.a407.cryptodisco.Data.Entities.UserExchangeEntity;
+import com.purdue.a407.cryptodisco.Helpers.DateAxisValueFormatter;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.Repos.CoinPairingRepository;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangeViewModel;
 
 import org.knowm.xchange.Exchange;
-import org.knowm.xchange.ExchangeFactory;
-import org.knowm.xchange.ExchangeSpecification;
-import org.knowm.xchange.ExchangeSpecification.*;
-import org.knowm.xchange.binance.BinanceExchange;
-import org.knowm.xchange.binance.service.BinanceTradeHistoryParams;
+import org.knowm.xchange.binance.service.BinanceMarketDataService;
 import org.knowm.xchange.binance.service.BinanceTradeService;
 import org.knowm.xchange.currency.CurrencyPair;
-import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.marketdata.OrderBook;
+import org.knowm.xchange.dto.marketdata.Trade;
+import org.knowm.xchange.dto.marketdata.Trades;
 import org.knowm.xchange.dto.trade.LimitOrder;
-import org.knowm.xchange.dto.trade.MarketOrder;
-import org.knowm.xchange.dto.trade.StopOrder;
+import org.knowm.xchange.dto.trade.OpenOrders;
 import org.knowm.xchange.dto.trade.UserTrade;
 import org.knowm.xchange.dto.trade.UserTrades;
-import org.knowm.xchange.gateio.GateioExchange;
 import org.knowm.xchange.service.marketdata.MarketDataService;
-import org.knowm.xchange.service.trade.TradeService;
+import org.knowm.xchange.service.trade.params.TradeHistoryParamsAll;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -64,7 +66,6 @@ import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.Call;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -112,9 +113,10 @@ public class MyExchangeFragment extends Fragment {
     Exchange exchangeApiHelper;
 
     GraphView graphView;
+    CandleStickChart mChart;
 
-    LineGraphSeries<DataPoint> askDataSet;
-    LineGraphSeries<DataPoint> bidDataSet;
+    LineGraphSeries<DataPoint> askDataOrderGraphGlobal;
+    LineGraphSeries<DataPoint> bidDataOrderGraphGlobal;
 
 
     public MyExchangeFragment() {
@@ -136,6 +138,27 @@ public class MyExchangeFragment extends Fragment {
                 container, false);
         ButterKnife.bind(this, view);
         graphView = view.findViewById(R.id.askBidChart);
+        mChart = view.findViewById(R.id.candlestick);
+        mChart.setMaxVisibleValueCount(60);
+
+        // scaling can now only be done on x- and y-axis separately
+        mChart.setPinchZoom(false);
+
+        mChart.setDrawGridBackground(false);
+
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+
+        YAxis leftAxis = mChart.getAxisLeft();
+//        leftAxis.setEnabled(false);
+        leftAxis.setLabelCount(7, false);
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setDrawAxisLine(false);
+
+        YAxis rightAxis = mChart.getAxisRight();
+        rightAxis.setEnabled(false);
+
         ((App) getActivity().getApplication()).getNetComponent().inject(this);
         setUpViewModel();
 //        runner();
@@ -220,35 +243,35 @@ public class MyExchangeFragment extends Fragment {
 //                    exchange = ApiHelpers.gateio("","");
 //                else
 //                    exchange = ApiHelpers.binance("","");
-                exchangeApiHelper = ApiHelpers.binance("","");
+                exchangeApiHelper = ApiHelpers.binance(getContext(),"","");
                 getStuff(strs[0]);
                 return null;
             }
             @Override
             protected void onPostExecute(Void s) {
-                graphView.addSeries(bidDataSet);
-                graphView.addSeries(askDataSet);
-                bidDataSet.setColor(lineColor1);
-                bidDataSet.setDrawDataPoints(false);
-                bidDataSet.setThickness(8);
-                bidDataSet.setAnimated(true);
-                bidDataSet.setDrawBackground(true);
-                bidDataSet.setBackgroundColor(lineColorOpaque1);
+                graphView.addSeries(bidDataOrderGraphGlobal);
+                graphView.addSeries(askDataOrderGraphGlobal);
+                bidDataOrderGraphGlobal.setColor(lineColor1);
+                bidDataOrderGraphGlobal.setDrawDataPoints(false);
+                bidDataOrderGraphGlobal.setThickness(8);
+                bidDataOrderGraphGlobal.setAnimated(true);
+                bidDataOrderGraphGlobal.setDrawBackground(true);
+                bidDataOrderGraphGlobal.setBackgroundColor(lineColorOpaque1);
 
-                askDataSet.setColor(lineColor2);
-                askDataSet.setDrawDataPoints(false);
-                askDataSet.setThickness(8);
-                askDataSet.setAnimated(true);
-                askDataSet.setDrawBackground(true);
-                askDataSet.setBackgroundColor(lineColorOpaque2);
-                double lowestX = bidDataSet.getLowestValueX() < askDataSet.getLowestValueX() ?
-                        bidDataSet.getLowestValueX(): askDataSet.getLowestValueX();
-                double highestX = bidDataSet.getHighestValueX() > askDataSet.getHighestValueX() ?
-                        bidDataSet.getHighestValueX(): askDataSet.getHighestValueX();
-                double lowestY = bidDataSet.getLowestValueY() < askDataSet.getLowestValueY() ?
-                        bidDataSet.getLowestValueY(): askDataSet.getLowestValueY();
-                double highestY = bidDataSet.getHighestValueY() > askDataSet.getHighestValueY() ?
-                        bidDataSet.getHighestValueY(): askDataSet.getHighestValueY();
+                askDataOrderGraphGlobal.setColor(lineColor2);
+                askDataOrderGraphGlobal.setDrawDataPoints(false);
+                askDataOrderGraphGlobal.setThickness(8);
+                askDataOrderGraphGlobal.setAnimated(true);
+                askDataOrderGraphGlobal.setDrawBackground(true);
+                askDataOrderGraphGlobal.setBackgroundColor(lineColorOpaque2);
+                double lowestX = bidDataOrderGraphGlobal.getLowestValueX() < askDataOrderGraphGlobal.getLowestValueX() ?
+                        bidDataOrderGraphGlobal.getLowestValueX(): askDataOrderGraphGlobal.getLowestValueX();
+                double highestX = bidDataOrderGraphGlobal.getHighestValueX() > askDataOrderGraphGlobal.getHighestValueX() ?
+                        bidDataOrderGraphGlobal.getHighestValueX(): askDataOrderGraphGlobal.getHighestValueX();
+                double lowestY = bidDataOrderGraphGlobal.getLowestValueY() < askDataOrderGraphGlobal.getLowestValueY() ?
+                        bidDataOrderGraphGlobal.getLowestValueY(): askDataOrderGraphGlobal.getLowestValueY();
+                double highestY = bidDataOrderGraphGlobal.getHighestValueY() > askDataOrderGraphGlobal.getHighestValueY() ?
+                        bidDataOrderGraphGlobal.getHighestValueY(): askDataOrderGraphGlobal.getHighestValueY();
                 graphView.getGridLabelRenderer().setNumVerticalLabels(5);
                 graphView.getGridLabelRenderer().setNumHorizontalLabels(5);
                 graphView.getViewport().setMinX(lowestX - .001);
@@ -257,17 +280,38 @@ public class MyExchangeFragment extends Fragment {
                 graphView.getViewport().setMaxY(highestY);
             }
         }.execute(localCoinPairing);
+
     }
 
     public String getStuff(String coinPairing) {
+        graphView.removeAllSeries();
+
+
+        // Get Trades and Open orders of user
         BinanceTradeService service = new BinanceTradeService(exchangeApiHelper);
+        TradeHistoryParamsAll params = new TradeHistoryParamsAll();
         try {
-            BinanceTradeHistoryParams params = new BinanceTradeHistoryParams();
             params.setCurrencyPair(new CurrencyPair(coinPairing));
+            String string_date = "01-01-2017";
+            Date d = new Date();
+            SimpleDateFormat f = new SimpleDateFormat("MM-dd-yyyy");
+            try {
+                d = f.parse(string_date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            params.setStartTime(d);
+            params.setEndTime(new Date());
+            OpenOrders orders = service.getOpenOrders(new CurrencyPair(coinPairing));
             UserTrades trades = service.getTradeHistory(params);
+
             System.out.println("Printing trades.......");
+            Log.d("Array Size", String.valueOf(trades.getTrades().size()));
             for(UserTrade trade: trades.getUserTrades()) {
                 System.out.println(trade.toString());
+            }
+            for(LimitOrder order: orders.getOpenOrders()) {
+                System.out.println(order.getId());
             }
             System.out.println("Finished printing trades");
         }
@@ -280,7 +324,6 @@ public class MyExchangeFragment extends Fragment {
 
         // Get the current orderbook
         try {
-            graphView.removeAllSeries();
             OrderBook orderBook = marketDataService.getOrderBook(new CurrencyPair(coinPairing));
             List<DataPoint> dataBids = new ArrayList<>();
             List<DataPoint> dataAsks = new ArrayList<>();
@@ -307,15 +350,101 @@ public class MyExchangeFragment extends Fragment {
             for(int i = 0; i < dataBids.size(); i++) {
                 bidArr[i] = dataBids.get(i);
             }
-            bidDataSet = new LineGraphSeries<>(bidArr);
+            bidDataOrderGraphGlobal = new LineGraphSeries<>(bidArr);
             DataPoint[] askArr = new DataPoint[dataAsks.size()];
             for(int i = 0; i < dataAsks.size(); i++) {
                 askArr[i] = dataAsks.get(i);
             }
-            askDataSet = new LineGraphSeries<>(askArr);
+            askDataOrderGraphGlobal = new LineGraphSeries<>(askArr);
         } catch (IOException e) {
             Log.d("Error in getting orderbook", "Handled Exception");
         }
+
+        // Get data for candlesticks
+        try {
+            Date date = new Date();
+            Long endDate = new Long(date.getTime());
+            date.setTime(date.getTime() - 3600000L);
+            Long startDate = new Long(date.getTime());
+            Trades marketTrades =
+                    exchangeApiHelper.getMarketDataService().
+                            getTrades(new CurrencyPair(coinPairing),null, startDate,
+                                    endDate, null);
+            Log.d("MARKET TRADES", "Starting to get market trades");
+
+
+            ArrayList<CandleEntry> candleEntries = new ArrayList<>();
+            ArrayList<String> candleLabels = new ArrayList<>();
+            float largest = Float.MIN_VALUE;
+            float smallest = Float.MAX_VALUE;
+
+            float finalLargest = Float.MIN_VALUE;
+            float finalSmallest = Float.MAX_VALUE;
+
+
+            float opening = 0.0f;
+            float closing = 0.0f;
+            int index = 0;
+            int levels = 10;
+            int stickSize = marketTrades.getTrades().size() / levels;
+            for(int i = 0; i < marketTrades.getTrades().size(); i++) {
+                Trade trade = marketTrades.getTrades().get(i);
+                float currentAmount = trade.getPrice().floatValue();
+                if(currentAmount > finalLargest) {
+                    finalLargest = currentAmount;
+                }
+                if(currentAmount < finalSmallest) {
+                    finalSmallest = currentAmount;
+                }
+                if(i % stickSize == 0) {
+                    opening = currentAmount;
+                }
+                if(currentAmount > largest) {
+                    largest = currentAmount;
+                }
+                if(currentAmount < smallest) {
+                    smallest = currentAmount;
+                }
+                if(i % stickSize == stickSize - 1 || i == marketTrades.getTrades().size() - 1) {
+                    closing = currentAmount;
+                    candleEntries.add(new CandleEntry((float) index,
+                            largest,smallest, opening,closing));
+                    index++;
+                    largest = Float.MIN_VALUE;
+                    smallest = Float.MAX_VALUE;
+                    opening = 0.0f;
+                    closing = 0.0f;
+                }
+                try {
+                    Date finDate = trade.getTimestamp();
+                    SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
+                    String dateStr = format.format(finDate);
+                    candleLabels.add(dateStr);
+                }
+                catch (Exception e) {
+                    candleLabels.add(String.valueOf(i));
+                }
+            }
+
+            CandleDataSet dataSet = new CandleDataSet(candleEntries, "candlestick");
+            dataSet.setDrawIcons(false);
+            dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+            dataSet.setShadowColor(Color.DKGRAY);
+            dataSet.setShadowWidth(0.7f);
+            dataSet.setDecreasingColor(Color.RED);
+            dataSet.setDecreasingPaintStyle(Paint.Style.FILL);
+            dataSet.setIncreasingColor(Color.rgb(122, 242, 84));
+            dataSet.setIncreasingPaintStyle(Paint.Style.FILL);
+            dataSet.setNeutralColor(Color.BLUE);
+            mChart.setData(new CandleData(dataSet));
+            mChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(candleLabels));
+            mChart.invalidate();
+            Log.d("MARKET TRADES", "Ending to get market trades");
+        }
+        catch (Exception e) {
+            Log.d("EXCEPTION", e.getLocalizedMessage());
+        }
+
         return "";
     }
 

@@ -1,14 +1,18 @@
 package com.purdue.a407.cryptodisco.Fragments;
 
+import android.content.Context;
+
+import com.purdue.a407.cryptodisco.R;
+
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.binance.BinanceExchange;
 
 public class ApiHelpers {
-    public static Exchange binance(String key, String secret) {
-        String binance_key = "udk7YkWWkP9WU3mcbocs3kREido5JL4QwiTDxEzokwer5KpSYSUiMVWgD8PGmpAD";
-        String binance_secret = "jiIcivGi7syQMlQviSHboVMl1kutOgmLJ4GhXvJBXwKdQlKe6RjMX5b7SJ3vt3dk";
+    public static Exchange binance(Context context, String key, String secret) {
+        String binance_key = context.getResources().getString(R.string.binance_test_key);
+        String binance_secret = context.getResources().getString(R.string.binance_test_secret);
         Exchange exchange = ExchangeFactory.INSTANCE.createExchange(BinanceExchange.class.getName());
         ExchangeSpecification bfxSpec = exchange.getDefaultExchangeSpecification();
         bfxSpec.setApiKey(binance_key);

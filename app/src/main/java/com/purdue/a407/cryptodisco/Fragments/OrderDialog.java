@@ -60,7 +60,7 @@ public class OrderDialog extends Fragment {
     EditText remaining;
 
     @OnClick(R.id.create)
-    public void onCreate() {
+    public void onCreateOrder() {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
@@ -96,7 +96,7 @@ public class OrderDialog extends Fragment {
     @Override
     public View onCreateView(LayoutInflater layoutInflater,
                                  ViewGroup viewGroup, Bundle savedInstanceState) {
-        View view = layoutInflater.inflate(R.layout.dialog_orders, null);
+        View view = layoutInflater.inflate(R.layout.dialog_orders, viewGroup, false);
         ButterKnife.bind(this, view);
         return view;
 

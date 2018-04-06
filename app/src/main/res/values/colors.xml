@@ -10,4 +10,7 @@
     <color name="lineColorOpaque2">#8001579B</color>
 
     <color name="unknownOpaque">#40000000</color>
+
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
 </resources>

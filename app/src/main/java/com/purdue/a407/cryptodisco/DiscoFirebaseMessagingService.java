@@ -16,9 +16,11 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.purdue.a407.cryptodisco.Activities.HomeActivity;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
+import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.NotificationsEntity;
 
 import java.util.Date;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -37,18 +39,18 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-
-            /**
-             * This is where we would receive data indicating that an
-             * order ought to be executed.
-             */
-
+            Map<String, String> mapping = remoteMessage.getData();
+            if(mapping.get("type").equals("0")) {
+                String uuid = mapping.get("uuid");
+                String chatID = mapping.get("chatroom_id");
+                String body = mapping.get("body");
+                appDatabase.chatmsgDao().insert(new ChatMessageEntity(body, uuid, "",
+                        Integer.parseInt(chatID)));
+            }
         }
 
         // Check if message contains a notification payload.
@@ -57,33 +59,6 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "\n\n\nSO THE REG TOKEN IS: " + FirebaseInstanceId.getInstance().getToken() + "\n\n\n\n" );
             sendNotification(remoteMessage.getNotification().getBody());
         }
-
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
-    }
-    // [END receive_message]
-
-    /**
-     * Schedule a job using FirebaseJobDispatcher.
-     * This may remain relevant when triggering orders from the server
-
-    private void scheduleJob() {
-        // [START dispatch_job]
-        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
-        Job myJob = dispatcher.newJobBuilder()
-                .setService(MyJobService.class)
-                .setTag("my-job-tag")
-                .build();
-        dispatcher.schedule(myJob);
-        // [END dispatch_job]
-    }
-     */
-
-    /**
-     * Handle time allotted to BroadcastReceivers.
-     */
-    private void handleNow() {
-        Log.d(TAG, "Short lived task is done.");
     }
 
     /**
@@ -114,16 +89,12 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Since android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId,
                     "CD Note Channel",
                     NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
         }
-
-
-
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 }

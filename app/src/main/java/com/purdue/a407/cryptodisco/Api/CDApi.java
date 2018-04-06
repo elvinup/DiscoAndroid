@@ -1,5 +1,6 @@
 package com.purdue.a407.cryptodisco.Api;
 
+import com.purdue.a407.cryptodisco.Data.Entities.ChatJoin;
 import com.purdue.a407.cryptodisco.Data.Entities.CoinEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.CoinPairingEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
@@ -39,7 +40,10 @@ public interface CDApi {
     Call<List<ChatRoomEntity>> getChatRooms();
 
     @GET("/chatmessages")
-    Call<List<ChatMessageEntity>> getChatMessages();
+    Call<List<ChatMessageEntity>> getChatMessages(@Query("room") String room);
+
+    @GET("/chatmessages")
+    Call<ChatMessageEntity> getChatMessagesTest(@Query("room") String room);
 
     @POST("/sendmessage")
     Call<Void> sendMessage(@Body ChatMessageEntity message);
@@ -64,5 +68,8 @@ public interface CDApi {
 
     @POST("/numberoflikedcoins")
     Call<List<SqlCount>> numberOfLikedCoins(@Body WatchListEntity watchListEntity);
+
+    @POST("/subchat")
+    Call<Void> joinChat(@Body ChatJoin chatJoin);
 
 }

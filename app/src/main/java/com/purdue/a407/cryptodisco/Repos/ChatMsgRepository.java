@@ -36,13 +36,13 @@ public class ChatMsgRepository {
             @NonNull
             @Override
             protected LiveData<List<ChatMessageEntity>> loadFromDb() {
-                return chatmsgDao.chatMessages();
+                return chatmsgDao.chatMessages(0);
             }
 
             @NonNull
             @Override
             protected Call<List<ChatMessageEntity>> createCall() {
-                return cdApi.getChatMessages();
+                return cdApi.getChatMessages("");
             }
         }.getAsLiveData();
     }

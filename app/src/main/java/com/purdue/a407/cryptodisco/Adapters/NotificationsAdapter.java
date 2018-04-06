@@ -10,8 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
+import com.purdue.a407.cryptodisco.Data.Entities.Arbitrage;
 import com.purdue.a407.cryptodisco.Data.Entities.NotificationsEntity;
 import com.purdue.a407.cryptodisco.R;
 
@@ -48,6 +50,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         NotificationsEntity entity = notifications.get(position);
+        Arbitrage arbitrage = new Gson().fromJson(entity.getMessage(), Arbitrage.class);
         holder.message.setText(entity.getMessage());
         long date = Long.parseLong(entity.getTimeStamp());
         Date date1 = new Date();

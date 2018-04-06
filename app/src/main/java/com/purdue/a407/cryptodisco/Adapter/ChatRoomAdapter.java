@@ -4,25 +4,33 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.purdue.a407.cryptodisco.Activities.ChatActivity;
 import com.purdue.a407.cryptodisco.Activities.MessageActivity;
+import com.purdue.a407.cryptodisco.Adapters.TradeHistoryAdapter;
 import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatJoin;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
 import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 import com.purdue.a407.cryptodisco.R;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,61 +39,52 @@ import retrofit2.Response;
  * Created by Kenny on 2/20/2018.
  */
 
-public class ChatRoomAdapter extends ArrayAdapter<ChatRoomEntity>{
+public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHolder> {
 
     private static final String TAG = "ChatRoomListAdapter";
     private Context mContext;
-    int mResource;
     CDApi cdApi;
     DeviceID deviceID;
+    List<ChatRoomEntity> objects;
 
-    public ChatRoomAdapter(@NonNull Context context, int resource, @NonNull ArrayList<ChatRoomEntity> objects,
+    public ChatRoomAdapter(@NonNull Context context, List<ChatRoomEntity> objects,
                            CDApi api, DeviceID deviceID) {
-        super(context, resource, objects);
         this.mContext = context;
-        this.mResource = resource;
+        this.objects = objects;
         this.cdApi = api;
         this.deviceID = deviceID;
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        String groupName = getItem(position).getName();
-        String description = getItem(position).getDescription();
-        int id = getItem(position).getId();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(mContext).
+                inflate(R.layout.holder_chat_rooms, parent, false);
+        return new ViewHolder(view);
+    }
 
-        ChatRoomEntity ChatRoom = new ChatRoomEntity(groupName, description);
-
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        convertView = inflater.inflate(mResource, parent, false);
-
-        TextView groupText = (TextView) convertView.findViewById(R.id.room_list_group_name);
-        TextView descriptionText = (TextView) convertView.findViewById(R.id.room_list_description);
-
-        groupText.setText(groupName);
-        descriptionText.setText(description);
-
-        convertView.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        ChatRoomEntity entity = objects.get(position);
+        holder.chatRoom.setText(entity.getName());
+        holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, MessageActivity.class);
-                intent.putExtra("groupName", groupName);
-                intent.putExtra("groupID", "0");
+                intent.putExtra("group", new Gson().toJson(entity));
                 mContext.startActivity(intent);
             }
         });
 
-        convertView.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.layout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 cdApi.joinChat(new ChatJoin(deviceID.getDeviceID(),
-                        String.valueOf(ChatRoom.getId()))).enqueue(new Callback<Void>() {
+                        String.valueOf(entity.getId()))).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if(response.code() != 200) {
                             Toast.makeText(mContext, "There was an error in subscribing to this chat: " +
-                                    String.valueOf(response.code()),
+                                            String.valueOf(response.code()),
                                     Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -102,7 +101,30 @@ public class ChatRoomAdapter extends ArrayAdapter<ChatRoomEntity>{
                 return true;
             }
         });
+    }
 
-        return convertView;
+    @Override
+    public int getItemCount() {
+        return objects.size();
+    }
+
+    public void addAll(List<ChatRoomEntity> newEntities) {
+        objects.clear();
+        objects.addAll(newEntities);
+        notifyDataSetChanged();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.chatRoom)
+        TextView chatRoom;
+
+        @BindView(R.id.cv)
+        LinearLayout layout;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
     }
 }

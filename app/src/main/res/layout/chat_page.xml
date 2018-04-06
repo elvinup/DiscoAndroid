@@ -37,14 +37,6 @@
             android:background="@null"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/send_message" />
-        <ImageButton
-            android:id="@+id/send_message_receive"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_weight="1"
-            android:background="@null"
-            android:scaleType="centerInside"
-            app:srcCompat="@drawable/send_message" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

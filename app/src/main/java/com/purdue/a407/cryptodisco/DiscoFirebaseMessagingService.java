@@ -14,8 +14,10 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 import com.purdue.a407.cryptodisco.Activities.HomeActivity;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
+import com.purdue.a407.cryptodisco.Data.Entities.Arbitrage;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.NotificationsEntity;
 
@@ -72,16 +74,20 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
         ((App)getApplication()).getNetComponent().inject(this);
-        appDatabase.notificationsDao().
-                insert(new NotificationsEntity(messageBody, String.valueOf(new Date().getTime()), false));
 
         String channelId = getString(R.string.default_notification_channel_id);
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Arbitrage arb = new Gson().fromJson(messageBody, Arbitrage.class);
+        String translate = String.format("There is a percent difference between exchanges" +
+                        " %s and %s with the coin pairing: %s",
+                arb.getFirst().getExchange(), arb.getSecond().getExchange(), arb.getFirst().getCoin_short());
+        appDatabase.notificationsDao().
+                insert(new NotificationsEntity(messageBody, String.valueOf(new Date().getTime()), false));
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.drawable.app_initials_blue)
-                        .setContentTitle("FCM Message")
-                        .setContentText(messageBody)
+                        .setContentTitle("Arbitrage Alert!!!!!")
+                        .setContentText(translate)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);

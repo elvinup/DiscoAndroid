@@ -46,6 +46,7 @@ public class StartActivity extends AppCompatActivity {
         ((App)getApplication()).getNetComponent().inject(this);
 
         Log.d("UUID", deviceID.getDeviceID());
+        appDatabase.notificationsDao().clear();
 
 //        appDatabase.coinPairingDao().deleteAll();
 //        appDatabase.userExchangeDao().clear();

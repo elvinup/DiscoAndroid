@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
 import com.purdue.a407.cryptodisco.Adapter.MessageAdapter;
 import com.purdue.a407.cryptodisco.Adapters.ChatMessageAdapter;
@@ -29,6 +30,7 @@ import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
+import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
 import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 import com.purdue.a407.cryptodisco.Helpers.LoadingDialog;
 import com.purdue.a407.cryptodisco.R;
@@ -72,12 +74,10 @@ public class MessageActivity extends AppCompatActivity {
     @BindView(R.id.chat_messages)
     RecyclerView messages;
 
-    @BindView(R.id.send_message_receive)
-    ImageButton receiveButton;
 
     ChatMessageAdapter chatMessageAdapter;
 
-    int groupID;
+    ChatRoomEntity entity;
 
 
     @Override
@@ -91,10 +91,10 @@ public class MessageActivity extends AppCompatActivity {
         messages.setLayoutManager(manager);
         chatMessageAdapter = new ChatMessageAdapter(getApplicationContext(), new ArrayList<>(), deviceID.getDeviceID());
         messages.setAdapter(chatMessageAdapter);
-        groupID = Integer.parseInt(getIntent().getStringExtra("groupID"));
+        entity = new Gson().fromJson(getIntent().getStringExtra("group"), ChatRoomEntity.class);
 
 
-        appDatabase.chatmsgDao().chatMessages(groupID).observe(this, new Observer<List<ChatMessageEntity>>() {
+        appDatabase.chatmsgDao().chatMessages(entity.getId()).observe(this, new Observer<List<ChatMessageEntity>>() {
             @Override
             public void onChanged(@Nullable List<ChatMessageEntity> chatMessageEntities) {
                 Log.d("OBSERVED CHANGE!!!", "INSIDE CHAT MESSAGES");
@@ -136,7 +136,7 @@ public class MessageActivity extends AppCompatActivity {
                     Toast.makeText(MessageActivity.this, "message cannot be empty", Toast.LENGTH_LONG).show();
                 } else {
                     ChatMessageEntity msg = new ChatMessageEntity(message, deviceID.getDeviceID(), deviceID.getDeviceID(),
-                            groupID);
+                            entity.getId());
                     appDatabase.chatmsgDao().insert(msg);
                 }
                 //This is just expanded to test for response codes

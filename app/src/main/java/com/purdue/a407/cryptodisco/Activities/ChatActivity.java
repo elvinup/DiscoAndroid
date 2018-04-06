@@ -18,10 +18,12 @@ import android.widget.Toast;
 
 //import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
 import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
+import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
+import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 import com.purdue.a407.cryptodisco.Helpers.LoadingDialog;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.ViewModels.ChatMsgViewModel;
@@ -45,6 +47,12 @@ public class ChatActivity extends AppCompatActivity {
 
     @Inject
     ChatMsgViewModel chatMsgViewModel;
+
+    @Inject
+    CDApi cdApi;
+
+    @Inject
+    DeviceID deviceID;
 
     private LoadingDialog progressDialog;
 
@@ -99,18 +107,9 @@ public class ChatActivity extends AppCompatActivity {
                 chatRoomList.add(chatRoom);
             }
 
-            ChatRoomAdapter chatRoomAdapter = new ChatRoomAdapter(this, R.layout.room_list, chatRoomList);
+            ChatRoomAdapter chatRoomAdapter = new ChatRoomAdapter(this,
+                    R.layout.room_list, chatRoomList, cdApi, deviceID);
             listView.setAdapter(chatRoomAdapter); // display items in group page
-
-            // group onclick
-            listView.setOnItemClickListener((adapterView, view, i, l) -> {
-
-                //Toast.makeText(ChatActivity.this, groupName[i].toString(),Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ChatActivity.this, MessageActivity.class);
-                intent.putExtra("groupName", groupName[i]);
-                intent.putExtra("groupID", id[i]);
-                startActivity(intent);
-            });
 
             //ArrayAdapter<String> groupNameAdapter = new ArrayAdapter<String>(this, R.layout.room_list, R.id.room_list_group_name, groupName);
             //ArrayAdapter<String> descriptionAdapter = new ArrayAdapter<String>(this, R.layout.room_list, R.id.room_list_description, description);

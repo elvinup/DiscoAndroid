@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import com.purdue.a407.cryptodisco.Data.Entities.NotificationsEntity;
 
@@ -18,4 +19,11 @@ public interface NotificationsDao {
 
     @Insert
     void insert(NotificationsEntity entity);
+
+    @Update
+    void update(NotificationsEntity entity);
+
+
+    @Query("DELETE FROM NotificationsEntity")
+    void clear();
 }

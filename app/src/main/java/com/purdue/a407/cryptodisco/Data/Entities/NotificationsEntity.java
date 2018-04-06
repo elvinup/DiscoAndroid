@@ -12,10 +12,12 @@ public class NotificationsEntity {
 
     String message;
     String timeStamp;
+    boolean checked;
 
-    public NotificationsEntity(String message, String timeStamp) {
+    public NotificationsEntity(String message, String timeStamp, boolean checked) {
         this.message = message;
         this.timeStamp = timeStamp;
+        this.checked = checked;
     }
 
     public int getNotificationId() {
@@ -40,5 +42,13 @@ public class NotificationsEntity {
 
     public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

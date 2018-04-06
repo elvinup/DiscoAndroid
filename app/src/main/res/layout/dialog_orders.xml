@@ -2,7 +2,8 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@android:color/white">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,25 +17,30 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textAlignment="center"
                 android:textSize="20sp"
                 android:text="Order Type" />
             <RadioGroup
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/marketOrderBtn"
+                    android:textAlignment="center"
                     android:text="Market"/>
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/limitOrderBtn"
+                    android:textAlignment="center"
                     android:text="Limit"/>
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/stopOrderBtn"
+                    android:textAlignment="center"
                     android:text="Stop"/>
             </RadioGroup>
         </LinearLayout>
@@ -47,19 +53,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:text="Order Type" />
+                android:text="Signal"
+                android:textAlignment="center"/>
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAlignment="center"
                     android:id="@+id/buyBtn"
                     android:text="Buy"/>
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/sellBtn"
+                    android:textAlignment="center"
                     android:text="Sell"/>
             </RadioGroup>
         </LinearLayout>

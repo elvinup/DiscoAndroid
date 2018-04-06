@@ -1,108 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@android:color/white">
 
-
-    <ListView
-        android:id="@+id/chat_messages"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/send_message"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!--<include-->
-        <!--android:id="@+id/include2"-->
-        <!--layout="@layout/app_bar_home"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="0dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent" />-->
-
     <TextView
         android:id="@+id/groupNameChatPage"
-        android:layout_width="118dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="415dp"
-        android:layout_marginTop="7dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Groupname"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/enteredMessage"
-        app:layout_constraintStart_toStartOf="@+id/chat_messages"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="30sp" />
 
-    <EditText
-        android:id="@+id/enteredMessage"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="6dp"
-        android:ems="10"
-        android:hint="Type a message..."
-        android:inputType="text"
-        android:textColor="@color/colorPrimaryDark"
-        android:windowSoftInputMode="adjustPan"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/send_message"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groupNameChatPage" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="10"
+        android:orientation="horizontal">
 
+        <EditText
+            android:id="@+id/enteredMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Type a message..."
+            android:inputType="text"
+            android:textColor="@color/colorPrimaryDark"
+            android:windowSoftInputMode="adjustResize"
+            android:layout_weight="8"/>
 
-    <ImageButton
-        android:id="@+id/send_message"
-        android:layout_width="60dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:background="@null"
-        android:scaleType="centerInside"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/enteredMessage"
-        app:layout_constraintTop_toBottomOf="@+id/chat_messages"
-        app:srcCompat="@drawable/send_message" />
+        <ImageButton
+            android:id="@+id/send_message"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/send_message" />
+        <ImageButton
+            android:id="@+id/send_message_receive"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/send_message" />
+    </LinearLayout>
 
-    <!--<LinearLayout-->
-    <!--android:id="@+id/bottomBar"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="60dp"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:background="@drawable/bottom_bar"-->
-    <!--android:orientation="horizontal"-->
-    <!--tools:layout_editor_absoluteX="0dp"-->
-    <!--tools:layout_editor_absoluteY="452dp">-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chat_messages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <!--<EditText-->
-    <!--android:id="@+id/enteredMessage"-->
-    <!--android:layout_width="300dp"-->
-    <!--android:layout_height="40dp"-->
-    <!--android:layout_marginTop="10dp"-->
-    <!--android:hint="Type a message..."-->
-    <!--android:ems="10"-->
-    <!--android:inputType="text"-->
-    <!--android:textColor="?android:attr/textColorPrimaryInverseNoDisable"-->
-    <!--android:windowSoftInputMode="adjustPan" />-->
-
-    <!--<ImageButton-->
-    <!--android:id="@+id/send_message"-->
-    <!--android:layout_width="30dp"-->
-    <!--android:layout_height="30dp"-->
-    <!--android:layout_marginRight="0dp"-->
-    <!--android:layout_marginTop="15dp"-->
-    <!--android:layout_weight="1"-->
-    <!--android:background="@null"-->
-    <!--android:scaleType="centerInside"-->
-    <!--app:srcCompat="@drawable/send_message" />-->
-    <!--</LinearLayout>-->
-
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

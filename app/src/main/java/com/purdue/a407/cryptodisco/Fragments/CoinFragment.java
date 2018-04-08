@@ -105,14 +105,30 @@ public class CoinFragment extends Fragment {
         context = getActivity();
 
         int coinNum = appDatabase.coinDao().getID(titleString);
-        int numliked = appDatabase.watchlistDao().getTimeUserLikedCoin(deviceID.getDeviceID(), coinNum);
+
+        WatchListEntity watchListEntity = new WatchListEntity(deviceID.getDeviceID(), coinNum);
+        cdApi.numberOfLikedCoins(watchListEntity).enqueue(new Callback<List<SqlCount>>() {
+            @Override
+            public void onResponse(Call<List<SqlCount>> call, Response<List<SqlCount>> response) {
+                if (response.code() != 200) {
+                    Log.d("Not 200", String.valueOf(response.code()));
+                    return;
+                }
+                int numliked =  response.body().get(0).count;
+                if (numliked > 0) {
+                    coinLike.setText("Unlike");
+                } else if (numliked == 0){
+                    coinLike.setText("Like");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SqlCount>> call, Throwable t) {
+
+            }
+        });
+
         Log.d("COINNUM", Integer.toString(coinNum));
-        Log.d("NUMLIKED", Integer.toString(numliked));
-        if (numliked > 0) {
-            coinLike.setText("Unlike");
-        } else if (numliked == 0){
-            coinLike.setText("Like");
-        }
 
         coinLike.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,13 +149,17 @@ public class CoinFragment extends Fragment {
                         }
 
                         int numliked =  response.body().get(0).count;
+
+                        Log.d("Response", Integer.toString(response.body().get(0).getCount()));
+                        Log.d("Response", response.body().get(0).toString());
+
                         if (numliked == 0) {
 
                             cdApi.insertLikedCoin(watchListEntity).enqueue(new Callback<Void>() {
                                 @Override
                                 public void onResponse(Call<Void> call, Response<Void> response) {
                                     if (response.code() != 200) {
-                                        Log.d("error ", String.valueOf(response.code()));
+                                        Log.d("insert error ", String.valueOf(response.code()));
                                     } else {
                                         Log.d("error ", "Sucesss");
 
@@ -163,9 +183,9 @@ public class CoinFragment extends Fragment {
                                 @Override
                                 public void onResponse(Call<Void> call, Response<Void> response) {
                                     if (response.code() != 200) {
-                                        Log.d("error ", String.valueOf(response.code()));
+                                        Log.d("remove error ", String.valueOf(response.code()));
                                     } else {
-                                        Log.d("error ", "Sucesss");
+                                        Log.d("error ", "Sucess");
 
                                     }
                                 }
@@ -185,7 +205,7 @@ public class CoinFragment extends Fragment {
                     }
                 });
                 Log.d("COINNUM", Integer.toString(coinNum));
-                Log.d("NUMLIKED", Integer.toString(numliked));
+               // Log.d("NUMLIKED", Integer.toString(numliked));
 
 
             }

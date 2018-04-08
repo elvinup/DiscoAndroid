@@ -24,6 +24,7 @@ import com.purdue.a407.cryptodisco.Fragments.MyExchangeFragment;
 import com.purdue.a407.cryptodisco.Fragments.SettingsFragment;
 import com.purdue.a407.cryptodisco.Fragments.WatchlistFragment;
 import com.purdue.a407.cryptodisco.R;
+import com.purdue.a407.cryptodisco.ViewModels.ChatMsgViewModel;
 import com.purdue.a407.cryptodisco.ViewModels.CoinViewModel;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangesViewModel;
 import com.purdue.a407.cryptodisco.ViewModels.WatchlistViewModel;
@@ -48,6 +49,9 @@ public class HomeActivity extends AppCompatActivity
 
     @Inject
     WatchlistViewModel watchvm;
+
+    @Inject
+    ChatMsgViewModel msgvm;
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -86,6 +90,11 @@ public class HomeActivity extends AppCompatActivity
         watchvm.getWatchList().observe(this, listCDResource -> {
             //coinsvm.getCoins().removeObservers(this);
         });
+        //msgvm.getChatmessagesList().observe(this, listCDResource -> {
+
+        //});
+
+
 
 
     }

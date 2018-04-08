@@ -11,6 +11,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
+import com.purdue.a407.cryptodisco.Data.Entities.CoinEntity;
 import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 import com.purdue.a407.cryptodisco.R;
 
@@ -23,6 +24,8 @@ import retrofit2.Response;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.util.List;
 
 
 public class StartActivity extends AppCompatActivity {
@@ -71,6 +74,28 @@ public class StartActivity extends AppCompatActivity {
         String FCMToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("UUID", UID);
         Log.d("FCMToken", FCMToken);
+
+        cdApi.getCoins().enqueue(new Callback<List<CoinEntity>>() {
+            @Override
+            public void onResponse(Call<List<CoinEntity>> call, Response<List<CoinEntity>> response) {
+                if(response.code() != 200) {
+                    // Error
+                    Log.d("Coin Result", String.valueOf(response.code()));
+
+                }
+                else {
+                    // Success
+                    Log.d("Coin Result", "Success");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CoinEntity>> call, Throwable t) {
+                Log.d("Coin Result", "Failure");
+
+            }
+        });
+
         cdApi.userExists(UID, FCMToken).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -96,6 +121,8 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(myIntent);
             }
         });
+
+
 
         if(!sharedPreferences.getBoolean(
                 "firstTime", false)) {

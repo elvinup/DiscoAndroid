@@ -15,11 +15,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.purdue.a407.cryptodisco.Adapters.CoinAdapter;
 import com.purdue.a407.cryptodisco.Adapters.UserExchangesAdapter;
+import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.Data.Entities.CoinEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
+import com.purdue.a407.cryptodisco.Data.Entities.WatchListEntity;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.Testing.exchangeVolumeTesting;
 
@@ -30,6 +33,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class WatchlistFragment extends Fragment {
 
@@ -46,13 +52,16 @@ public class WatchlistFragment extends Fragment {
     AppCompatAutoCompleteTextView searchCoins;
 
 
-    //UserExchangesAdapter exchangesAdapter;
+    CoinAdapter watchlistAdapter;
 
    // List<ExchangeEntity> searchEntities = new ArrayList<>();
     //List<String> searchesByExchange = new ArrayList<>();
 
     ArrayAdapter<Object> arrayAdapter;
     Context context;
+
+    @Inject
+    CDApi cdApi;
 
     public WatchlistFragment() {
         // Required empty public constructor
@@ -68,15 +77,42 @@ public class WatchlistFragment extends Fragment {
         ((App) getActivity().getApplication()).getNetComponent().inject(this);
         context = getActivity();
         title.setText("Watched Coins");
-        //watchlistAdapter = new UserExchangesAdapter(getActivity(), new ArrayList<>());
+        watchlistAdapter = new CoinAdapter(getActivity(), new ArrayList<>());
 
         watchlistRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        //exchangesRecycler.setAdapter(watchlistAdapter);
+        watchlistRecycler.setAdapter(watchlistAdapter);
 
-        //appDatabase.userExchangeDao().userExchanges().observe(getActivity(), exchangeEntities ->
-        //        exchangesAdapter.addAll(exchangeEntities));
+        /*
+        cdApi.getWatchListEntities().enqueue(new Callback<List<WatchListEntity>>() {
+            @Override
+            public void onResponse(Call<List<WatchListEntity>> call, Response<List<WatchListEntity>> response) {
+                if (response.code() != 200) {
+                    Log.d("Not 200", String.valueOf(response.code()));
+                    return;
+                }
+
+                List<WatchListEntity> testnum = response.body();
+
+                watchlistAdapter.addAll(response.body());
+
+                Log.d("Size of watchlists", Integer.toString(testnum.size()));
+
+            }
+
+            @Override
+            public void onFailure(Call<List<WatchListEntity>> call, Throwable t) {
+
+            }
+        });
+        */
 
 
+        //watchlistAdapter.addAll(appDatabase.watchlistDao().watchListsNotLive());
+
+        appDatabase.watchlistDao().getWatchLists().observe(getActivity(), watchListEntities ->
+                watchlistAdapter.addAll(watchListEntities));
+
+        //Log.d("Num of watchlists", Integer.toString(appDatabase.watchlistDao());
 
         searchCoins.setOnItemClickListener((adapterView, view12, i, l) -> {
             View view1 = getActivity().getCurrentFocus();

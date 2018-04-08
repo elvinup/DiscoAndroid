@@ -26,6 +26,9 @@ public interface CoinDao {
     List<CoinEntity> coinsNotLive();
 
     @Query("SELECT * FROM CoinEntity WHERE id = :id")
+    List<CoinEntity> coinByIdNotLive(int id);
+
+    @Query("SELECT * FROM CoinEntity WHERE id = :id")
     LiveData<List<CoinEntity>> coinById(int id);
 
     @Insert(onConflict = REPLACE)
@@ -36,7 +39,6 @@ public interface CoinDao {
 
     @Query("SELECT id FROM CoinEntity WHERE short_name = :shortName")
     int getID(String shortName);
-
 
 
 }

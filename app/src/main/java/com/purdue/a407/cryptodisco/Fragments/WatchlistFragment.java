@@ -23,6 +23,7 @@ import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.Data.Entities.CoinEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.WatchListEntity;
+import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.Testing.exchangeVolumeTesting;
 
@@ -63,6 +64,9 @@ public class WatchlistFragment extends Fragment {
     @Inject
     CDApi cdApi;
 
+    @Inject
+    DeviceID deviceID;
+
     public WatchlistFragment() {
         // Required empty public constructor
     }
@@ -77,7 +81,13 @@ public class WatchlistFragment extends Fragment {
         ((App) getActivity().getApplication()).getNetComponent().inject(this);
         context = getActivity();
         title.setText("Watched Coins");
-        watchlistAdapter = new CoinAdapter(getActivity(), new ArrayList<>());
+
+        List<CoinEntity> coinEntityList = appDatabase.coinDao().coinsNotLive();
+        Log.d("coin ent size", Integer.toString(coinEntityList.size()));
+
+        String uuid = deviceID.getDeviceID();
+
+        watchlistAdapter = new CoinAdapter(getActivity(), new ArrayList<>(), coinEntityList, uuid);
 
         watchlistRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         watchlistRecycler.setAdapter(watchlistAdapter);
@@ -108,9 +118,35 @@ public class WatchlistFragment extends Fragment {
 
 
         //watchlistAdapter.addAll(appDatabase.watchlistDao().watchListsNotLive());
+        //List<WatchListEntity> wlist = watchlistAdapter.filterWatchList(appDatabase.watchlistDao().watchListsNotLive());
+        //watchlistAdapter.addAll(wlist);
+        //Filters watchList
+        //List<WatchListEntity> wlist = appDatabase.watchlistDao().watchListsNotLive();
+        //watchlistAdapter.addAll(watchlistAdapter.filterWatchList(wlist));
 
-        appDatabase.watchlistDao().getWatchLists().observe(getActivity(), watchListEntities ->
-                watchlistAdapter.addAll(watchListEntities));
+
+        cdApi.getWatchListEntities().enqueue(new Callback<List<WatchListEntity>>() {
+            @Override
+            public void onResponse(Call<List<WatchListEntity>> call, Response<List<WatchListEntity>> response) {
+                if (response.code() != 200) {
+
+                }
+                else {
+                    watchlistAdapter.addAll(watchlistAdapter.filterWatchList(response.body()));
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<List<WatchListEntity>> call, Throwable t) {
+
+            }
+        });
+
+        //appDatabase.watchlistDao().getWatchLists().observe(getActivity(), watchListEntities ->
+        //        watchlistAdapter.addAll(watchlistAdapter.filterWatchList(watchListEntities)));
+
 
         //Log.d("Num of watchlists", Integer.toString(appDatabase.watchlistDao());
 

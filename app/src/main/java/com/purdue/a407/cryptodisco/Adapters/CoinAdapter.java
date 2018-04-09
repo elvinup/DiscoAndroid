@@ -20,6 +20,7 @@ import com.purdue.a407.cryptodisco.Data.Entities.WatchListEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.UserExchangeEntity;
 import com.purdue.a407.cryptodisco.Fragments.CoinFragment;
 import com.purdue.a407.cryptodisco.Fragments.MyExchangeFragment;
+import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.ViewModels.CoinViewModel;
 
@@ -39,19 +40,17 @@ import retrofit2.Response;
  */
 
 public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.UserWatchlistHolder> {
-    @Inject
-    AppDatabase appDatabase;
-
-    @Inject
-    CDApi cdApi;
-
 
     Context context;
     List<WatchListEntity> watchlists;
+    List<CoinEntity> coinEntityList;
+    String uuid;
 
-    public CoinAdapter(Context context, List<WatchListEntity> watchlists) {
+    public CoinAdapter(Context context, List<WatchListEntity> watchlists, List<CoinEntity> coinEntityList, String uuid) {
         this.context = context;
         this.watchlists = watchlists;
+        this.coinEntityList = coinEntityList;
+        this.uuid = uuid;
     }
 
 
@@ -66,39 +65,26 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.UserWatchlistH
     @Override
     public void onBindViewHolder(CoinAdapter.UserWatchlistHolder holder, int position) {
         WatchListEntity watchlist = watchlists.get(position);
-        Log.d("Coin ID", Integer.toString(watchlist.getCoin()));
+        //Log.d("Coin ID", Integer.toString(watchlist.getCoin()));
+        boolean isUserList = false;
 
-        List<CoinEntity> coinList = appDatabase.coinDao().coinsNotLive(); //coinByIdNotLive(watchlist.getCoin());
-
-        Log.d("WatchList Size", Integer.toString(coinList.size()));
-        String watchlistCoin = coinList.get(0).getName();
-
-
-        /*
-        cdApi.getCoins().enqueue(new Callback<List<CoinEntity>>() {
-            @Override
-            public void onResponse(Call<List<CoinEntity>> call, Response<List<CoinEntity>> response) {
-                if (response.code() != 200) {
-                    Log.d("Error", Integer.toString(response.code()));
-                    return;
+        String watchlistCoin = "Bitcoin";
+        for (CoinEntity ce: coinEntityList){
+            // Match coin id
+            if (watchlist.getCoin() == ce.getId()) {
+                //Check if id is same
+                if (watchlist.getUser().equals(uuid)) {
+                    watchlistCoin = ce.getName();
+                    isUserList = true;
+                    break;
                 }
-                List<CoinEntity> coinList = response.body(); //appDatabase.coinDao().coinsNotLive(); //coinByIdNotLive(watchlist.getCoin());
-
-                Log.d("WatchList Size", Integer.toString(coinList.size()));
-                String watchlistCoin = coinList.get(0).getName();
-
             }
-
-            @Override
-            public void onFailure(Call<List<CoinEntity>> call, Throwable t) {
-
-            }
-        });
-        */
+        }
 
         holder.coinName.setText(watchlistCoin);
+        String finalWatchlistCoin = watchlistCoin;
         holder.cardView.setOnClickListener(view -> {
-            CoinFragment fragment = CoinFragment.newInstance(watchlistCoin);
+            CoinFragment fragment = CoinFragment.newInstance(finalWatchlistCoin);
             AppCompatActivity activity = (AppCompatActivity)context;
             activity.getSupportFragmentManager().beginTransaction().
                     replace(R.id.replaceView,fragment).addToBackStack("coin").commit();
@@ -114,6 +100,24 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.UserWatchlistH
         watchlists.clear();
         watchlists.addAll(newwatchlists);
         notifyDataSetChanged();
+    }
+
+    public List<WatchListEntity> filterWatchList(List<WatchListEntity> watchlists) {
+        List<WatchListEntity> filteredList = new ArrayList<>();
+
+        for (WatchListEntity we: watchlists) {
+            for (CoinEntity ce : coinEntityList) {
+                // Match coin id or userid
+                if (we.getCoin() == ce.getId() && we.getUser().equals(uuid)) {
+                    //watchlists.remove(counter);
+                    //notifyDataSetChanged();
+                    filteredList.add(we);
+                    break;
+                }
+            }
+        }
+
+        return filteredList;
     }
 
     public class UserWatchlistHolder extends RecyclerView.ViewHolder {

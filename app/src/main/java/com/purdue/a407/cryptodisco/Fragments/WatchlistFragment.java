@@ -27,6 +27,7 @@ import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.Testing.exchangeVolumeTesting;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,39 +93,7 @@ public class WatchlistFragment extends Fragment {
         watchlistRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         watchlistRecycler.setAdapter(watchlistAdapter);
 
-        /*
-        cdApi.getWatchListEntities().enqueue(new Callback<List<WatchListEntity>>() {
-            @Override
-            public void onResponse(Call<List<WatchListEntity>> call, Response<List<WatchListEntity>> response) {
-                if (response.code() != 200) {
-                    Log.d("Not 200", String.valueOf(response.code()));
-                    return;
-                }
-
-                List<WatchListEntity> testnum = response.body();
-
-                watchlistAdapter.addAll(response.body());
-
-                Log.d("Size of watchlists", Integer.toString(testnum.size()));
-
-            }
-
-            @Override
-            public void onFailure(Call<List<WatchListEntity>> call, Throwable t) {
-
-            }
-        });
-        */
-
-
-        //watchlistAdapter.addAll(appDatabase.watchlistDao().watchListsNotLive());
-        //List<WatchListEntity> wlist = watchlistAdapter.filterWatchList(appDatabase.watchlistDao().watchListsNotLive());
-        //watchlistAdapter.addAll(wlist);
-        //Filters watchList
-        //List<WatchListEntity> wlist = appDatabase.watchlistDao().watchListsNotLive();
-        //watchlistAdapter.addAll(watchlistAdapter.filterWatchList(wlist));
-
-
+        //Gets the entries from the watchlist in the database
         cdApi.getWatchListEntities().enqueue(new Callback<List<WatchListEntity>>() {
             @Override
             public void onResponse(Call<List<WatchListEntity>> call, Response<List<WatchListEntity>> response) {
@@ -143,12 +112,6 @@ public class WatchlistFragment extends Fragment {
 
             }
         });
-
-        //appDatabase.watchlistDao().getWatchLists().observe(getActivity(), watchListEntities ->
-        //        watchlistAdapter.addAll(watchlistAdapter.filterWatchList(watchListEntities)));
-
-
-        //Log.d("Num of watchlists", Integer.toString(appDatabase.watchlistDao());
 
         searchCoins.setOnItemClickListener((adapterView, view12, i, l) -> {
             View view1 = getActivity().getCurrentFocus();

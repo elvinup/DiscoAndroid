@@ -105,6 +105,8 @@ public class CoinFragment extends Fragment {
         context = getActivity();
 
         int coinNum = appDatabase.coinDao().getID(titleString);
+        Log.d("Coin name", titleString);
+
 
         WatchListEntity watchListEntity = new WatchListEntity(deviceID.getDeviceID(), coinNum);
         cdApi.numberOfLikedCoins(watchListEntity).enqueue(new Callback<List<SqlCount>>() {

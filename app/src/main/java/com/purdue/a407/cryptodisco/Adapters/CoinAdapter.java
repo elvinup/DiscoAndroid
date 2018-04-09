@@ -65,24 +65,24 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.UserWatchlistH
     @Override
     public void onBindViewHolder(CoinAdapter.UserWatchlistHolder holder, int position) {
         WatchListEntity watchlist = watchlists.get(position);
-        //Log.d("Coin ID", Integer.toString(watchlist.getCoin()));
-        boolean isUserList = false;
 
+        //Default watch list has at least 1 coin which is set to Bitcoin
         String watchlistCoin = "Bitcoin";
+        String watchlistShortName = "BTC";
         for (CoinEntity ce: coinEntityList){
             // Match coin id
             if (watchlist.getCoin() == ce.getId()) {
                 //Check if id is same
                 if (watchlist.getUser().equals(uuid)) {
                     watchlistCoin = ce.getName();
-                    isUserList = true;
+                    watchlistShortName = ce.getShort_name();
                     break;
                 }
             }
         }
 
         holder.coinName.setText(watchlistCoin);
-        String finalWatchlistCoin = watchlistCoin;
+        String finalWatchlistCoin = watchlistShortName;
         holder.cardView.setOnClickListener(view -> {
             CoinFragment fragment = CoinFragment.newInstance(finalWatchlistCoin);
             AppCompatActivity activity = (AppCompatActivity)context;

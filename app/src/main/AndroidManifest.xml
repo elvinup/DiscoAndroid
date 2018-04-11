@@ -41,6 +41,10 @@
             android:name=".Activities.SettingsActivity"
             android:label="@string/title_activity_first"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activities.NewsfeedActivity"
+            android:label="Newsfeed"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name=".FCM.DiscoFirebaseInstanceIDService">
             <intent-filter>

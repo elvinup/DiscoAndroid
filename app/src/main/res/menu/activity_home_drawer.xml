@@ -24,6 +24,11 @@
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
             android:title="Settings" />
+
+        <item
+            android:id="@+id/nav_newsfeeds"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Newsfeeds" />
     </group>
 
     <item android:title="Communicate">

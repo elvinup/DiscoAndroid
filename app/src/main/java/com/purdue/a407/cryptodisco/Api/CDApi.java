@@ -7,6 +7,7 @@ import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.SettingsEntity;
+import com.purdue.a407.cryptodisco.Data.Entities.TrailStop;
 import com.purdue.a407.cryptodisco.Data.Entities.WatchListEntity;
 
 import java.util.List;
@@ -71,5 +72,8 @@ public interface CDApi {
 
     @POST("/subchat")
     Call<Void> joinChat(@Body ChatJoin chatJoin);
+
+    @POST("/user/trailstop")
+    Call<Void> trailstop(@Body TrailStop trailStop);
 
 }

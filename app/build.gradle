@@ -68,7 +68,6 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
     compile 'com.google.code.gson:gson:2.8.2'
     // ImageStuff
-    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
 
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'

@@ -42,6 +42,12 @@
                     android:id="@+id/stopOrderBtn"
                     android:textAlignment="center"
                     android:text="Stop"/>
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/trailstopOrderBtn"
+                    android:textAlignment="center"
+                    android:text="Trailing Stop"/>
             </RadioGroup>
         </LinearLayout>
         <LinearLayout
@@ -76,20 +82,14 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/stopLimitPrice"
-        android:hint="Limit/Stop Price"
-        android:inputType="numberDecimal"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/originalAmount"
         android:hint="Amount to Trade"
         android:inputType="numberDecimal"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/remainingPrice"
-        android:hint="Remaining Price"
+        android:id="@+id/stopLimitPrice"
+        android:hint="Limit/Stop Price or Trail"
         android:inputType="numberDecimal"/>
     <Button
         android:layout_width="match_parent"

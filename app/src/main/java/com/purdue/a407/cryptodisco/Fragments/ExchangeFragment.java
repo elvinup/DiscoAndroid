@@ -3,6 +3,7 @@ package com.purdue.a407.cryptodisco.Fragments;
 
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatButton;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,7 @@ import com.purdue.a407.cryptodisco.Data.Entities.UserExchangeEntity;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.Repos.CoinPairingRepository;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangeViewModel;
+import com.tooltip.Tooltip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,6 +101,7 @@ public class ExchangeFragment extends Fragment {
         ((App) getActivity().getApplication()).getNetComponent().inject(this);
         context = getActivity();
         setUpViewModel();
+
         return view;
     }
 
@@ -165,5 +169,7 @@ public class ExchangeFragment extends Fragment {
             alertDialog.dismiss();
         });
     }
+
+
 
 }

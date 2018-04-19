@@ -24,7 +24,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="10dp"
+        android:tooltipText=""/>
 
     <ListView
         android:id="@+id/exchangeLists"
@@ -39,6 +40,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:text="Sort" />
+        android:text="Sort"
+        android:tooltipText="Sort the exchanges by popularity"/>
+
 
 </RelativeLayout>

@@ -25,6 +25,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".Activities.NewsfeedActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Activities.ChatActivity"
             android:label="@string/app_name"
@@ -40,10 +45,6 @@
         <activity
             android:name=".Activities.SettingsActivity"
             android:label="@string/title_activity_first"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activities.NewsfeedActivity"
-            android:label="Newsfeed"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name=".FCM.DiscoFirebaseInstanceIDService">

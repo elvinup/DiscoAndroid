@@ -147,6 +147,7 @@ public class NewsfeedActivity extends AppCompatActivity {
                                     Log.d("tweet list size", Integer.toString(tweetIds.size()));
                                     for (i = 0; i < tweetIds.size(); i++) {
                                         myLayout.addView(new TweetView(NewsfeedActivity.this, result.data.get(i)));
+                                        //myLayout.add;
                                     }
                                 }
 
@@ -171,37 +172,5 @@ public class NewsfeedActivity extends AppCompatActivity {
 
             }
         });
-
-
-
-
-
-        /*
-        TweetUtils.loadTweet(tweetId, new Callback<Tweet>() {
-            @Override
-            public void success(Result<Tweet> result) {
-                Log.d("Tweet", result.data.text);
-                myLayout.addView(new TweetView(NewsfeedActivity.this, result.data));
-            }
-
-            @Override
-            public void failure(TwitterException exception) {
-                Log.d("Very useful debug", "yo");
-                Toast.makeText(NewsfeedActivity.this, "yo", 5);
-            }
-        });
-
-        TweetUtils.loadTweet(tweetId2, new Callback<Tweet>() {
-            @Override
-            public void success(Result<Tweet> result) {
-                myLayout.addView(new TweetView(NewsfeedActivity.this, result.data));
-            }
-
-            @Override
-            public void failure(TwitterException exception) {
-
-            }
-        });
-        */
     }
 }

@@ -78,6 +78,11 @@ dependencies {
     compile group: 'org.knowm.xchange', name: 'xchange-core', version: '4.3.3'
     compile group: 'org.knowm.xchange', name: 'xchange-gateio', version: '4.3.3'
     compile group: 'org.knowm.xchange', name: 'xchange-binance', version: '4.3.3'
+    //compile group: 'org.knowm.xchange', name: 'xchange-coinone', version: '4.3.6'
+    compile group: 'org.knowm.xchange', name: 'xchange-hitbtc', version: '4.3.3'
+    //compile group: 'org.knowm.xchange', name: 'xchange-quione', version: '4.3.3'
+    compile group: 'org.knowm.xchange', name: 'xchange-kraken', version: '4.3.3'
+
 
     compile group: 'com.github.machinarius', name: 'preferencefragment', version: '0.1'
 

@@ -220,6 +220,7 @@ public class MyExchangeFragment extends Fragment {
 //                    exchange = ApiHelpers.gateio("","");
 //                else
 //                    exchange = ApiHelpers.binance("","");
+
                 exchangeApiHelper = ApiHelpers.binance("","");
                 getStuff(strs[0]);
                 return null;

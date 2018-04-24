@@ -4,6 +4,8 @@ import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.binance.BinanceExchange;
+import org.knowm.xchange.hitbtc.v2.HitbtcExchange;
+import org.knowm.xchange.kraken.KrakenExchange;
 
 public class ApiHelpers {
     public static Exchange binance(String key, String secret) {
@@ -27,4 +29,28 @@ public class ApiHelpers {
         Exchange exchange = ExchangeFactory.INSTANCE.createExchange(exchangeSpecification);
         return exchange;
     }
+
+    public static Exchange kraken(String key, String secret) {
+        ExchangeSpecification exchangeSpecification =
+                new KrakenExchange().getDefaultExchangeSpecification();
+        String gate_key = key;
+        String gate_secret = secret;
+        exchangeSpecification.setApiKey(gate_key);
+        exchangeSpecification.setSecretKey(gate_secret);
+        Exchange exchange = ExchangeFactory.INSTANCE.createExchange(exchangeSpecification);
+        return exchange;
+    }
+
+    public static Exchange hitbtc(String key, String secret) {
+        ExchangeSpecification exchangeSpecification =
+                new HitbtcExchange().getDefaultExchangeSpecification();
+        String gate_key = key;
+        String gate_secret = secret;
+        exchangeSpecification.setApiKey(gate_key);
+        exchangeSpecification.setSecretKey(gate_secret);
+        Exchange exchange = ExchangeFactory.INSTANCE.createExchange(exchangeSpecification);
+        return exchange;
+    }
+
+
 }

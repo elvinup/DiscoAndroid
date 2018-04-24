@@ -36,7 +36,7 @@ public class exchangeVolumeTesting{
 
         try {
             URL url = new URL("https://coinmarketcap.com/exchanges/volume/24-hour/");
-            Document doc = Jsoup.parse(url, 3000);
+            Document doc = Jsoup.parse(url, 6000);
 
             //Grab the table
             Element table = doc.select("table[class=table table-condensed]").get(0);

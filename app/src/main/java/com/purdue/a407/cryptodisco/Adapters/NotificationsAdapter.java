@@ -50,8 +50,20 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         NotificationsEntity entity = notifications.get(position);
-        Arbitrage arbitrage = new Gson().fromJson(entity.getMessage(), Arbitrage.class);
-        holder.message.setText(entity.getMessage());
+        Arbitrage arb = new Gson().fromJson(entity.getMessage(), Arbitrage.class);
+        String translate = String.format("There is a percent difference between exchanges" +
+                        " %s and %s with the coin pairing: %s",
+                arb.getFirst().getExchange(), arb.getSecond().getExchange(), arb.getFirst().getCoin_short());
+        holder.alert.setText("Arbitrage Alert!!!!");
+        holder.description.setText(translate);
+        holder.exchange1.setText(arb.getFirst().getExchange());
+        holder.exchange2.setText(arb.getSecond().getExchange());
+        holder.market1.setText(arb.getFirst().getMarket_short());
+        holder.market2.setText(arb.getSecond().getMarket_short());
+        holder.price1.setText(String.valueOf(arb.getFirst().getPrice()));
+        holder.price2.setText(String.valueOf(arb.getSecond().getPrice()));
+        holder.coin1.setText(arb.getFirst().getCoin_short());
+        holder.coin2.setText(arb.getSecond().getCoin_short());
         long date = Long.parseLong(entity.getTimeStamp());
         Date date1 = new Date();
         date1.setTime(date);
@@ -90,8 +102,35 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.message)
-        TextView message;
+        @BindView(R.id.alert)
+        TextView alert;
+
+        @BindView(R.id.description)
+        TextView description;
+
+        @BindView(R.id.exchange1)
+        TextView exchange1;
+
+        @BindView(R.id.exchange2)
+        TextView exchange2;
+
+        @BindView(R.id.market1)
+        TextView market1;
+
+        @BindView(R.id.market2)
+        TextView market2;
+
+        @BindView(R.id.price1)
+        TextView price1;
+
+        @BindView(R.id.price2)
+        TextView price2;
+
+        @BindView(R.id.coin1)
+        TextView coin1;
+
+        @BindView(R.id.coin2)
+        TextView coin2;
 
         @BindView(R.id.timestamp)
         TextView timestamp;

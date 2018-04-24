@@ -1,6 +1,7 @@
 package com.purdue.a407.cryptodisco.Fragments;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v14.preference.PreferenceFragment;
@@ -8,6 +9,9 @@ import android.support.v7.preference.Preference;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.github.omadahealth.lollipin.lib.managers.AppLock;
+import com.github.omadahealth.lollipin.lib.managers.LockManager;
+import com.purdue.a407.cryptodisco.Activities.PinActivity;
 import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
@@ -41,6 +45,13 @@ public class SettingsFragment extends PreferenceFragment {
         ((App) getActivity().getApplication()).getNetComponent().inject(this);
         addPreferencesFromResource(R.xml.settings_screen);
         Preference button = findPreference("Backup");
+        Preference setCode = findPreference("Passcode");
+        setCode.setOnPreferenceClickListener((preference) ->  {
+            Intent intent = new Intent(getActivity(), PinActivity.class);
+            intent.putExtra(AppLock.EXTRA_TYPE, AppLock.CHANGE_PIN);
+            startActivity(intent);
+            return true;
+        });
         button.setOnPreferenceClickListener(preference -> {
             //code for what you want it to do
             boolean uuid = sharedPreferences.getBoolean("key1", false);

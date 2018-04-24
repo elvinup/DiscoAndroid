@@ -15,6 +15,7 @@ import com.purdue.a407.cryptodisco.Fragments.ExchangeFragment;
 import com.purdue.a407.cryptodisco.Fragments.ExchangesFragment;
 import com.purdue.a407.cryptodisco.Fragments.MyExchangeFragment;
 import com.purdue.a407.cryptodisco.Fragments.NotificationsFragment;
+import com.purdue.a407.cryptodisco.Fragments.OrderDialog;
 import com.purdue.a407.cryptodisco.Fragments.SettingsFragment;
 import com.purdue.a407.cryptodisco.Fragments.WatchlistFragment;
 
@@ -39,4 +40,5 @@ public interface NetComponent {
     void inject(DiscoFirebaseMessagingService service);
     void inject(WatchlistFragment watchlistFragment);
     void inject(CoinFragment coinFragment);
+    void inject(OrderDialog orderDialog);
 }

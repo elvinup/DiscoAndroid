@@ -2,6 +2,7 @@ package com.purdue.a407.cryptodisco.DependencyInjection.Components;
 
 import com.purdue.a407.cryptodisco.Activities.ChatActivity;
 import com.purdue.a407.cryptodisco.Activities.MessageActivity;
+import com.purdue.a407.cryptodisco.Activities.NewsfeedActivity;
 import com.purdue.a407.cryptodisco.DependencyInjection.Modules.AppModule;
 import com.purdue.a407.cryptodisco.DependencyInjection.Modules.DBModule;
 import com.purdue.a407.cryptodisco.DependencyInjection.Modules.NetModule;
@@ -40,5 +41,6 @@ public interface NetComponent {
     void inject(DiscoFirebaseMessagingService service);
     void inject(WatchlistFragment watchlistFragment);
     void inject(CoinFragment coinFragment);
+    void inject(NewsfeedActivity activity);
     void inject(OrderDialog orderDialog);
 }

@@ -40,5 +40,7 @@ public interface CoinDao {
     @Query("SELECT id FROM CoinEntity WHERE short_name = :shortName")
     int getID(String shortName);
 
+    @Query("SELECT id FROM CoinEntity WHERE name = :name")
+    int getIDWithName(String name);
 
 }

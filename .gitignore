@@ -9,6 +9,8 @@
 /build
 /captures
 .externalNativeBuild
+/app/src/main/res/values/apikeys.xml
+/.idea/caches/build_file_checksums.ser
 app/gradle/wrapper/gradle-wrapper.properties
 app/gradlew
 app/gradlew.bat

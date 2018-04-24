@@ -3,6 +3,7 @@ package com.purdue.a407.cryptodisco.Activities;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -68,8 +69,8 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_room);
-        ((App) getApplication()).getNetComponent().inject(this);
         ButterKnife.bind(this);
+        ((App) getApplication()).getNetComponent().inject(this);
         progressDialog = LoadingDialog.create();
         adapter = new ChatRoomAdapter(getApplicationContext(), new ArrayList<>(), cdApi, deviceID);
         chatRooms.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

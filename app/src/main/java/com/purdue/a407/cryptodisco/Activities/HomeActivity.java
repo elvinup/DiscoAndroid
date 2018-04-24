@@ -168,6 +168,9 @@ public class HomeActivity extends AppCompatActivity
             NotificationsFragment fragment = new NotificationsFragment();
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.replaceView,fragment).addToBackStack("notifications").commit();
+        } else if(id == R.id.nav_newsfeeds) {
+            Intent intent = new Intent(this, NewsfeedActivity.class);
+            startActivity(intent);
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;

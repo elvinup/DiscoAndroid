@@ -3,6 +3,7 @@
 buildscript {
     
     repositories {
+
         google()
         jcenter()
     }
@@ -21,6 +22,7 @@ allprojects {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
+        maven { url "https://github.com/omadahealth/omada-nexus/raw/master/release"}
     }
 }
 

@@ -40,6 +40,7 @@ import org.knowm.xchange.dto.trade.LimitOrder;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.knowm.xchange.dto.trade.UserTrade;
 import org.knowm.xchange.dto.trade.UserTrades;
+import org.knowm.xchange.service.account.AccountService;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.knowm.xchange.service.trade.params.TradeHistoryParamsAll;
 
@@ -177,6 +178,9 @@ public class GraphFragment extends Fragment {
                 bidVals.add(new Entry(limitOrder.getLimitPrice().floatValue(),
                         accumulatedBidUnits.floatValue()));
             }
+
+            AccountService accountService = exchange.getAccountService();
+            accountService.getAccountInfo().getWallet().getBalances().get("");
 
             BigDecimal accumulatedBidUnits2 = new BigDecimal("0");
             Log.d("ASKS","This is a message");

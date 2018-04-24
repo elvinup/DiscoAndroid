@@ -60,6 +60,9 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
             Log.d(TAG, "\n\n\nSO THE REG TOKEN IS: " + FirebaseInstanceId.getInstance().getToken() + "\n\n\n\n" );
             sendNotification(remoteMessage.getNotification().getBody());
+        } else {
+            Map<String, String> data = remoteMessage.getData();
+            Log.d(TAG, "Message data: " + data.toString());
         }
     }
 

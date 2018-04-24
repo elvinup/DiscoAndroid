@@ -37,7 +37,6 @@ import com.purdue.a407.cryptodisco.Data.Entities.UserExchangeEntity;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.Repos.CoinPairingRepository;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangeViewModel;
-import com.tooltip.Tooltip;
 
 import java.util.ArrayList;
 import java.util.List;

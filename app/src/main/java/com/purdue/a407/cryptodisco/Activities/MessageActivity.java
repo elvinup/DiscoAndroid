@@ -37,6 +37,9 @@ import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.ViewModels.ChatMsgViewModel;
 import com.purdue.a407.cryptodisco.ViewModels.ChatRoomsViewModel;
 
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -45,6 +48,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -75,9 +79,18 @@ public class MessageActivity extends AppCompatActivity {
     RecyclerView messages;
 
 
+
     ChatMessageAdapter chatMessageAdapter;
 
     ChatRoomEntity entity;
+
+
+    int currentRecyclerPosition = 0;
+
+    @OnClick(R.id.enteredMessage)
+    public void onEntered() {
+        messages.scrollToPosition(chatMessageAdapter.getItemCount() - 1);
+    }
 
 
     @Override
@@ -100,6 +113,7 @@ public class MessageActivity extends AppCompatActivity {
                 Log.d("OBSERVED CHANGE!!!", "INSIDE CHAT MESSAGES");
                 chatMessageAdapter.addAll(chatMessageEntities);
                 messages.scrollToPosition(chatMessageAdapter.getItemCount() - 1);
+                currentRecyclerPosition = chatMessageAdapter.getItemCount() - 1;
             }
         });
 
@@ -119,6 +133,16 @@ public class MessageActivity extends AppCompatActivity {
             public void onFailure(Call<List<ChatMessageEntity>> call, Throwable t) {
                 Log.d("RESULT: FAILURE", t.getLocalizedMessage());
             }
+        });
+
+        KeyboardVisibilityEvent.setEventListener(this, isOpen -> {
+            Log.d("Keyboard", "Keyboard has changed visibility");
+            messages.scrollToPosition(currentRecyclerPosition);
+        });
+
+        messages.setOnScrollChangeListener((view, i, i1, i2, i3) -> {
+            currentRecyclerPosition = ((LinearLayoutManager)messages.getLayoutManager()).findLastVisibleItemPosition();
+            Log.d("Current Recycler Position", String.valueOf(currentRecyclerPosition));
         });
 
 

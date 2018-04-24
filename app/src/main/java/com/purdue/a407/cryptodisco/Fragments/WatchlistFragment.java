@@ -153,6 +153,4 @@ public class WatchlistFragment extends Fragment {
 
         return view;
     }
-
-
 }

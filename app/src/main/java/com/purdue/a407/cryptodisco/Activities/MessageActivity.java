@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -78,6 +79,9 @@ public class MessageActivity extends AppCompatActivity {
     @BindView(R.id.chat_messages)
     RecyclerView messages;
 
+    @BindView(R.id.title)
+    TextView chatName;
+
 
 
     ChatMessageAdapter chatMessageAdapter;
@@ -85,7 +89,6 @@ public class MessageActivity extends AppCompatActivity {
     ChatRoomEntity entity;
 
 
-    int currentRecyclerPosition = 0;
 
     @OnClick(R.id.enteredMessage)
     public void onEntered() {
@@ -105,15 +108,13 @@ public class MessageActivity extends AppCompatActivity {
         chatMessageAdapter = new ChatMessageAdapter(getApplicationContext(), new ArrayList<>(), deviceID.getDeviceID());
         messages.setAdapter(chatMessageAdapter);
         entity = new Gson().fromJson(getIntent().getStringExtra("group"), ChatRoomEntity.class);
-
+        chatName.setText(entity.getDescription());
 
         appDatabase.chatmsgDao().chatMessages(entity.getId()).observe(this, new Observer<List<ChatMessageEntity>>() {
             @Override
             public void onChanged(@Nullable List<ChatMessageEntity> chatMessageEntities) {
                 Log.d("OBSERVED CHANGE!!!", "INSIDE CHAT MESSAGES");
                 chatMessageAdapter.addAll(chatMessageEntities);
-                messages.scrollToPosition(chatMessageAdapter.getItemCount() - 1);
-                currentRecyclerPosition = chatMessageAdapter.getItemCount() - 1;
             }
         });
 
@@ -137,14 +138,8 @@ public class MessageActivity extends AppCompatActivity {
 
         KeyboardVisibilityEvent.setEventListener(this, isOpen -> {
             Log.d("Keyboard", "Keyboard has changed visibility");
-            messages.scrollToPosition(currentRecyclerPosition);
+            messages.smoothScrollToPosition(chatMessageAdapter.getItemCount() - 1);
         });
-
-        messages.setOnScrollChangeListener((view, i, i1, i2, i3) -> {
-            currentRecyclerPosition = ((LinearLayoutManager)messages.getLayoutManager()).findLastVisibleItemPosition();
-            Log.d("Current Recycler Position", String.valueOf(currentRecyclerPosition));
-        });
-
 
         // get input text upon clicking the send button
         ImageButton sendMessage = (ImageButton) findViewById(R.id.send_message);

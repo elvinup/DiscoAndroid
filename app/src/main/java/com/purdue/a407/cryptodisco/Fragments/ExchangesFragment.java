@@ -103,7 +103,7 @@ public class ExchangesFragment extends Fragment {
         ButterKnife.bind(this, view);
         ((App) getActivity().getApplication()).getNetComponent().inject(this);
         context = getActivity();
-
+        eAdapter = new ExchangesAdapter(getActivity(), new ArrayList<>());
         if (isAccount)
         {
             title.setText("My Exchanges");
@@ -123,7 +123,6 @@ public class ExchangesFragment extends Fragment {
         else
         {
             title.setText("Exchanges");
-            eAdapter = new ExchangesAdapter(getActivity(), new ArrayList<>());
             exchangesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
             exchangesRecycler.setAdapter(eAdapter);
             appDatabase.exchangeDao().exchanges().observe(getActivity(), exchangeEntities ->

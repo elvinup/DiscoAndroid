@@ -79,8 +79,13 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
                     msg += mapping.get("exchange").concat(".");
 
                     sendNotification("Executing Transaction", msg);
+
+                    appDatabase.notificationsDao().
+                            insert(new NotificationsEntity(msg, String.valueOf(new Date().getTime()), false));
                 } catch (Exception e) {
                     sendNotification("Order Failed", e.getLocalizedMessage().toString());
+                    appDatabase.notificationsDao().
+                            insert(new NotificationsEntity(e.getLocalizedMessage().toString(), String.valueOf(new Date().getTime()), false));
                 }
             }
         }

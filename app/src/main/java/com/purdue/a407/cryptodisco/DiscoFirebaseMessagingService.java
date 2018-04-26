@@ -52,6 +52,8 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
                 String body = mapping.get("body");
                 appDatabase.chatmsgDao().insert(new ChatMessageEntity(body, uuid, "",
                         Integer.parseInt(chatID)));
+            } else if(mapping.get("type").equals("1")) {
+                sendNotification("Stop triggered", "Executing pending order");
             }
         }
 
@@ -59,10 +61,7 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
             Log.d(TAG, "\n\n\nSO THE REG TOKEN IS: " + FirebaseInstanceId.getInstance().getToken() + "\n\n\n\n" );
-            sendNotification(remoteMessage.getNotification().getBody());
-        } else {
-            Map<String, String> data = remoteMessage.getData();
-            Log.d(TAG, "Message data: " + data.toString());
+            sendArbitrageNotification(remoteMessage.getNotification().getBody());
         }
     }
 
@@ -71,7 +70,22 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
      *
      * @param messageBody FCM message body received.
      */
-    private void sendNotification(String messageBody) {
+    private void sendArbitrageNotification(String messageBody) {
+        Arbitrage arb = new Gson().fromJson(messageBody, Arbitrage.class);
+        String translate = String.format("There is a percent difference between exchanges" +
+                        " %s and %s with the coin pairing: %s",
+                arb.getFirst().getExchange(), arb.getSecond().getExchange(), arb.getFirst().getCoin_short());
+
+        sendNotification("Arbitrage Alert!", translate);
+
+    }
+
+    /**
+     * Create and show a simple notification containing the received FCM message.
+     *
+     * @param messageBody FCM message body received.
+     */
+    private void sendNotification(String title, String messageBody) {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -80,17 +94,15 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
 
         String channelId = getString(R.string.default_notification_channel_id);
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        Arbitrage arb = new Gson().fromJson(messageBody, Arbitrage.class);
-        String translate = String.format("There is a percent difference between exchanges" +
-                        " %s and %s with the coin pairing: %s",
-                arb.getFirst().getExchange(), arb.getSecond().getExchange(), arb.getFirst().getCoin_short());
+
         appDatabase.notificationsDao().
                 insert(new NotificationsEntity(messageBody, String.valueOf(new Date().getTime()), false));
+
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.drawable.app_initials_blue)
-                        .setContentTitle("Arbitrage Alert!!!!!")
-                        .setContentText(translate)
+                        .setContentTitle(title)
+                        .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);

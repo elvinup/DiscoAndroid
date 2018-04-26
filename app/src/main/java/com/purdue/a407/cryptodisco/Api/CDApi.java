@@ -7,6 +7,8 @@ import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.SettingsEntity;
+import com.purdue.a407.cryptodisco.Data.Entities.TweetId;
+import com.purdue.a407.cryptodisco.Data.Entities.TweetQueryEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.TrailStop;
 import com.purdue.a407.cryptodisco.Data.Entities.WatchListEntity;
 
@@ -73,7 +75,8 @@ public interface CDApi {
     @POST("/subchat")
     Call<Void> joinChat(@Body ChatJoin chatJoin);
 
+    @GET("/twitter")
+    Call<List<TweetId>> getTweets(@Query("query") String query, @Query("count") int count);
     @POST("/user/trailstop")
     Call<Void> trailstop(@Body TrailStop trailStop);
-
 }

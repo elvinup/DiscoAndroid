@@ -31,8 +31,6 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/ic_arrow_drop_down_black_24dp" />
-
-
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -50,6 +48,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/linLayout"
         android:hint="Search Exchanges"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:tooltipText="e.g. (binance)"/>
 
 </RelativeLayout>

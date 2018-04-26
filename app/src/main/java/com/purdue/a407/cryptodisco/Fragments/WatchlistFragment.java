@@ -84,7 +84,7 @@ public class WatchlistFragment extends Fragment {
         title.setText("Watched Coins");
 
         List<CoinEntity> coinEntityList = appDatabase.coinDao().coinsNotLive();
-        Log.d("coin ent size", Integer.toString(coinEntityList.size()));
+        //Log.d("coin ent size", Integer.toString(coinEntityList.size()));
 
         String uuid = deviceID.getDeviceID();
 

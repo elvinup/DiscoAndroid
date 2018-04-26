@@ -120,6 +120,24 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.UserWatchlistH
         return filteredList;
     }
 
+    public List<CoinEntity> filterCoinList(List<WatchListEntity> watchlists) {
+        List<CoinEntity> filteredList = new ArrayList<>();
+
+        for (WatchListEntity we: watchlists) {
+            for (CoinEntity ce : coinEntityList) {
+                // Match coin id or userid
+                if (we.getCoin() == ce.getId() && we.getUser().equals(uuid)) {
+                    //watchlists.remove(counter);
+                    //notifyDataSetChanged();
+                    filteredList.add(ce);
+                    break;
+                }
+            }
+        }
+
+        return filteredList;
+    }
+
     public class UserWatchlistHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.cv)

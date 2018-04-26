@@ -32,8 +32,9 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="SplashTheme" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/app_initials_white_background</item>
+
     </style>
 
 

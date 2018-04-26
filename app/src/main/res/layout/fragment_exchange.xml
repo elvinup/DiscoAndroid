@@ -6,7 +6,32 @@
     android:background="@android:color/white"
     tools:context=".Fragments.ExchangeFragment">
 
-    <include layout="@layout/content_layout_title" android:id="@+id/layout_title"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/linLayout"
+        android:background="@drawable/background_border_bottom">
+
+        <TextView
+            android:padding="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:textColor="@android:color/black"
+            android:id="@+id/title" />
+
+        <Button
+            android:id="@+id/coin_sort"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_arrow_drop_down_black_24dp" />
+
+
+    </RelativeLayout>
 
     <android.support.v7.widget.AppCompatAutoCompleteTextView
         android:layout_width="match_parent"
@@ -14,7 +39,7 @@
         android:id="@+id/searchText"
         android:textSize="20dp"
         android:hint="Search Coin Pairings"
-        android:layout_below="@+id/layout_title"/>
+        android:layout_below="@+id/linLayout"/>
 
     <android.support.v7.widget.AppCompatButton
         android:layout_width="50dp"
@@ -29,16 +54,10 @@
     <ListView
         android:id="@+id/exchangeLists"
         android:layout_width="match_parent"
-        android:layout_height="413dp"
+        android:layout_height="match_parent"
         android:layout_below="@+id/searchText"
         android:layout_marginTop="0dp" />
 
-    <Button
-        android:id="@+id/coin_sort"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:text="Sort" />
+
 
 </RelativeLayout>

@@ -45,6 +45,17 @@ public class ApiHelpers {
         return exchange;
     }
 
+    public static Exchange getExchange(Context context, String exchangeName) {
+        if(exchangeName.toLowerCase().equals("binance")) {
+            return ApiHelpers.binance(context, null, null);
+        } else if(exchangeName.toLowerCase().equals("kucoin")) {
+            return ApiHelpers.kucoin(null, null);
+        } else if(exchangeName.toLowerCase().equals("gateio")) {
+            return ApiHelpers.gateio(null, null);
+        } else {
+            return null;
+        }
+    }
 
 
 

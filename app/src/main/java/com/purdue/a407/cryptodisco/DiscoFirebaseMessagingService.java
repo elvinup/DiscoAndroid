@@ -20,7 +20,15 @@ import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.Data.Entities.Arbitrage;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.NotificationsEntity;
+import com.purdue.a407.cryptodisco.Fragments.ApiHelpers;
 
+import org.knowm.xchange.Exchange;
+import org.knowm.xchange.currency.CurrencyPair;
+import org.knowm.xchange.dto.Order;
+import org.knowm.xchange.dto.trade.MarketOrder;
+import org.knowm.xchange.service.trade.TradeService;
+
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
@@ -53,7 +61,27 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
                 appDatabase.chatmsgDao().insert(new ChatMessageEntity(body, uuid, "",
                         Integer.parseInt(chatID)));
             } else if(mapping.get("type").equals("1")) {
-                sendNotification("Stop triggered", "Executing pending order");
+
+                String currencyPairStr = mapping.get("coin_short").concat("/").concat(mapping.get("market_short"));
+                try {
+                    MarketOrder.Builder marketBuilder = new MarketOrder.Builder(Order.OrderType.BID, new CurrencyPair(currencyPairStr));
+                    marketBuilder.originalAmount(new BigDecimal(Double.parseDouble(mapping.get("size"))));
+                    marketBuilder.timestamp(new Date());
+                    MarketOrder marketOrder = marketBuilder.build();
+                    Exchange exchange = ApiHelpers.getExchange(getApplicationContext(), mapping.get("exchange"));
+                    exchange.getTradeService().placeMarketOrder(marketOrder);
+
+                    String msg = "Order: ";
+                    msg += Boolean.parseBoolean(mapping.get("side")) ? "Buying " : "Selling ";
+                    msg += mapping.get("size").concat(" ");
+                    msg += mapping.get("coin_short").concat(" in ");
+                    msg += mapping.get("market_short").concat(" market on ");
+                    msg += mapping.get("exchange").concat(".");
+
+                    sendNotification("Executing Transaction", msg);
+                } catch (Exception e) {
+                    sendNotification("Order Failed", e.getLocalizedMessage().toString());
+                }
             }
         }
 
@@ -78,6 +106,9 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
 
         sendNotification("Arbitrage Alert!", translate);
 
+        appDatabase.notificationsDao().
+                insert(new NotificationsEntity(messageBody, String.valueOf(new Date().getTime()), false));
+
     }
 
     /**
@@ -94,9 +125,6 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
 
         String channelId = getString(R.string.default_notification_channel_id);
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        appDatabase.notificationsDao().
-                insert(new NotificationsEntity(messageBody, String.valueOf(new Date().getTime()), false));
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)

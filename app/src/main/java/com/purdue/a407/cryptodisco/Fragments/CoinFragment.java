@@ -43,6 +43,8 @@ import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.Repos.CoinPairingRepository;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangeViewModel;
+import com.webcerebrium.kucoin.KucoinApi;
+import com.webcerebrium.kucoin.KucoinApiException;
 
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.binance.dto.account.BinanceAccountInformation;
@@ -56,7 +58,9 @@ import org.knowm.xchange.kucoin.service.KucoinAccountService;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -251,6 +255,23 @@ public class CoinFragment extends Fragment {
                         //Fina Fuckin Lee
                         String walletid = depositAddress.getAddress();
 
+                        /*
+                        try {
+                            KucoinApi kApi = new KucoinApi("5adf878603d644558b709565", "5f4e56ec-5ea8-40cf-af9d-42f43fbfcafe");
+                            String userinfo = kApi.getUserInfo().toString();
+                            Log.d("Kucoin Info", userinfo);
+                        } catch (KucoinApiException e) {
+                            Log.d("ERROR", e.getLocalizedMessage());
+                        }
+                        */
+
+                        /*
+                        input.clear();
+//                        input.put("asset", "ZEUR");
+                        response = krakApi.queryPrivate(KrakenApi.Method.BALANCE, input);
+                        //System.out.println(response);
+                        Log.d("KRAK-RESPONSE", response);
+                        */
 //                       String thing =  service.getAccountInfo().getWallet().getBalance(new Currency("BTC")).toString();
 //                       String thing2 = service.requestDepositAddress(new Currency("BTC")).toString();
 //                          String address = service.requestDepositAddress(new Currency("BTC"));

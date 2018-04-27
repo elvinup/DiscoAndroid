@@ -234,10 +234,10 @@ public class MyExchangeFragment extends TabbedFragment {
             exchangeApi = ApiHelpers.binance(getActivity(), "", "");
         }
         else if (exchange.equals("gateio")) {
-            exchangeApi = ApiHelpers.gateio("", "");
+            exchangeApi = ApiHelpers.gateio(getContext(),"", "");
         }
         else if (exchange.equals("kucoin")) {
-            exchangeApi = ApiHelpers.kucoin("", "");
+            exchangeApi = ApiHelpers.kucoin(getContext(),"", "");
         }
 
         if(currentlySelectedFragment == 0) {

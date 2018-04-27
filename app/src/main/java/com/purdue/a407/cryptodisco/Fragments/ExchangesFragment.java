@@ -116,7 +116,7 @@ public class ExchangesFragment extends Fragment {
         ButterKnife.bind(this, view);
         ((App) getActivity().getApplication()).getNetComponent().inject(this);
         context = getActivity();
-        eAdapter = new ExchangesAdapter(getActivity(), new ArrayList<>());
+        eAdapter = new ExchangesAdapter(getActivity(), new exchangeVolume());
         if (isAccount)
         {
             title.setText("My Exchanges");

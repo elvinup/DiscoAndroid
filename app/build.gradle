@@ -179,7 +179,7 @@ dependencies {
         exclude group: "com.android.support"
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
-    compile('com.github.omadahealth:lollipin:2.1.0@aar') {
+
     compile 'com.squareup.picasso:picasso:2.5.2'
 
     compile ('com.github.omadahealth:lollipin:2.1.0@aar') {

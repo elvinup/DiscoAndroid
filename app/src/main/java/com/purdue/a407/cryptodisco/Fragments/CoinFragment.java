@@ -2,11 +2,13 @@ package com.purdue.a407.cryptodisco.Fragments;
 
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,7 @@ import org.knowm.xchange.kucoin.KucoinExchange;
 import org.knowm.xchange.kucoin.service.KucoinAccountService;
 
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +86,11 @@ public class CoinFragment extends Fragment {
     @BindView(R.id.toLabel)
     TextView toLabel;
 
+    @BindView(R.id.addressFrom)
+    TextView addressFrom;
+
+    @BindView(R.id.addressTo)
+    TextView addressTo;
 
     @Inject
     AppDatabase appDatabase;
@@ -95,6 +103,12 @@ public class CoinFragment extends Fragment {
 
     ArrayAdapter<Object> arrayAdapter;
     Context context;
+
+    String depositAddress = "";
+
+    boolean kucoinHas = true;
+    boolean gateioHas = true;
+    boolean binanceHas = true;
 
     public CoinFragment() {
         // Required empty public constructor
@@ -227,52 +241,85 @@ public class CoinFragment extends Fragment {
         title.setText(titleString);
 
 
+        BinanceApiClientFactory factory = BinanceApiClientFactory.newInstance("eAvqgbHiIbrAHg0Yu8ACBrAPDBTBWePQuxae22znBGrU2hrPly98dQmmEMyzLNYd", "FgyCVcuKGc9Y9KTzZwQGQgR8dyurV7vdUIkf84yjgToZVxo4g9TVKbvIkwe5lV3G");
+        BinanceApiRestClient client = factory.newRestClient();
+
+
 
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
-                Exchange gateioApi = ApiHelpers.gateio("","");
-                Exchange binance = ApiHelpers.binance(getContext(), "", "");
+
+                Exchange gateioApi = ApiHelpers.gateio(getContext(),"","");
+                Exchange kucoinApi = ApiHelpers.kucoin(getContext(), "", "");
+                Exchange binanceApi = ApiHelpers.binance(getContext(), "", "");
+
+                KucoinAccountService service = new KucoinAccountService(kucoinApi);
+                GateioAccountService service2 = new GateioAccountService(gateioApi);
+                BinanceAccountService service3 = new BinanceAccountService(binanceApi);
 
 
                 if (titleString.equals("BTC")) {
                     try {
-//                        KucoinAccountService service = new KucoinAccountService(gateioApi);
-                        GateioAccountService service = new GateioAccountService(gateioApi);
-                        BinanceAccountService binanceAccountService = new BinanceAccountService(binance);
-
-
-                        BinanceApiClientFactory factory = BinanceApiClientFactory.newInstance("eAvqgbHiIbrAHg0Yu8ACBrAPDBTBWePQuxae22znBGrU2hrPly98dQmmEMyzLNYd", "FgyCVcuKGc9Y9KTzZwQGQgR8dyurV7vdUIkf84yjgToZVxo4g9TVKbvIkwe5lV3G");
-                        BinanceApiRestClient client = factory.newRestClient();
+                        //BinanceAccountService binanceAccountService = new BinanceAccountService(binance);
 
                         com.binance.api.client.domain.account.DepositAddress depositAddress = client.getDepositAddress("BTC");
-
                         //Fina Fuckin Lee
                         String walletid = depositAddress.getAddress();
 
-                        /*
-                        try {
-                            KucoinApi kApi = new KucoinApi("5adf878603d644558b709565", "5f4e56ec-5ea8-40cf-af9d-42f43fbfcafe");
-                            String userinfo = kApi.getUserInfo().toString();
-                            Log.d("Kucoin Info", userinfo);
-                        } catch (KucoinApiException e) {
-                            Log.d("ERROR", e.getLocalizedMessage());
-                        }
-                        */
 
-                        /*
-                        input.clear();
-//                        input.put("asset", "ZEUR");
-                        response = krakApi.queryPrivate(KrakenApi.Method.BALANCE, input);
-                        //System.out.println(response);
-                        Log.d("KRAK-RESPONSE", response);
-                        */
-//                       String thing =  service.getAccountInfo().getWallet().getBalance(new Currency("BTC")).toString();
-//                       String thing2 = service.requestDepositAddress(new Currency("BTC")).toString();
-//                          String address = service.requestDepositAddress(new Currency("BTC"));
-//                          return address;
-                        //return new Gson().toJson(service.);
+                        String balance =  service2.getAccountInfo().getWallet().getBalance(new Currency("BTC")).toString();
+                        String balance2 = service3.getAccountInfo().getWallet().getBalance(new Currency("BTC")).toString();
+
+                       if (balance.contains("available=0,")) {
+                           gateioHas = false;
+                       }
+                       if (balance2.contains("available=0,")) {
+                           binanceHas = false;
+                       }
+
+
+
+                       System.out.println(balance2);
                        return walletid;
+                    } catch (Exception e) {
+                        return e.getLocalizedMessage();
+                    }
+                }
+                else if (titleString.equals("ETH")) {
+                    try {
+                        com.binance.api.client.domain.account.DepositAddress depositAddress = client.getDepositAddress("ETH");
+                        String walletid = depositAddress.getAddress();
+
+                        String balance = service2.getAccountInfo().getWallet().getBalance(new Currency("ETH")).toString();
+                        String balance2 = service3.getAccountInfo().getWallet().getBalance(new Currency("ETH")).toString();
+
+                        if (balance.contains("available=0,")) {
+                            gateioHas = false;
+                        }
+                        if (balance2.contains("available=0,")) {
+                            binanceHas = false;
+                        }
+                        return walletid;
+                    } catch (Exception e) {
+                        return e.getLocalizedMessage();
+                    }
+                }
+                else if (titleString.equals("XLM")) {
+                    try {
+                        com.binance.api.client.domain.account.DepositAddress depositAddress = client.getDepositAddress("XLM");
+                        String walletid = depositAddress.getAddress();
+                        String balance = service2.getAccountInfo().getWallet().getBalance(new Currency("XLM")).toString();
+                        String balance2 = service3.getAccountInfo().getWallet().getBalance(new Currency("XLM")).toString();
+
+                        System.out.println("XLMBalance" + balance);
+                        if (balance.contains("available=0,")) {
+                            gateioHas = false;
+                        }
+                        if (balance2.contains("available=0,")) {
+                            binanceHas = false;
+                        }
+                        return walletid;
                     } catch (Exception e) {
                         return e.getLocalizedMessage();
                     }
@@ -285,6 +332,7 @@ public class CoinFragment extends Fragment {
                     walletid = "null";
                 }
                 Log.d("walletId", walletid);
+                depositAddress = walletid;
             }
         }.execute();
 
@@ -306,11 +354,26 @@ public class CoinFragment extends Fragment {
                 switch(item.getItemId()) {
                     case R.id.item_kucoin:
                         // do whatever
-                        fromLabel.setText("Kucoin");
+                        if (kucoinHas) {
+                            fromLabel.setText("Kucoin");
+                            addressFrom.setText("16vBGW5pPPYebwJhv4bCNrs2MWYG3SNznR");
+                        }
                         break;
                     case R.id.item_gateio:
                         // do whatever
-                        fromLabel.setText("Gateio");
+                        if (gateioHas) {
+                            fromLabel.setText("Gateio");
+                            addressFrom.setText("1QEbysfQQaQbyk8pFxz1D55uJ6z7nyZNzR");
+                        }
+                        else {
+                            item.setVisible(false);
+                        }
+                        break;
+                    case R.id.item_binance:
+                        if (binanceHas) {
+                            fromLabel.setText("Binance");
+                            addressFrom.setText(depositAddress);
+                        }
                         break;
                 }
                 return true;
@@ -323,17 +386,31 @@ public class CoinFragment extends Fragment {
     public void onExchangeTo(View view) {
         PopupMenu popupMenu = new PopupMenu(getActivity(), view);
         popupMenu.getMenuInflater().inflate(R.menu.menu_coin_withdrawal, popupMenu.getMenu());
-
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch(item.getItemId()) {
                     case R.id.item_kucoin:
                         // do whatever
-                        toLabel.setText("Kucoin");
+                        if (kucoinHas) {
+                            toLabel.setText("Kucoin");
+                            addressTo.setText("16vBGW5pPPYebwJhv4bCNrs2MWYG3SNznR");
+                        }
                         break;
                     case R.id.item_gateio:
-                        toLabel.setText("Gateio");
+                        if (gateioHas) {
+                            toLabel.setText("Gateio");
+                            addressTo.setText("1QEbysfQQaQbyk8pFxz1D55uJ6z7nyZNzR");
+                        }
+                        else {
+                            item.setVisible(false);
+                        }
+                        break;
+                    case R.id.item_binance:
+                        if (binanceHas) {
+                            toLabel.setText("binance");
+                            addressTo.setText(depositAddress);
+                        }
                         break;
                 }
                 return true;
@@ -341,6 +418,8 @@ public class CoinFragment extends Fragment {
         });
         popupMenu.show();
     }
+
+
 
 
 

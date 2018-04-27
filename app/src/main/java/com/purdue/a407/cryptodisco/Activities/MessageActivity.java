@@ -158,7 +158,23 @@ public class MessageActivity extends AppCompatActivity {
                 } else {
                     ChatMessageEntity msg = new ChatMessageEntity(message, deviceID.getDeviceID(), deviceID.getDeviceID(),
                             entity.getId());
-                    appDatabase.chatmsgDao().insert(msg);
+                    cdApi.sendMessage(msg).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if(response.code() != 200) {
+                                Log.d("SENDING MESSAGE", "ERROR");
+                            }
+                            else {
+                                Log.d("SENDING MESSAGE", "SUCCESS");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Log.d("SENDING MESSAGE", "FAILURE");
+                        }
+                    });
+//                    appDatabase.chatmsgDao().insert(msg);
                 }
                 //This is just expanded to test for response codes
 //                    cdApi.sendMessage(msg).enqueue(new Callback<Void>() {

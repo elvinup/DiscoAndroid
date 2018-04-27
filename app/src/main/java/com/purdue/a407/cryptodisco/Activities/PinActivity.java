@@ -15,14 +15,16 @@ import com.purdue.a407.cryptodisco.R;
 
 public class PinActivity extends AppLockActivity {
 
+    @Override
+    public int getPinLength() {
+        return 8;
+    }
+
 
     @Override
     public void showForgotDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setPositiveButton("Positive",
-                (dialogInterface, i) -> dialogInterface.dismiss());
-        builder.setNegativeButton("Negative",
-                (dialogInterface, i) -> dialogInterface.dismiss());
+        builder.setMessage("In order to maintain the security of this application, passcodes cannot be reset.");
         builder.create().show();
     }
 

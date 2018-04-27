@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,9 +29,11 @@ import com.kyleohanian.databinding.modelbindingforms.Listeners.OnBindDialogCreat
 import com.kyleohanian.databinding.modelbindingforms.UIObjects.ModelForm;
 import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
 import com.purdue.a407.cryptodisco.Adapters.ExchangesAdapter;
+import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.CacheData.CDResource;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
+import com.purdue.a407.cryptodisco.Data.Entities.CoinPairVolEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.CoinPairingEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.UserExchangeEntity;
@@ -46,6 +49,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,6 +81,9 @@ public class ExchangeFragment extends Fragment {
 
     @Inject
     CoinPairingRepository coinPairingRepository;
+
+    @Inject
+    CDApi api;
 
     ExchangeViewModel viewModel;
 
@@ -132,7 +141,7 @@ public class ExchangeFragment extends Fragment {
                 }
             }
             arrayAdapter = new ArrayAdapter<>(context,
-                    android.R.layout.simple_dropdown_item_1line,strings.toArray());
+                    android.R.layout.simple_dropdown_item_1line, strings.toArray());
             searchText.setAdapter(arrayAdapter);
 
             exchangeLists.setAdapter(arrayAdapter);
@@ -142,12 +151,33 @@ public class ExchangeFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
 
-                    //searchText.setText("test");
+                    api.getExchangePairsByVol(titleString).enqueue(new Callback<List<CoinPairVolEntity>>() {
+
+                        @Override
+                        public void onResponse(Call<List<CoinPairVolEntity>> call, Response<List<CoinPairVolEntity>> response) {
+                            ArrayList<String> strings = new ArrayList<>();
+                            for(CoinPairVolEntity entity: response.body()) {
+                                if (entity.getFirst().length() > 0 && entity.getSecond().length() > 0) {
+                                    strings.add(entity.getFirst() + " -> " + entity.getSecond() +
+                                    "               " + entity.getVolume());
+
+                                    arrayAdapter = new ArrayAdapter<>(context,
+                                            android.R.layout.simple_dropdown_item_1line, strings.toArray());
+
+                                    exchangeLists.setAdapter(arrayAdapter);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<CoinPairVolEntity>> call, Throwable t) {
+
+                        }
+                    });
                 }
             });
         });
-
-    }
+    };
 
     @OnClick(R.id.addButton)
     public void onAdd() {

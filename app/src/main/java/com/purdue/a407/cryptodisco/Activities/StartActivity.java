@@ -61,7 +61,6 @@ public class StartActivity extends AppCompatActivity {
         String UID = deviceID.getDeviceID();
         String FCMToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("UUID", UID);
-        Log.d("FCMToken", FCMToken);
 
         if (!LockManager.getInstance().getAppLock().isPasscodeSet()) {
             Intent intent = new Intent(this, PinActivity.class);

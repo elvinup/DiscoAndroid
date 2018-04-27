@@ -2,6 +2,7 @@ package com.purdue.a407.cryptodisco.Fragments;
 
 import android.content.Context;
 
+
 import com.purdue.a407.cryptodisco.R;
 
 import org.knowm.xchange.Exchange;
@@ -17,6 +18,7 @@ import org.knowm.xchange.kucoin.KucoinExchange;
 
 
 public class ApiHelpers {
+
     public static Exchange binance(Context context, String key, String secret) {
         String binance_key = context.getResources().getString(R.string.binance_test_key);
         String binance_secret = context.getResources().getString(R.string.binance_test_secret);
@@ -78,9 +80,9 @@ public class ApiHelpers {
         if(exchangeName.toLowerCase().equals("binance")) {
             return ApiHelpers.binance(context, null, null);
         } else if(exchangeName.toLowerCase().equals("kucoin")) {
-            return ApiHelpers.kucoin(null, null);
+            return ApiHelpers.kucoin(null, null, null);
         } else if(exchangeName.toLowerCase().equals("gateio")) {
-            return ApiHelpers.gateio(null, null);
+            return ApiHelpers.gateio(null, null, null);
         } else {
             return null;
         }

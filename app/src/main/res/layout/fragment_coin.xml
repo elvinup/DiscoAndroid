@@ -6,17 +6,19 @@
     android:background="@android:color/white"
     tools:context=".Fragments.ExchangeFragment">
 
-    <include layout="@layout/content_layout_title" android:id="@+id/layout_title"/>
+    <include
+        android:id="@+id/layout_title"
+        layout="@layout/content_layout_title" />
 
     <android.support.v7.widget.AppCompatButton
+        android:id="@+id/addButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/addButton"
-        android:background="@drawable/floating_action_background"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="10dp"
+        android:background="@drawable/floating_action_background" />
 
     <Button
         android:id="@+id/coin_like"
@@ -27,6 +29,25 @@
         android:text="Like" />
 
     <Button
+        android:id="@+id/exchange_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="92dp"
+        android:text="FROM" />
+
+    <Button
+        android:id="@+id/exchange_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/exchange_from"
+        android:layout_marginEnd="31dp"
+        android:text="TO" />
+
+    <Button
         android:id="@+id/sendButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,5 +55,41 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="37dp"
         android:text="SEND" />
+
+    <EditText
+        android:id="@+id/addressFrom"
+        android:layout_width="161dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/exchange_from"
+        android:layout_marginTop="182dp"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/addressTo"
+        android:layout_width="164dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/exchange_to"
+        android:layout_alignTop="@+id/addressFrom"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/fromLabel"
+        android:layout_width="109dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="41dp"
+        android:layout_marginTop="151dp" />
+
+    <TextView
+        android:id="@+id/toLabel"
+        android:layout_width="88dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/fromLabel"
+        android:layout_marginEnd="-30dp"
+        android:layout_toStartOf="@+id/addButton" />
 
 </RelativeLayout>

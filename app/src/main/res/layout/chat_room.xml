@@ -5,19 +5,17 @@
     android:id="@+id/chatrooms_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="0dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="0dp">
+    android:orientation="vertical">
 
+    <include layout="@layout/app_bar_half"/>
+
+    <include layout="@layout/content_layout_title" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/group_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomBar"
-        android:layout_marginTop="50dp"
-        android:layout_below="@+id/topBar" />
+        android:layout_marginTop="10dp"/>
 
 
 

@@ -12,6 +12,7 @@ import com.purdue.a407.cryptodisco.Data.Entities.TweetQueryEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.TrailStop;
 import com.purdue.a407.cryptodisco.Data.Entities.WatchListEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.exchangeVolumeEntity;
+import com.purdue.a407.cryptodisco.Data.Entities.CoinPairVolEntity;
 
 import java.util.List;
 
@@ -84,4 +85,8 @@ public interface CDApi {
 
     @GET("/exchangesVolume")
     Call<List<exchangeVolumeEntity>> getVolumes();
+
+    @GET("/exchangePairsVolume/{exchange}")
+    Call<List<CoinPairVolEntity>> getExchangePairsByVol(@Path("exchange") String exchange);
+
 }

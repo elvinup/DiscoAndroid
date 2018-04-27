@@ -174,7 +174,17 @@ public class MyExchangeFragment extends TabbedFragment {
         String[] coins = currentPairing.split("->");
         String coin = coins[0].trim();
         String mark = coins[1].trim();
-        Exchange exchange = ApiHelpers.binance(getActivity(),"","");
+        Exchange exchange;
+        if(this.exchange.equals("binance")) {
+            exchange = ApiHelpers.binance(getActivity(),"","");
+        } else if (this.exchange.equals("gateio")) {
+            exchange = ApiHelpers.gateio(getActivity(),"","");
+        } else if (this.exchange.equals("kraken")) {
+            exchange = ApiHelpers.kraken(getActivity(),"","");
+        }  else {
+            exchange = ApiHelpers.hitbtc(getActivity(),"","");
+        }
+
         if(position == 0) {
             currentlySelectedFragment = 0;
             graphFragment.setCoinPairing(coin + "/" + mark, exchange);
@@ -297,4 +307,7 @@ public class MyExchangeFragment extends TabbedFragment {
         getActivity().getSupportFragmentManager().beginTransaction().
                 replace(R.id.replaceView, dialog).addToBackStack("order_dialog").commit();
     }
+
+
+
 }

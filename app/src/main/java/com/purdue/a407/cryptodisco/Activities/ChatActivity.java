@@ -2,6 +2,7 @@ package com.purdue.a407.cryptodisco.Activities;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
@@ -14,12 +15,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
+import com.google.gson.Gson;
 import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
 import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.App;
@@ -62,6 +67,10 @@ public class ChatActivity extends AppCompatActivity {
     @BindView(R.id.group_list)
     RecyclerView chatRooms;
 
+    @BindView(R.id.title)
+    TextView title;
+
+
     ChatRoomAdapter adapter;
 
 
@@ -71,6 +80,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.chat_room);
         ButterKnife.bind(this);
         ((App) getApplication()).getNetComponent().inject(this);
+        title.setText("Chatrooms");
         progressDialog = LoadingDialog.create();
         adapter = new ChatRoomAdapter(getApplicationContext(), new ArrayList<>(), cdApi, deviceID);
         chatRooms.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

@@ -110,7 +110,7 @@ public class HomeActivity extends AppCompatActivity
                 getSupportFragmentManager().popBackStack();
             }
             else {
-                finish();
+//                finish();
             }
         }
     }

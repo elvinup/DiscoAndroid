@@ -39,6 +39,8 @@ public class StartActivity extends AppCompatActivity {
 
     private static final int CONFIRM_PIN = 2000;
 
+    private static final int FIRST_TIME = 3000;
+
     @Inject
     DeviceID deviceID;
 
@@ -61,7 +63,6 @@ public class StartActivity extends AppCompatActivity {
         String UID = deviceID.getDeviceID();
         String FCMToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("UUID", UID);
-        Log.d("FCMToken", FCMToken);
 
         if (!LockManager.getInstance().getAppLock().isPasscodeSet()) {
             Intent intent = new Intent(this, PinActivity.class);
@@ -89,6 +90,9 @@ public class StartActivity extends AppCompatActivity {
             case CONFIRM_PIN:
                 firstTimeCheck();
                 break;
+            case FIRST_TIME:
+                firstTimeCheck();
+                break;
         }
     }
 
@@ -97,7 +101,7 @@ public class StartActivity extends AppCompatActivity {
                 "firstTime", false)) {
             sharedPreferences.edit().putBoolean("firstTime", true).apply();
             Intent intent = new Intent(this, FirstActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, FIRST_TIME);
         }
         else {
             continueToHome();

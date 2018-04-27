@@ -13,22 +13,23 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.gson.Gson;
 import com.purdue.a407.cryptodisco.Activities.MessageActivity;
 import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatJoin;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
-import com.purdue.a407.cryptodisco.DependencyInjection.Modules.GlideApp;
 import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 import com.purdue.a407.cryptodisco.R;
-import com.purdue.a407.cryptodisco.Svg.SvgSoftwareLayerSetter;
+import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.Interceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,8 +45,8 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
     CDApi cdApi;
     DeviceID deviceID;
     List<ChatRoomEntity> objects;
+    Map<String, Integer> mapImages;
 
-    RequestBuilder<PictureDrawable> requestBuilder;
 
     public ChatRoomAdapter(@NonNull Context context, List<ChatRoomEntity> objects,
                            CDApi api, DeviceID deviceID) {
@@ -53,7 +54,26 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
         this.objects = objects;
         this.cdApi = api;
         this.deviceID = deviceID;
-        setSvgBuilder();
+        setUpMap();
+    }
+
+    public void setUpMap() {
+        mapImages = new HashMap<>();
+        mapImages.put("BTC", 1);
+        mapImages.put("ETH", 1027);
+        mapImages.put("XRP", 52);
+        mapImages.put("BCH",1831);
+        mapImages.put("LTC", 2);
+        mapImages.put("ADA", 2010);
+        mapImages.put("NEO", 1376);
+        mapImages.put("XLM", 512);
+        mapImages.put("EOS", 1765);
+        mapImages.put("DASH", 131);
+        mapImages.put("MIOTA", 1720);
+        mapImages.put("XMR", 328);
+        mapImages.put("XEM", 873);
+        mapImages.put("ETC", 1321);
+        mapImages.put("VEN", 1904);
     }
 
     @Override
@@ -66,20 +86,23 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ChatRoomEntity entity = objects.get(position);
-        String base = "https://cdn.worldvectorlogo.com/logos/";
-        String desc = entity.getDescription();
-        desc.replaceAll(" ", "-");
-        base += desc.toLowerCase() + ".svg";
-        Uri uri = Uri.parse(base);
-        Log.d("Base String", base);
-        requestBuilder.load(uri).into(holder.circleImageView);
+        String base = "https://s2.coinmarketcap.com/static/img/coins/64x64/";
+        Integer id = mapImages.get(entity.getName());
+        base += String.valueOf(id);
+        base += ".png";
+        Picasso.with(mContext)
+                .load(base)
+                .centerCrop()
+                .resize(50,50)
+                .error(R.drawable.emoji_1f30f)
+                .into(holder.circleImageView);
         holder.chatRoom.setText(entity.getName());
+        holder.chatRoomDesc.setText(entity.getDescription());
         holder.layout.setOnClickListener(view -> {
             Intent intent = new Intent(mContext, MessageActivity.class);
             intent.putExtra("group", new Gson().toJson(entity));
             mContext.startActivity(intent);
         });
-
         holder.layout.setOnLongClickListener(view -> {
             cdApi.joinChat(new ChatJoin(deviceID.getDeviceID(),
                     String.valueOf(entity.getId()))).enqueue(new Callback<Void>() {
@@ -105,15 +128,6 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
         });
     }
 
-    public void setSvgBuilder() {
-        requestBuilder = GlideApp.with(mContext)
-                .as(PictureDrawable.class)
-                .placeholder(R.drawable.emoji_00a9)
-                .error(R.drawable.emoji_00a9)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .listener(new SvgSoftwareLayerSetter());
-
-    }
 
     @Override
     public int getItemCount() {
@@ -130,6 +144,9 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
 
         @BindView(R.id.chatRoom)
         TextView chatRoom;
+
+        @BindView(R.id.chatRoomDesc)
+        TextView chatRoomDesc;
 
         CircleImageView circleImageView;
 

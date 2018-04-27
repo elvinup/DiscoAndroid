@@ -1,6 +1,7 @@
 package com.purdue.a407.cryptodisco.Fragments;
 
 
+import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,11 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
+import com.binance.api.client.domain.account.WithdrawHistory;
 import com.google.gson.Gson;
 import com.kyleohanian.databinding.modelbindingforms.Listeners.OnBindDialogCancelListener;
 import com.kyleohanian.databinding.modelbindingforms.Listeners.OnBindDialogCreateListener;
@@ -91,6 +94,12 @@ public class CoinFragment extends Fragment {
 
     @BindView(R.id.addressTo)
     TextView addressTo;
+
+    @BindView(R.id.transferAmount)
+    EditText transferAmount;
+
+    @BindView(R.id.sendButton)
+    Button sendButton;
 
     @Inject
     AppDatabase appDatabase;
@@ -349,25 +358,44 @@ public class CoinFragment extends Fragment {
         PopupMenu popupMenu = new PopupMenu(getActivity(), view);
         popupMenu.getMenuInflater().inflate(R.menu.menu_coin_withdrawal, popupMenu.getMenu());
 
+        if (!gateioHas)
+            popupMenu.getMenu().findItem(R.id.item_gateio).setVisible(false);
+        else if (!binanceHas)
+            popupMenu.getMenu().findItem(R.id.item_binance).setVisible(false);
+        else if (!kucoinHas)
+            popupMenu.getMenu().findItem(R.id.item_kucoin).setVisible(false);
+
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch(item.getItemId()) {
                     case R.id.item_kucoin:
                         // do whatever
-                        if (kucoinHas) {
+                        if (kucoinHas && titleString.equals("BTC")) {
                             fromLabel.setText("Kucoin");
                             addressFrom.setText("16vBGW5pPPYebwJhv4bCNrs2MWYG3SNznR");
+                        }
+                        else if (kucoinHas && titleString.equals("ETH")) {
+                            fromLabel.setText("Kucoin");
+                            addressFrom.setText("0x5a327347dedd733ca22480f5e80b2822a27ffb9d");
+                        }
+                        else if (kucoinHas && titleString.equals("XLM")) {
+
                         }
                         break;
                     case R.id.item_gateio:
                         // do whatever
-                        if (gateioHas) {
+                        if (gateioHas && titleString.equals("BTC")) {
                             fromLabel.setText("Gateio");
                             addressFrom.setText("1QEbysfQQaQbyk8pFxz1D55uJ6z7nyZNzR");
                         }
-                        else {
-                            item.setVisible(false);
+                        else if (gateioHas && titleString.equals("ETH")) {
+                            fromLabel.setText("Gateio");
+                            addressFrom.setText("0x1f33659Ce990ae4C5A365f0d0729B028E0A3777D");
+                        }
+                        else if (gateioHas && titleString.equals("XLM")) {
+                            fromLabel.setText("Gateio");
+                            addressFrom.setText("GBC6NRTTQLRCABQHIR5J4R4YDJWFWRAO4ZRQIM2SVI5GSIZ2HZ42RINW");
                         }
                         break;
                     case R.id.item_binance:
@@ -387,6 +415,14 @@ public class CoinFragment extends Fragment {
     public void onExchangeTo(View view) {
         PopupMenu popupMenu = new PopupMenu(getActivity(), view);
         popupMenu.getMenuInflater().inflate(R.menu.menu_coin_withdrawal, popupMenu.getMenu());
+
+        if (!gateioHas)
+            popupMenu.getMenu().findItem(R.id.item_gateio).setVisible(false);
+        else if (!binanceHas)
+            popupMenu.getMenu().findItem(R.id.item_binance).setVisible(false);
+        else if (!kucoinHas || titleString.equals("XLM"))
+            popupMenu.getMenu().findItem(R.id.item_kucoin).setVisible(false);
+
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -420,8 +456,39 @@ public class CoinFragment extends Fragment {
         popupMenu.show();
     }
 
+    @OnClick(R.id.sendButton)
+    public void sendButtonClick(View view) {
+        Log.d("Wallet 1", addressFrom.getText().toString());
+        Log.d("Wallet2", addressTo.getText().toString());
+
+        String amount = transferAmount.getText().toString();
+        Log.d("Amount", amount);
+
+        //String apiKey = context.getString(R.)
+        BinanceApiClientFactory factory = BinanceApiClientFactory.newInstance("", "");
+        BinanceApiRestClient client = factory.newRestClient();
 
 
+        //client.withdraw("BTC", addressTo.getText().toString(), amount, "null");
 
+        new AsyncTask<Void, Void, String>() {
+
+            @Override
+            protected String doInBackground(Void... voids) {
+
+                client.withdraw("BTC", addressTo.getText().toString(), amount, "null");
+
+
+                /*
+                WithdrawHistory withdrawHistory = client.getWithdrawHistory("BTC");
+                System.out.println(withdrawHistory);
+                */
+                return null;
+            }
+
+
+        }.execute();
+
+    }
 
 }

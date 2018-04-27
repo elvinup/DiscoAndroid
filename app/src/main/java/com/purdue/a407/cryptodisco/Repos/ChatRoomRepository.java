@@ -31,7 +31,6 @@ public class ChatRoomRepository {
 
             @Override
             protected void saveCallResult(@NonNull List<ChatRoomEntity> items) {
-                chatroomDao.clear();
                 chatroomDao.saveAll(items);
             }
 

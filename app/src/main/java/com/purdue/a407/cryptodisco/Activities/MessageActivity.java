@@ -118,7 +118,8 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-        cdApi.getChatMessages(getIntent().getStringExtra("groupID")).enqueue(new Callback<List<ChatMessageEntity>>() {
+
+        cdApi.getChatMessages(String.valueOf(entity.getId())).enqueue(new Callback<List<ChatMessageEntity>>() {
             @Override
             public void onResponse(Call<List<ChatMessageEntity>> call, Response<List<ChatMessageEntity>> response) {
                 if(response.code() != 200) {
@@ -138,7 +139,8 @@ public class MessageActivity extends AppCompatActivity {
 
         KeyboardVisibilityEvent.setEventListener(this, isOpen -> {
             Log.d("Keyboard", "Keyboard has changed visibility");
-            messages.smoothScrollToPosition(chatMessageAdapter.getItemCount() - 1);
+            if(chatMessageAdapter.getItemCount() > 0)
+                messages.smoothScrollToPosition(chatMessageAdapter.getItemCount() - 1);
         });
 
         // get input text upon clicking the send button

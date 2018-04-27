@@ -90,7 +90,7 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
         Integer id = mapImages.get(entity.getName());
         base += String.valueOf(id);
         base += ".png";
-        Picasso.get()
+        Picasso.with(mContext)
                 .load(base)
                 .centerCrop()
                 .resize(50,50)

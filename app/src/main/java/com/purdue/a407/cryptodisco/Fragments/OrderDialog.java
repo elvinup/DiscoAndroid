@@ -215,7 +215,7 @@ public class OrderDialog extends Fragment {
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.code() != 200) {
                         // Error
-                        Toast.makeText(getActivity(), "Fucked response code", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Bad response code", Toast.LENGTH_SHORT).show();
                         Log.d("TrailStop", String.valueOf(response.errorBody().toString()));
                     } else {
                         // Success
@@ -231,7 +231,7 @@ public class OrderDialog extends Fragment {
                     Log.d("TrailStop", "Failure");
                 }
                 });
-                return "Some shit";
+                return "Success";
         }
         return null;
 

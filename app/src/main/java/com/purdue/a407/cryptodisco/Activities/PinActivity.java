@@ -17,7 +17,7 @@ public class PinActivity extends AppLockActivity {
 
     @Override
     public int getPinLength() {
-        return 4;
+        return 8;
     }
 
 

@@ -59,6 +59,12 @@ public class DiscoFirebaseMessagingService extends FirebaseMessagingService {
                 String uuid = mapping.get("uuid");
                 String chatID = mapping.get("chatroom_id");
                 String body = mapping.get("body");
+                if(body.indexOf("\"") == 0 && body.lastIndexOf("\"") == body.length() - 1) {
+                    if(body.length() > 2) {
+                        body = body.substring(1, body.length() - 1);
+                        body.replaceAll("\"", "''");
+                    }
+                }
                 appDatabase.chatmsgDao().insert(new ChatMessageEntity(body, uuid, "",
                         Integer.parseInt(chatID)));
             } else if(mapping.get("type").equals("1")) {

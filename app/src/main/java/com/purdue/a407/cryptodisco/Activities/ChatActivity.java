@@ -44,6 +44,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.annotations.Nullable;
 
 public class ChatActivity extends AppCompatActivity {
@@ -72,6 +73,11 @@ public class ChatActivity extends AppCompatActivity {
 
 
     ChatRoomAdapter adapter;
+
+    @OnClick(R.id.topBackButton)
+    public void onBack() {
+        onBackPressed();
+    }
 
 
     @Override

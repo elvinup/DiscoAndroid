@@ -34,6 +34,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -56,11 +58,17 @@ public class NewsfeedActivity extends AppCompatActivity {
     @Inject
     DeviceID deviceID;
 
+    @OnClick(R.id.topBackButton)
+    public void onBack() {
+        onBackPressed();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newsfeeds);
 
+        ButterKnife.bind(this);
         ((App) getApplication()).getNetComponent().inject(this);
 
         //Gets user watch list

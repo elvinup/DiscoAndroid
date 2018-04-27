@@ -13,6 +13,8 @@ import com.purdue.a407.cryptodisco.Data.Entities.ChatMessageEntity;
 import com.purdue.a407.cryptodisco.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Kenny on 2/22/2018.
@@ -23,6 +25,7 @@ public class MessageAdapter extends ArrayAdapter<ChatMessageEntity> {
     private static final String TAG = "MessageListAdapter";
     private Context mContext;
     int mResource;
+    Map<String, Integer> mapImages;
 
     public MessageAdapter(@NonNull Context context, int resource, @NonNull ArrayList<ChatMessageEntity> objects) {
         super(context, resource, objects);

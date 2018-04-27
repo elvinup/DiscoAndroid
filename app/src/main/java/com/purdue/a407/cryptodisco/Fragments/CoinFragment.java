@@ -249,83 +249,84 @@ public class CoinFragment extends Fragment {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
+                try {
+                    Exchange gateioApi = ApiHelpers.gateio(getActivity(), "", "");
+                    Exchange kucoinApi = ApiHelpers.kucoin(getActivity(), "", "");
+                    Exchange binanceApi = ApiHelpers.binance(getActivity(), "", "");
 
-                Exchange gateioApi = ApiHelpers.gateio(getContext(),"","");
-                Exchange kucoinApi = ApiHelpers.kucoin(getContext(), "", "");
-                Exchange binanceApi = ApiHelpers.binance(getContext(), "", "");
-
-                KucoinAccountService service = new KucoinAccountService(kucoinApi);
-                GateioAccountService service2 = new GateioAccountService(gateioApi);
-                BinanceAccountService service3 = new BinanceAccountService(binanceApi);
-
-
-                if (titleString.equals("BTC")) {
-                    try {
-                        //BinanceAccountService binanceAccountService = new BinanceAccountService(binance);
-
-                        com.binance.api.client.domain.account.DepositAddress depositAddress = client.getDepositAddress("BTC");
-                        //Fina Fuckin Lee
-                        String walletid = depositAddress.getAddress();
+                    KucoinAccountService service = new KucoinAccountService(kucoinApi);
+                    GateioAccountService service2 = new GateioAccountService(gateioApi);
+                    BinanceAccountService service3 = new BinanceAccountService(binanceApi);
 
 
-                        String balance =  service2.getAccountInfo().getWallet().getBalance(new Currency("BTC")).toString();
-                        String balance2 = service3.getAccountInfo().getWallet().getBalance(new Currency("BTC")).toString();
+                    if (titleString.equals("BTC")) {
+                        try {
+                            //BinanceAccountService binanceAccountService = new BinanceAccountService(binance);
 
-                       if (balance.contains("available=0,")) {
-                           gateioHas = false;
-                       }
-                       if (balance2.contains("available=0,")) {
-                           binanceHas = false;
-                       }
+                            com.binance.api.client.domain.account.DepositAddress depositAddress = client.getDepositAddress("BTC");
+                            //Fina Fuckin Lee
+                            String walletid = depositAddress.getAddress();
 
 
+                            String balance = service2.getAccountInfo().getWallet().getBalance(new Currency("BTC")).toString();
+                            String balance2 = service3.getAccountInfo().getWallet().getBalance(new Currency("BTC")).toString();
 
-                       System.out.println(balance2);
-                       return walletid;
-                    } catch (Exception e) {
-                        return e.getLocalizedMessage();
+                            if (balance.contains("available=0,")) {
+                                gateioHas = false;
+                            }
+                            if (balance2.contains("available=0,")) {
+                                binanceHas = false;
+                            }
+
+
+                            System.out.println(balance2);
+                            return walletid;
+                        } catch (Exception e) {
+                            return e.getLocalizedMessage();
+                        }
+                    } else if (titleString.equals("ETH")) {
+                        try {
+                            com.binance.api.client.domain.account.DepositAddress depositAddress = client.getDepositAddress("ETH");
+                            String walletid = depositAddress.getAddress();
+
+                            String balance = service2.getAccountInfo().getWallet().getBalance(new Currency("ETH")).toString();
+                            String balance2 = service3.getAccountInfo().getWallet().getBalance(new Currency("ETH")).toString();
+
+                            if (balance.contains("available=0,")) {
+                                gateioHas = false;
+                            }
+                            if (balance2.contains("available=0,")) {
+                                binanceHas = false;
+                            }
+                            return walletid;
+                        } catch (Exception e) {
+                            return e.getLocalizedMessage();
+                        }
+                    } else if (titleString.equals("XLM")) {
+                        try {
+                            com.binance.api.client.domain.account.DepositAddress depositAddress = client.getDepositAddress("XLM");
+                            String walletid = depositAddress.getAddress();
+                            String balance = service2.getAccountInfo().getWallet().getBalance(new Currency("XLM")).toString();
+                            String balance2 = service3.getAccountInfo().getWallet().getBalance(new Currency("XLM")).toString();
+
+                            System.out.println("XLMBalance" + balance);
+                            if (balance.contains("available=0,")) {
+                                gateioHas = false;
+                            }
+                            if (balance2.contains("available=0,")) {
+                                binanceHas = false;
+                            }
+                            return walletid;
+                        } catch (Exception e) {
+                            return e.getLocalizedMessage();
+                        }
                     }
+                    return "Nothing";
+                } catch(Exception e) {
+                    return "Nothing";
                 }
-                else if (titleString.equals("ETH")) {
-                    try {
-                        com.binance.api.client.domain.account.DepositAddress depositAddress = client.getDepositAddress("ETH");
-                        String walletid = depositAddress.getAddress();
-
-                        String balance = service2.getAccountInfo().getWallet().getBalance(new Currency("ETH")).toString();
-                        String balance2 = service3.getAccountInfo().getWallet().getBalance(new Currency("ETH")).toString();
-
-                        if (balance.contains("available=0,")) {
-                            gateioHas = false;
-                        }
-                        if (balance2.contains("available=0,")) {
-                            binanceHas = false;
-                        }
-                        return walletid;
-                    } catch (Exception e) {
-                        return e.getLocalizedMessage();
-                    }
-                }
-                else if (titleString.equals("XLM")) {
-                    try {
-                        com.binance.api.client.domain.account.DepositAddress depositAddress = client.getDepositAddress("XLM");
-                        String walletid = depositAddress.getAddress();
-                        String balance = service2.getAccountInfo().getWallet().getBalance(new Currency("XLM")).toString();
-                        String balance2 = service3.getAccountInfo().getWallet().getBalance(new Currency("XLM")).toString();
-
-                        System.out.println("XLMBalance" + balance);
-                        if (balance.contains("available=0,")) {
-                            gateioHas = false;
-                        }
-                        if (balance2.contains("available=0,")) {
-                            binanceHas = false;
-                        }
-                        return walletid;
-                    } catch (Exception e) {
-                        return e.getLocalizedMessage();
-                    }
-                }
-                return "Nothing";
             }
+
             @Override
             protected void onPostExecute(String walletid) {
                 if(walletid == null) {

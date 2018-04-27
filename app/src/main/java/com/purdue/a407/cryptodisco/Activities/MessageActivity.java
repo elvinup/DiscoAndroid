@@ -95,6 +95,11 @@ public class MessageActivity extends AppCompatActivity {
         messages.scrollToPosition(chatMessageAdapter.getItemCount() - 1);
     }
 
+    @OnClick(R.id.topBackButton)
+    public void onBack() {
+        onBackPressed();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +120,8 @@ public class MessageActivity extends AppCompatActivity {
             public void onChanged(@Nullable List<ChatMessageEntity> chatMessageEntities) {
                 Log.d("OBSERVED CHANGE!!!", "INSIDE CHAT MESSAGES");
                 chatMessageAdapter.addAll(chatMessageEntities);
+                if(chatMessageAdapter.getItemCount() > 0)
+                    messages.smoothScrollToPosition(chatMessageAdapter.getItemCount() - 1);
             }
         });
 
@@ -128,7 +135,8 @@ public class MessageActivity extends AppCompatActivity {
                 }
                 Log.d("RESULT: SUCCESS", response.body().toString());
                 appDatabase.chatmsgDao().saveAll(response.body());
-                messages.scrollToPosition(chatMessageAdapter.getItemCount() - 1);
+                if(chatMessageAdapter.getItemCount() > 0)
+                    messages.scrollToPosition(chatMessageAdapter.getItemCount() - 1);
             }
 
             @Override

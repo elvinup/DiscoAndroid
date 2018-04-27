@@ -6,6 +6,13 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#1DA1F2">
+        <Button
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/topBackButton"
+            android:background="@drawable/ic_arrow_back"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -22,6 +22,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.binance.api.client.BinanceApiClientFactory;
+import com.binance.api.client.BinanceApiRestClient;
 import com.google.gson.Gson;
 import com.kyleohanian.databinding.modelbindingforms.Listeners.OnBindDialogCancelListener;
 import com.kyleohanian.databinding.modelbindingforms.Listeners.OnBindDialogCreateListener;
@@ -41,6 +43,16 @@ import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.Repos.CoinPairingRepository;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangeViewModel;
+
+import org.knowm.xchange.Exchange;
+import org.knowm.xchange.binance.dto.account.BinanceAccountInformation;
+import org.knowm.xchange.binance.dto.account.DepositAddress;
+import org.knowm.xchange.binance.service.BinanceAccountService;
+import org.knowm.xchange.currency.Currency;
+import org.knowm.xchange.gateio.service.GateioAccountService;
+import org.knowm.xchange.gateio.service.GateioAccountServiceRaw;
+import org.knowm.xchange.kucoin.KucoinExchange;
+import org.knowm.xchange.kucoin.service.KucoinAccountService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -215,6 +227,50 @@ public class CoinFragment extends Fragment {
 
         title.setText(titleString);
 
+
+
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                Exchange gateioApi = ApiHelpers.gateio("","");
+                Exchange binance = ApiHelpers.binance(getContext(), "", "");
+
+
+                if (titleString.equals("BTC")) {
+                    try {
+//                        KucoinAccountService service = new KucoinAccountService(gateioApi);
+                        GateioAccountService service = new GateioAccountService(gateioApi);
+                        BinanceAccountService binanceAccountService = new BinanceAccountService(binance);
+
+
+                        BinanceApiClientFactory factory = BinanceApiClientFactory.newInstance("eAvqgbHiIbrAHg0Yu8ACBrAPDBTBWePQuxae22znBGrU2hrPly98dQmmEMyzLNYd", "FgyCVcuKGc9Y9KTzZwQGQgR8dyurV7vdUIkf84yjgToZVxo4g9TVKbvIkwe5lV3G");
+                        BinanceApiRestClient client = factory.newRestClient();
+
+                        com.binance.api.client.domain.account.DepositAddress depositAddress = client.getDepositAddress("BTC");
+
+                        //Fina Fuckin Lee
+                        String walletid = depositAddress.getAddress();
+
+//                       String thing =  service.getAccountInfo().getWallet().getBalance(new Currency("BTC")).toString();
+//                       String thing2 = service.requestDepositAddress(new Currency("BTC")).toString();
+//                          String address = service.requestDepositAddress(new Currency("BTC"));
+//                          return address;
+                        //return new Gson().toJson(service.);
+                       return walletid;
+                    } catch (Exception e) {
+                        return e.getLocalizedMessage();
+                    }
+                }
+                return "Nothing";
+            }
+            @Override
+            protected void onPostExecute(String walletid) {
+                if(walletid == null) {
+                    walletid = "null";
+                }
+                Log.d("walletId", walletid);
+            }
+        }.execute();
 
         return view;
     }

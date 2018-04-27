@@ -8,8 +8,12 @@ import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.binance.BinanceExchange;
+import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.gateio.GateioExchange;
 import org.knowm.xchange.kucoin.KucoinExchange;
+
+import java.io.IOException;
+
 
 public class ApiHelpers {
     public static Exchange binance(Context context, String key, String secret) {

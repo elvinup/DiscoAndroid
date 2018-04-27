@@ -217,15 +217,27 @@ public class MyExchangeFragment extends TabbedFragment {
             layout.addView(coinPairingText, 2);
         }
         coinPairingText.setText(finalText);
-        Exchange exchange = ApiHelpers.binance(getActivity(),"","");
+
+        Exchange exchangeApi = ApiHelpers.binance(getActivity(), "", "");
+        if (exchange.equals("binance")) {
+
+            exchangeApi = ApiHelpers.binance(getActivity(), "", "");
+        }
+        else if (exchange.equals("gateio")) {
+            exchangeApi = ApiHelpers.gateio("", "");
+        }
+        else if (exchange.equals("kucoin")) {
+            exchangeApi = ApiHelpers.kucoin("", "");
+        }
+
         if(currentlySelectedFragment == 0) {
-            graphFragment.setCoinPairing(coin + "/" + mark, exchange);
+            graphFragment.setCoinPairing(coin + "/" + mark, exchangeApi);
         }
         else if(currentlySelectedFragment == 1) {
-            tradeHistoryFragment.setCoinPairing(coin + "/" + mark, exchange);
+            tradeHistoryFragment.setCoinPairing(coin + "/" + mark, exchangeApi);
         }
         else if(currentlySelectedFragment == 2) {
-            openOrdersFragment.setCoinPairing(coin + "/" + mark, exchange);
+            openOrdersFragment.setCoinPairing(coin + "/" + mark, exchangeApi);
         }
 
 
@@ -277,6 +289,8 @@ public class MyExchangeFragment extends TabbedFragment {
             type = ExchType.BINANCE;
         else if(exchange.equals("gateio"))
             type = ExchType.GATEIO;
+        else if(exchange.equals("kucoin"))
+            type = ExchType.KUCOIN;
         else
             type = ExchType.BINANCE;
         dialog.setCurrencyPair(coin + "/" + mark, type);

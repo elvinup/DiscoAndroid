@@ -1,49 +1,28 @@
 package com.purdue.a407.cryptodisco.Fragments;
 
 
-import android.arch.lifecycle.Observer;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatAutoCompleteTextView;
-import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.kyleohanian.databinding.modelbindingforms.Listeners.OnBindDialogCancelListener;
-import com.kyleohanian.databinding.modelbindingforms.Listeners.OnBindDialogCreateListener;
-import com.kyleohanian.databinding.modelbindingforms.UIObjects.ModelForm;
-import com.purdue.a407.cryptodisco.Adapter.ChatRoomAdapter;
-import com.purdue.a407.cryptodisco.Adapters.ExchangesAdapter;
 import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.Api.SqlCount;
 import com.purdue.a407.cryptodisco.App;
-import com.purdue.a407.cryptodisco.CacheData.CDResource;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
-import com.purdue.a407.cryptodisco.Data.Entities.CoinPairingEntity;
-import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
-import com.purdue.a407.cryptodisco.Data.Entities.UserExchangeEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.WatchListEntity;
 import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 import com.purdue.a407.cryptodisco.R;
-import com.purdue.a407.cryptodisco.Repos.CoinPairingRepository;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangeViewModel;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -51,7 +30,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,6 +50,13 @@ public class CoinFragment extends Fragment {
 
     @BindView(R.id.title)
     TextView title;
+
+    @BindView(R.id.fromLabel)
+    TextView fromLabel;
+
+    @BindView(R.id.toLabel)
+    TextView toLabel;
+
 
     @Inject
     AppDatabase appDatabase;
@@ -221,6 +206,53 @@ public class CoinFragment extends Fragment {
 
     public void setTitle(String titleString) {
         this.titleString = titleString;
+    }
+
+    @OnClick(R.id.exchange_from)
+    public void onExchangeFrom(View view) {
+        PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_coin_withdrawal, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch(item.getItemId()) {
+                    case R.id.item_kucoin:
+                        // do whatever
+                        fromLabel.setText("Kucoin");
+                        break;
+                    case R.id.item_gateio:
+                        // do whatever
+                        fromLabel.setText("Gateio");
+                        break;
+                }
+                return true;
+            }
+        });
+        popupMenu.show();
+    }
+
+    @OnClick(R.id.exchange_to)
+    public void onExchangeTo(View view) {
+        PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_coin_withdrawal, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch(item.getItemId()) {
+                    case R.id.item_kucoin:
+                        // do whatever
+                        toLabel.setText("Kucoin");
+                        break;
+                    case R.id.item_gateio:
+                        toLabel.setText("Gateio");
+                        break;
+                }
+                return true;
+            }
+        });
+        popupMenu.show();
     }
 
 

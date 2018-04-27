@@ -158,8 +158,13 @@ public class ExchangeFragment extends Fragment {
                             ArrayList<String> strings = new ArrayList<>();
                             for(CoinPairVolEntity entity: response.body()) {
                                 if (entity.getFirst().length() > 0 && entity.getSecond().length() > 0) {
-                                    strings.add(entity.getFirst() + " -> " + entity.getSecond() +
-                                    "               " + entity.getVolume());
+                                    String msg = entity.getFirst() + " -> " + entity.getSecond();
+                                    while(msg.length() < 17) {
+                                        msg = msg.concat(" ");
+                                    }
+                                    strings.add(msg.concat(entity.getVolume()));
+
+
 
                                     arrayAdapter = new ArrayAdapter<>(context,
                                             android.R.layout.simple_dropdown_item_1line, strings.toArray());

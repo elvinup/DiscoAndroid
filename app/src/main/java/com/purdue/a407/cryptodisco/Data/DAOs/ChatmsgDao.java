@@ -14,12 +14,15 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 @Dao
 public interface ChatmsgDao {
 
-    @Query("SELECT * FROM ChatMessageEntity")
-    LiveData<List<ChatMessageEntity>> chatMessages();
+    @Query("SELECT * FROM ChatMessageEntity WHERE chatroom_id = :id")
+    LiveData<List<ChatMessageEntity>> chatMessages(int id);
 
     @Insert(onConflict = REPLACE)
     void saveAll(List<ChatMessageEntity> chatMessageEntities);
 
     @Query("DELETE FROM ChatMessageEntity")
     void clear();
+
+    @Insert(onConflict = REPLACE)
+    void insert(ChatMessageEntity chatMessageEntity);
 }

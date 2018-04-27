@@ -5,8 +5,10 @@ import android.arch.persistence.room.Room;
 
 import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
+import com.purdue.a407.cryptodisco.Data.DAOs.CoinDao;
 import com.purdue.a407.cryptodisco.Data.DAOs.CoinPairingDao;
 import com.purdue.a407.cryptodisco.Data.DAOs.ExchangeDao;
+import com.purdue.a407.cryptodisco.Data.DAOs.WatchlistDao;
 import com.purdue.a407.cryptodisco.Repos.CoinPairingRepository;
 import com.purdue.a407.cryptodisco.Data.DAOs.ChatmsgDao;
 import com.purdue.a407.cryptodisco.Data.DAOs.ChatroomDao;
@@ -14,7 +16,9 @@ import com.purdue.a407.cryptodisco.Data.DAOs.ExchangeDao;
 import com.purdue.a407.cryptodisco.Data.Entities.ChatRoomEntity;
 import com.purdue.a407.cryptodisco.Repos.ChatMsgRepository;
 import com.purdue.a407.cryptodisco.Repos.ChatRoomRepository;
+import com.purdue.a407.cryptodisco.Repos.CoinRepository;
 import com.purdue.a407.cryptodisco.Repos.ExchangeRepository;
+import com.purdue.a407.cryptodisco.Repos.WatchlistRepository;
 
 import javax.inject.Singleton;
 
@@ -47,6 +51,10 @@ public class DBModule {
 
     @Provides
     @Singleton
+    public WatchlistDao provideWatchlistDao(AppDatabase db) { return db.watchlistDao(); }
+
+    @Provides
+    @Singleton
     public ExchangeRepository provideExchangeRepository(CDApi cdApi, ExchangeDao exchangeDao) {
         return new ExchangeRepository(cdApi, exchangeDao);
     }
@@ -60,6 +68,13 @@ public class DBModule {
 
     @Provides
     @Singleton
+    public CoinRepository provideCoinRepository(CDApi cdApi, AppDatabase database) {
+        CoinDao dao = database.coinDao();
+        return new CoinRepository(cdApi, dao);
+    }
+
+    @Provides
+    @Singleton
     public ChatRoomRepository provideChatroomRepository(CDApi cdApi, ChatroomDao chatroomDao) {
         return new ChatRoomRepository(cdApi, chatroomDao);
     }
@@ -68,6 +83,12 @@ public class DBModule {
     @Singleton
     public ChatMsgRepository provideChatmsgRepository(CDApi cdApi, ChatmsgDao chatMsgDao) {
         return new ChatMsgRepository(cdApi, chatMsgDao);
+    }
+
+    @Provides
+    @Singleton
+    public WatchlistRepository provideWatchListRepository(CDApi cdApi, WatchlistDao watchlistDao) {
+        return new WatchlistRepository(cdApi, watchlistDao);
     }
 
 }

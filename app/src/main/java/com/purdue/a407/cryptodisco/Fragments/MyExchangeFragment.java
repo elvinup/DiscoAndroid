@@ -2,60 +2,77 @@ package com.purdue.a407.cryptodisco.Fragments;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.mikephil.charting.charts.CandleStickChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.CandleData;
+import com.github.mikephil.charting.data.CandleDataSet;
+import com.github.mikephil.charting.data.CandleEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.EntryXComparator;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-import com.kyleohanian.databinding.modelbindingforms.UIObjects.ModelForm;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.Data.Entities.CoinPairingEntity;
-import com.purdue.a407.cryptodisco.Data.Entities.UserExchangeEntity;
+import com.purdue.a407.cryptodisco.Helpers.DateAxisValueFormatter;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.Repos.CoinPairingRepository;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangeViewModel;
 
 import org.knowm.xchange.Exchange;
-import org.knowm.xchange.ExchangeFactory;
-import org.knowm.xchange.ExchangeSpecification;
-import org.knowm.xchange.ExchangeSpecification.*;
-import org.knowm.xchange.binance.BinanceExchange;
-import org.knowm.xchange.binance.service.BinanceTradeHistoryParams;
+import org.knowm.xchange.binance.service.BinanceMarketDataService;
 import org.knowm.xchange.binance.service.BinanceTradeService;
 import org.knowm.xchange.currency.CurrencyPair;
-import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.marketdata.OrderBook;
+import org.knowm.xchange.dto.marketdata.Trade;
+import org.knowm.xchange.dto.marketdata.Trades;
 import org.knowm.xchange.dto.trade.LimitOrder;
-import org.knowm.xchange.dto.trade.MarketOrder;
-import org.knowm.xchange.dto.trade.StopOrder;
+import org.knowm.xchange.dto.trade.OpenOrders;
 import org.knowm.xchange.dto.trade.UserTrade;
 import org.knowm.xchange.dto.trade.UserTrades;
-import org.knowm.xchange.gateio.GateioExchange;
 import org.knowm.xchange.service.marketdata.MarketDataService;
-import org.knowm.xchange.service.trade.TradeService;
+import org.knowm.xchange.service.trade.params.TradeHistoryParamsAll;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -64,38 +81,23 @@ import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.Call;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyExchangeFragment extends Fragment {
+public class MyExchangeFragment extends TabbedFragment {
 
     @BindView(R.id.title)
     TextView title;
 
-    @BindView(R.id.sellOrder)
-    Button btnSell;
-
     private String exchange = "N/A";
+
+    public static final int RES_DETAILS = 10000;
 
     @BindView(R.id.searchText)
     AppCompatAutoCompleteTextView searchText;
 
-    @BindView(R.id.coinPairing)
-    TextView coinPairing;
 
-    @BindColor(R.color.lineColor1)
-    int lineColor1;
-
-    @BindColor(R.color.lineColorOpaque1)
-    int lineColorOpaque1;
-
-    @BindColor(R.color.lineColor2)
-    int lineColor2;
-
-    @BindColor(R.color.lineColorOpaque2)
-    int lineColorOpaque2;
 
     @Inject
     AppDatabase appDatabase;
@@ -109,12 +111,13 @@ public class MyExchangeFragment extends Fragment {
     Context context;
 
     String currentPairing = "";
-    Exchange exchangeApiHelper;
 
-    GraphView graphView;
+    GraphFragment graphFragment;
+    TradeHistoryFragment tradeHistoryFragment;
+    OpenOrdersFragment openOrdersFragment;
 
-    LineGraphSeries<DataPoint> askDataSet;
-    LineGraphSeries<DataPoint> bidDataSet;
+
+    int currentlySelectedFragment = 0;
 
 
     public MyExchangeFragment() {
@@ -132,14 +135,68 @@ public class MyExchangeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public View getView(LayoutInflater inflater, ViewGroup container,
+                        Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_exchange,
                 container, false);
         ButterKnife.bind(this, view);
-        graphView = view.findViewById(R.id.askBidChart);
         ((App) getActivity().getApplication()).getNetComponent().inject(this);
         setUpViewModel();
-//        runner();
+        graphFragment = new GraphFragment();
+        graphFragment.callback(this);
+        tradeHistoryFragment = new TradeHistoryFragment();
+        tradeHistoryFragment.callback(this);
+        openOrdersFragment = new OpenOrdersFragment();
+        openOrdersFragment.callback(this);
         return view;
+    }
+
+    @Override
+    public Fragment[] getFragments() {
+        return new Fragment[]{graphFragment,
+                tradeHistoryFragment, openOrdersFragment};
+    }
+
+    @Override
+    public String[] getTitles() {
+        return new String[]{"Graphs", "Trade History", "Open Orders"};
+    }
+
+    @Override
+    public void onSelected(int position) {
+        if(currentPairing.equals("")) {
+            return;
+        }
+        String[] coins = currentPairing.split("->");
+        String coin = coins[0].trim();
+        String mark = coins[1].trim();
+        Exchange exchange;
+        if(this.exchange.equals("binance")) {
+            exchange = ApiHelpers.binance(getActivity(),"","");
+        } else if (this.exchange.equals("gateio")) {
+            exchange = ApiHelpers.gateio(getActivity(),"","");
+        } else if (this.exchange.equals("kraken")) {
+            exchange = ApiHelpers.kraken(getActivity(),"","");
+        }  else {
+            exchange = ApiHelpers.hitbtc(getActivity(),"","");
+        }
+
+        if(position == 0) {
+            currentlySelectedFragment = 0;
+            graphFragment.setCoinPairing(coin + "/" + mark, exchange);
+        }
+        else if(position == 1) {
+            currentlySelectedFragment = 1;
+            tradeHistoryFragment.setCoinPairing(coin + "/" + mark, exchange);
+        }
+        else if(position == 2) {
+            currentlySelectedFragment = 2;
+            openOrdersFragment.setCoinPairing(coin + "/" + mark, exchange);
+        }
     }
 
     public void setExchange(String exchange) {
@@ -153,16 +210,40 @@ public class MyExchangeFragment extends Fragment {
         String mark = coins[1].trim();
         float price = appDatabase.coinPairingDao().getPrice(coin, mark);
         String finalText = String.format("%s: %f", currentPairing, price);
-        coinPairing.setText(finalText);
-        String localCoinPairing = coin + "/" + mark;
-        runner(localCoinPairing);
+        TextView coinPairingText;
+        if(getView().findViewById(R.id.coinPairingTextValue) != null) {
+            coinPairingText = getView().findViewById(R.id.coinPairingTextValue);
+        }
+        else {
+            coinPairingText = new TextView(getActivity());
+            coinPairingText.setLayoutParams(new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            coinPairingText.setTextSize(14f);
+            coinPairingText.setId(R.id.coinPairingTextValue);
+            coinPairingText.setText(finalText);
+
+            LinearLayout layout = getView().findViewById(R.id.masterLayout);
+            layout.addView(coinPairingText, 2);
+        }
+        coinPairingText.setText(finalText);
+        Exchange exchange = ApiHelpers.binance(getActivity(),"","");
+        if(currentlySelectedFragment == 0) {
+            graphFragment.setCoinPairing(coin + "/" + mark, exchange);
+        }
+        else if(currentlySelectedFragment == 1) {
+            tradeHistoryFragment.setCoinPairing(coin + "/" + mark, exchange);
+        }
+        else if(currentlySelectedFragment == 2) {
+            openOrdersFragment.setCoinPairing(coin + "/" + mark, exchange);
+        }
+
 
 
     }
 
     public void setUpViewModel() {
         title.setText(exchange);
-        btnSell.setVisibility(View.INVISIBLE);
         coinPairingRepository.setExchange(exchange);
         viewModel = new ExchangeViewModel(coinPairingRepository);
         context = getActivity();
@@ -171,9 +252,7 @@ public class MyExchangeFragment extends Fragment {
             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view1.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             searchText.clearFocus();
-            btnSell.setVisibility(View.VISIBLE);
             setCoinPairing();
-
         });
 
         viewModel.getCoinPairings().observe(getActivity(), listCDResource -> {
@@ -192,10 +271,15 @@ public class MyExchangeFragment extends Fragment {
 
     }
 
-    @OnClick(R.id.sellOrder)
-    public void onSell() {
+
+    @OnClick(R.id.createOrder)
+    public void onOrder() {
         OrderDialog dialog = new OrderDialog();
         String[] coins = currentPairing.split("->");
+        if(coins.length != 2) {
+            Toast.makeText(getActivity(), "Please choose a coin pairing", Toast.LENGTH_SHORT).show();
+            return;
+        }
         String coin = coins[0].trim();
         String mark = coins[1].trim();
         ExchType type;
@@ -210,114 +294,6 @@ public class MyExchangeFragment extends Fragment {
                 replace(R.id.replaceView, dialog).addToBackStack("order_dialog").commit();
     }
 
-    public void runner(String localCoinPairing) {
-        new AsyncTask<String, Void, Void>() {
-            @Override
-            protected Void doInBackground(String... strs) {
-//                if(exchType == ExchType.BINANCE)
-//                    exchange = ApiHelpers.binance("","");
-//                else if(exchType == ExchType.GATEIO)
-//                    exchange = ApiHelpers.gateio("","");
-//                else
-//                    exchange = ApiHelpers.binance("","");
 
-                exchangeApiHelper = ApiHelpers.binance("","");
-                getStuff(strs[0]);
-                return null;
-            }
-            @Override
-            protected void onPostExecute(Void s) {
-                graphView.addSeries(bidDataSet);
-                graphView.addSeries(askDataSet);
-                bidDataSet.setColor(lineColor1);
-                bidDataSet.setDrawDataPoints(false);
-                bidDataSet.setThickness(8);
-                bidDataSet.setAnimated(true);
-                bidDataSet.setDrawBackground(true);
-                bidDataSet.setBackgroundColor(lineColorOpaque1);
-
-                askDataSet.setColor(lineColor2);
-                askDataSet.setDrawDataPoints(false);
-                askDataSet.setThickness(8);
-                askDataSet.setAnimated(true);
-                askDataSet.setDrawBackground(true);
-                askDataSet.setBackgroundColor(lineColorOpaque2);
-                double lowestX = bidDataSet.getLowestValueX() < askDataSet.getLowestValueX() ?
-                        bidDataSet.getLowestValueX(): askDataSet.getLowestValueX();
-                double highestX = bidDataSet.getHighestValueX() > askDataSet.getHighestValueX() ?
-                        bidDataSet.getHighestValueX(): askDataSet.getHighestValueX();
-                double lowestY = bidDataSet.getLowestValueY() < askDataSet.getLowestValueY() ?
-                        bidDataSet.getLowestValueY(): askDataSet.getLowestValueY();
-                double highestY = bidDataSet.getHighestValueY() > askDataSet.getHighestValueY() ?
-                        bidDataSet.getHighestValueY(): askDataSet.getHighestValueY();
-                graphView.getGridLabelRenderer().setNumVerticalLabels(5);
-                graphView.getGridLabelRenderer().setNumHorizontalLabels(5);
-                graphView.getViewport().setMinX(lowestX - .001);
-                graphView.getViewport().setMaxX(highestX + .001);
-                graphView.getViewport().setMinY(lowestY);
-                graphView.getViewport().setMaxY(highestY);
-            }
-        }.execute(localCoinPairing);
-    }
-
-    public String getStuff(String coinPairing) {
-        BinanceTradeService service = new BinanceTradeService(exchangeApiHelper);
-        try {
-            BinanceTradeHistoryParams params = new BinanceTradeHistoryParams();
-            params.setCurrencyPair(new CurrencyPair(coinPairing));
-            UserTrades trades = service.getTradeHistory(params);
-            System.out.println("Printing trades.......");
-            for(UserTrade trade: trades.getUserTrades()) {
-                System.out.println(trade.toString());
-            }
-            System.out.println("Finished printing trades");
-        }
-        catch(Exception e) {
-            Log.d("EXCEPTION", e.getLocalizedMessage());
-        }
-        MarketDataService marketDataService = exchangeApiHelper.getMarketDataService();
-
-        System.out.println("fetching data...");
-
-        // Get the current orderbook
-        try {
-            graphView.removeAllSeries();
-            OrderBook orderBook = marketDataService.getOrderBook(new CurrencyPair(coinPairing));
-            List<DataPoint> dataBids = new ArrayList<>();
-            List<DataPoint> dataAsks = new ArrayList<>();
-            BigDecimal accumulatedBidUnits = new BigDecimal("0");
-            System.out.println("Inside of the thread");
-            Log.d("BIDS","This is a message");
-            for(LimitOrder limitOrder: orderBook.getBids()) {
-                accumulatedBidUnits = accumulatedBidUnits.add(limitOrder.getOriginalAmount());
-                Log.d("X Coordinate", String.valueOf(limitOrder.getLimitPrice()));
-                Log.d("Y Coordinate", String.valueOf(accumulatedBidUnits));
-                dataBids.add(new DataPoint(limitOrder.getLimitPrice().doubleValue()
-                        , accumulatedBidUnits.doubleValue()));
-            }
-            BigDecimal accumulatedBidUnits2 = new BigDecimal("0");
-            Log.d("ASKS","This is a message");
-            for(LimitOrder limitOrder: orderBook.getAsks()) {
-                accumulatedBidUnits2 = accumulatedBidUnits2.add(limitOrder.getOriginalAmount());
-                Log.d("X Coordinate", String.valueOf(limitOrder.getLimitPrice()));
-                Log.d("Y Coordinate", String.valueOf(accumulatedBidUnits2));
-                dataAsks.add(new DataPoint(limitOrder.getLimitPrice().doubleValue(),
-                        accumulatedBidUnits2.doubleValue()));
-            }
-            DataPoint[] bidArr = new DataPoint[dataBids.size()];
-            for(int i = 0; i < dataBids.size(); i++) {
-                bidArr[i] = dataBids.get(i);
-            }
-            bidDataSet = new LineGraphSeries<>(bidArr);
-            DataPoint[] askArr = new DataPoint[dataAsks.size()];
-            for(int i = 0; i < dataAsks.size(); i++) {
-                askArr[i] = dataAsks.get(i);
-            }
-            askDataSet = new LineGraphSeries<>(askArr);
-        } catch (IOException e) {
-            Log.d("Error in getting orderbook", "Handled Exception");
-        }
-        return "";
-    }
 
 }

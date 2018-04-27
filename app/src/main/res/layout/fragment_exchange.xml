@@ -24,6 +24,24 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="10dp"
+        android:tooltipText=""/>
+
+    <ListView
+        android:id="@+id/exchangeLists"
+        android:layout_width="match_parent"
+        android:layout_height="413dp"
+        android:layout_below="@+id/searchText"
+        android:layout_marginTop="0dp" />
+
+    <Button
+        android:id="@+id/coin_sort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="Sort"
+        android:tooltipText="Sort the exchanges by popularity"/>
+
 
 </RelativeLayout>

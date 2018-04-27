@@ -40,6 +40,7 @@ public class NetModule {
     public Gson provideGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+        gsonBuilder.setLenient();
         return gsonBuilder.create();
     }
 

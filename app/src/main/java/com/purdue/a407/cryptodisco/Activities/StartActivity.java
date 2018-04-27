@@ -1,16 +1,22 @@
 package com.purdue.a407.cryptodisco.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.github.omadahealth.lollipin.lib.managers.AppLock;
+import com.github.omadahealth.lollipin.lib.managers.AppLockActivity;
+import com.github.omadahealth.lollipin.lib.managers.LockManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
+import com.purdue.a407.cryptodisco.Data.Entities.CoinEntity;
 import com.purdue.a407.cryptodisco.Helpers.DeviceID;
 import com.purdue.a407.cryptodisco.R;
 
@@ -24,8 +30,14 @@ import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.List;
+
 
 public class StartActivity extends AppCompatActivity {
+
+    private static final int REQUEST_LOCK = 1000;
+
+    private static final int CONFIRM_PIN = 2000;
 
     @Inject
     DeviceID deviceID;
@@ -46,30 +58,77 @@ public class StartActivity extends AppCompatActivity {
         ((App)getApplication()).getNetComponent().inject(this);
 
         Log.d("UUID", deviceID.getDeviceID());
-
-//        appDatabase.coinPairingDao().deleteAll();
-//        appDatabase.userExchangeDao().clear();
-//        appDatabase.exchangeDao().clear();
-
-//        new Handler().postDelayed(() -> {
-//            if(!sharedPreferences.getBoolean(
-//                    "firstTime", false)) {
-//                sharedPreferences.edit().putBoolean("firstTime", true).apply();
-//                Intent intent = new Intent(this, FirstActivity.class);
-//                startActivity(intent);
-//            }
-//            else {
-//                Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
-//                Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getApplication(),
-//                        android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
-//                StartActivity.this.startActivity(myIntent, bundle);
-//            }
-//        }, 1000);
-
         String UID = deviceID.getDeviceID();
         String FCMToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("UUID", UID);
         Log.d("FCMToken", FCMToken);
+
+        if (!LockManager.getInstance().getAppLock().isPasscodeSet()) {
+            Intent intent = new Intent(this, PinActivity.class);
+            intent.putExtra(AppLock.EXTRA_TYPE, AppLock.ENABLE_PINLOCK);
+            startActivityForResult(intent, REQUEST_LOCK);
+        }
+
+
+        else {
+            Intent intent = new Intent(this, PinActivity.class);
+            intent.putExtra(AppLock.EXTRA_TYPE, AppLock.UNLOCK_PIN);
+            startActivityForResult(intent, CONFIRM_PIN);
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQUEST_LOCK:
+                firstTimeCheck();
+                break;
+            case CONFIRM_PIN:
+                firstTimeCheck();
+                break;
+        }
+    }
+
+    private void firstTimeCheck() {
+        if(!sharedPreferences.getBoolean(
+                "firstTime", false)) {
+            sharedPreferences.edit().putBoolean("firstTime", true).apply();
+            Intent intent = new Intent(this, FirstActivity.class);
+            startActivity(intent);
+        }
+        else {
+            continueToHome();
+        }
+    }
+
+
+    private void continueToHome() {
+        String UID = deviceID.getDeviceID();
+        String FCMToken = FirebaseInstanceId.getInstance().getToken();
+        cdApi.getCoins().enqueue(new Callback<List<CoinEntity>>() {
+            @Override
+            public void onResponse(Call<List<CoinEntity>> call, Response<List<CoinEntity>> response) {
+                if(response.code() != 200) {
+                    // Error
+                    Log.d("Coin Result", String.valueOf(response.code()));
+
+                }
+                else {
+                    // Success
+                    Log.d("Coin Result", "Success");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CoinEntity>> call, Throwable t) {
+                Log.d("Coin Result", "Failure");
+
+            }
+        });
+
         cdApi.userExists(UID, FCMToken).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -95,18 +154,5 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(myIntent);
             }
         });
-
-        if(!sharedPreferences.getBoolean(
-                "firstTime", false)) {
-            sharedPreferences.edit().putBoolean("firstTime", true).apply();
-            Intent intent = new Intent(this, FirstActivity.class);
-            startActivity(intent);
-        }
-        else {
-            Intent myIntent = new Intent(StartActivity.this, HomeActivity.class);
-            Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getApplication(),
-                    android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
-            StartActivity.this.startActivity(myIntent, bundle);
-        }
     }
 }

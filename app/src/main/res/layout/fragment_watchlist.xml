@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    tools:context=".Fragments.WatchlistFragment">
+
+    <include layout="@layout/content_layout_title"
+        android:id="@+id/include" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/myWatchlistRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/searchCoins" />
+
+    <android.support.v7.widget.AppCompatAutoCompleteTextView
+        android:id="@+id/searchCoins"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/include"
+        android:hint="Search Coins"
+        android:textSize="20dp"
+        android:tooltipText="e.g. (BTC)"/>
+
+</RelativeLayout>

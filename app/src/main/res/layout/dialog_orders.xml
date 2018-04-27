@@ -2,7 +2,8 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@android:color/white">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,26 +17,37 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textAlignment="center"
                 android:textSize="20sp"
                 android:text="Order Type" />
             <RadioGroup
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/marketOrderBtn"
+                    android:textAlignment="center"
                     android:text="Market"/>
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/limitOrderBtn"
+                    android:textAlignment="center"
                     android:text="Limit"/>
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/stopOrderBtn"
+                    android:textAlignment="center"
                     android:text="Stop"/>
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/trailstopOrderBtn"
+                    android:textAlignment="center"
+                    android:text="Trailing Stop"/>
             </RadioGroup>
         </LinearLayout>
         <LinearLayout
@@ -47,29 +59,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:text="Order Type" />
+                android:text="Signal"
+                android:textAlignment="center"/>
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAlignment="center"
                     android:id="@+id/buyBtn"
                     android:text="Buy"/>
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/sellBtn"
+                    android:textAlignment="center"
                     android:text="Sell"/>
             </RadioGroup>
         </LinearLayout>
     </LinearLayout>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/stopLimitPrice"
-        android:hint="Limit/Stop Price"
-        android:inputType="numberDecimal"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -79,8 +88,8 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/remainingPrice"
-        android:hint="Remaining Price"
+        android:id="@+id/stopLimitPrice"
+        android:hint="Limit/Stop Price or Trail"
         android:inputType="numberDecimal"/>
     <Button
         android:layout_width="match_parent"

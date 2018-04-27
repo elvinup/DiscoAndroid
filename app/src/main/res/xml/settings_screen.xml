@@ -21,8 +21,12 @@
             />
     </PreferenceCategory>
 
-    <Preference android:title="Acts like a button"
+    <Preference android:title="Backup"
         android:key="Backup"
         android:summary="Click here to start backup"/>
+
+    <Preference android:title="Reset Passcode"
+        android:key="Passcode"
+        android:summary="Click here to reset your passcode"/>
 
 </PreferenceScreen>

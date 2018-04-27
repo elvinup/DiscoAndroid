@@ -73,7 +73,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.2'
     // ImageStuff
     compile 'de.hdodenhof:circleimageview:2.1.0'
-    implementation 'com.squareup.picasso:picasso:2.71828'
+
+
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     compile 'com.kyleohanian.databinding:ModelBindingForms:1.0.0'
@@ -92,7 +93,7 @@ dependencies {
         transitive = true
     }
     compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
-
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     compile ('com.github.omadahealth:lollipin:2.1.0@aar') {
         transitive = true

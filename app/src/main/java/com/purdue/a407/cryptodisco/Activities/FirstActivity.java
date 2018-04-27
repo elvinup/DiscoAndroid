@@ -135,6 +135,10 @@ public class FirstActivity extends AppCompatActivity {
                 fab = rootView.findViewById(R.id.fab);
                 fab.setOnClickListener(view -> getActivity().finish());
                 layout.setVisibility(View.INVISIBLE);
+                fab.setOnClickListener(view -> {
+                    getActivity().setResult(RESULT_OK);
+                    getActivity().finish();
+                });
             }
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             TextView textView1 = (TextView) rootView.findViewById(R.id.description);

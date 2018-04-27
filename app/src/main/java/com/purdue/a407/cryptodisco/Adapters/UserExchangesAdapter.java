@@ -65,7 +65,7 @@ public class UserExchangesAdapter extends RecyclerView.Adapter<UserExchangesAdap
         Integer id = mapImages.get(exchange.getName());
         base += String.valueOf(id);
         base += ".png";
-        Picasso.get()
+        Picasso.with(context)
                 .load(base)
                 .centerCrop()
                 .resize(50,50)

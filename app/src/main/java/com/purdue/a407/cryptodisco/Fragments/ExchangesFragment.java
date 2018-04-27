@@ -33,12 +33,15 @@ import android.widget.Toast;
 import com.purdue.a407.cryptodisco.Activities.HomeActivity;
 import com.purdue.a407.cryptodisco.Adapters.ExchangesAdapter;
 import com.purdue.a407.cryptodisco.Adapters.UserExchangesAdapter;
+import com.purdue.a407.cryptodisco.Api.CDApi;
 import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
 import com.purdue.a407.cryptodisco.Data.Entities.UserExchangeEntity;
+import com.purdue.a407.cryptodisco.Data.Entities.exchangeVolumeEntity;
 import com.purdue.a407.cryptodisco.R;
 import com.purdue.a407.cryptodisco.Testing.exchangeVolume;
+import com.purdue.a407.cryptodisco.Testing.exchangeVolumeCallback;
 import com.purdue.a407.cryptodisco.Testing.exchangeVolumeTesting;
 import com.purdue.a407.cryptodisco.ViewModels.ExchangesViewModel;
 
@@ -50,6 +53,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnTextChanged;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,6 +64,9 @@ public class ExchangesFragment extends Fragment {
 
     @Inject
     AppDatabase appDatabase;
+
+    @Inject
+    CDApi cdApi;
 
     @BindView(R.id.searchText)
     AppCompatAutoCompleteTextView searchText;
@@ -71,6 +80,8 @@ public class ExchangesFragment extends Fragment {
     @BindView(R.id.exchange_sort)
     Button exchangeSortButton;
 
+
+
     UserExchangesAdapter exchangesAdapter;
 
     ExchangesAdapter eAdapter;
@@ -82,6 +93,8 @@ public class ExchangesFragment extends Fragment {
     Context context;
 
     List<ExchangeEntity> test;
+
+    exchangeVolume test2 = new exchangeVolume();
 
     public ExchangesFragment() {
 
@@ -103,7 +116,7 @@ public class ExchangesFragment extends Fragment {
         ButterKnife.bind(this, view);
         ((App) getActivity().getApplication()).getNetComponent().inject(this);
         context = getActivity();
-        eAdapter = new ExchangesAdapter(getActivity(), new ArrayList<>());
+        eAdapter = new ExchangesAdapter(getActivity(), new exchangeVolume());
         if (isAccount)
         {
             title.setText("My Exchanges");
@@ -123,6 +136,7 @@ public class ExchangesFragment extends Fragment {
         else
         {
             title.setText("Exchanges");
+            eAdapter = new ExchangesAdapter(getActivity(), new exchangeVolume());
             exchangesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
             exchangesRecycler.setAdapter(eAdapter);
             appDatabase.exchangeDao().exchanges().observe(getActivity(), exchangeEntities ->
@@ -157,11 +171,53 @@ public class ExchangesFragment extends Fragment {
                         if (item.getTitle().equals("Sort by Volume (Popularity)"))
                         {
                             Log.d("Check Menu", "Sort by Volume was pressed");
-                            List<ExchangeEntity> ents = appDatabase.exchangeDao().exchangesNotLive();
+                            //List<ExchangeEntity> ents = appDatabase.exchangeDao().exchangesNotLive();
+
+                            cdApi.getVolumes().enqueue(new Callback<List<exchangeVolumeEntity>>() {
+                                @Override
+                                public void onResponse(Call<List<exchangeVolumeEntity>> call, Response<List<exchangeVolumeEntity>> response) {
+                                    if(response.code() != 200) {
+                                        // Error
+                                        Log.d("Volume Error Result", String.valueOf(response.code()));
+                                    }
+                                    else {
+                                        Log.d("Size of volume list", Integer.toString(response.body().size()));
+
+                                        List<ExchangeEntity> exchangeList = appDatabase.exchangeDao().exchangesNotLive();
+                                        exchangeVolume eV = new exchangeVolume();
+
+                                        for(exchangeVolumeEntity exch: response.body()) {
+                                            //exchangeVolume entry = new exchangeVolume();
+
+                                            for (ExchangeEntity i: exchangeList) {
+                                                if (exch.getExchange().equals(i.getName()))
+                                                {
+                                                    if (!eV.retExchangeList.contains(i)) {
+                                                        eV.retExchangeList.add(i);
+                                                        Log.d("Price", exch.getPrice());
+                                                        eV.prices.add(exch.getPrice());
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        eAdapter.addAll(eV.retExchangeList);
+                                        eAdapter.addPrices(eV.prices);
+                                        Log.d("PricesSize2", Integer.toString(eV.retExchangeList.size()));
+                                        Log.d("PricesSize2", Integer.toString(eV.prices.size()));
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<exchangeVolumeEntity>> call, Throwable t) {
+
+                                }
+                            });
 
                             eAdapter.clear();
-                            Log.d("Size of ents " ,Integer.toString(ents.size()));
-                            eAdapter.addAll(test);
+                            //Log.d("Size of ents " ,Integer.toString(ents.size()));
+                            eAdapter.addAll(test2.retExchangeList);
+                            eAdapter.addPrices(test2.prices);
                             //exchangeVolumeTesting v = new exchangeVolumeTesting();
                             //List<exchangeVolumeTesting> a = v.getExchangesByVolume(ents);
                             //System.out.println(a);
@@ -177,9 +233,18 @@ public class ExchangesFragment extends Fragment {
         new AsyncTask<Void, Void, List<ExchangeEntity>>() {
             @Override
             protected List<ExchangeEntity> doInBackground(Void... params) {
+                /*
                 exchangeVolumeTesting v = new exchangeVolumeTesting();
-                test = v.getExchangesbyVolume(appDatabase.exchangeDao()
-                        .exchangesNotLive());
+                exchangeVolumeCallback evc = new exchangeVolumeCallback() {
+                    @Override
+                    public void callback(exchangeVolume eV) {
+                        eAdapter.addAll(eV.retExchangeList);
+                        eAdapter.addPrices(eV.prices);
+                    }
+                };
+                v.getExchangesbyVolume(appDatabase.exchangeDao()
+                        .exchangesNotLive(), cdApi, evc);
+                */
 
                 //System.out.println(test);
 

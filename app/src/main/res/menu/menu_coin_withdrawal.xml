@@ -6,4 +6,7 @@
     <item
         android:id="@+id/item_kucoin"
         android:title="Kucoin"/>
+    <item
+        android:id="@+id/item_binance"
+        android:title="Binance"/>
 </menu>

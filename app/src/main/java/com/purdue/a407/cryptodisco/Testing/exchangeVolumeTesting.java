@@ -3,8 +3,11 @@ package com.purdue.a407.cryptodisco.Testing;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.purdue.a407.cryptodisco.Api.CDApi;
+import com.purdue.a407.cryptodisco.App;
 import com.purdue.a407.cryptodisco.Data.AppDatabase;
 import com.purdue.a407.cryptodisco.Data.Entities.ExchangeEntity;
+import com.purdue.a407.cryptodisco.Data.Entities.exchangeVolumeEntity;
 
 import java.io.IOException;
 import java.net.URL;
@@ -19,6 +22,10 @@ import org.jsoup.select.Elements;
 
 import javax.inject.Inject;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 //This tests getting the exchange volumes in order. Everything is in exchanges
 
@@ -26,10 +33,57 @@ public class exchangeVolumeTesting{
 
 
     static ArrayList<exchangeVolume> exchanges = new ArrayList<exchangeVolume>();
+    //ArrayList<ExchangeEntity> retExchangeList = new ArrayList<>();
+    exchangeVolume eV = new exchangeVolume();
+
+
+    public void getExchangesbyVolume(List<ExchangeEntity> exchangeList, CDApi cdApi, exchangeVolumeCallback evc) {
+
+        cdApi.getVolumes().enqueue(new Callback<List<exchangeVolumeEntity>>() {
+            @Override
+            public void onResponse(Call<List<exchangeVolumeEntity>> call, Response<List<exchangeVolumeEntity>> response) {
+                if(response.code() != 200) {
+                    // Error
+                    Log.d("Volume Error Result", String.valueOf(response.code()));
+                }
+                else {
+                    Log.d("Size of volume list", Integer.toString(response.body().size()));
 
 
 
-    public List<ExchangeEntity> getExchangesbyVolume(List<ExchangeEntity> exchangeList) {
+                    for(exchangeVolumeEntity exch: response.body()) {
+                        //exchangeVolume entry = new exchangeVolume();
+
+                            for (ExchangeEntity i: exchangeList) {
+                                if (exch.getExchange().equals(i.getName()))
+                                {
+                                    //exch.getPrice();
+                                    //entry.exchange = exch.getExchange() + "\t" + exch.price;
+                                    //entry.exchange = exch.getExchange();
+                                    //entry.volume = Double.parseDouble(exch.getPrice().substring(1).replace(",", ""));
+                                    if (!eV.retExchangeList.contains(i)) {
+                                        eV.retExchangeList.add(i);
+                                        eV.prices.add(exch.getPrice());
+                                        break;
+                                    }
+                                }
+                            }
+
+                        //entry.exchange = exch.getExchange() + "\t" + exch.price;
+                        //entry.volume = Double.parseDouble(exch.getPrice().substring(1).replace(",", ""));
+                    }
+                    //evc.callback(eV);
+                    Log.d("PricesSize2", Integer.toString(eV.prices.size()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<exchangeVolumeEntity>> call, Throwable t) {
+
+            }
+        });
+
+        /*
         boolean skip = false;
 
         exchangeVolume entry = new exchangeVolume();
@@ -92,14 +146,18 @@ public class exchangeVolumeTesting{
             e.printStackTrace();
         }
 
+
         //System.out.println(exchanges.size());
         //Prints an exchange
+        /*
         for (exchangeVolume entr: exchanges) {
             System.out.println(entr.exchange);
 
         }
+        */
 
-        ArrayList<ExchangeEntity> retExchangeList = new ArrayList<>();
+        /*
+        //This sorts
         for (exchangeVolume entr: exchanges) {
             for (ExchangeEntity i: exchangeList) {
                 if ((entr.exchange).equals(i.getName()))
@@ -109,12 +167,14 @@ public class exchangeVolumeTesting{
                 }
             }
         }
+        */
 
+        /*
         for (ExchangeEntity entr: retExchangeList) {
             System.out.println(entr.getName());
         }
-
-        return retExchangeList;
+        */
+        Log.d("PricesSize", Integer.toString(eV.prices.size()));
 
     }
 

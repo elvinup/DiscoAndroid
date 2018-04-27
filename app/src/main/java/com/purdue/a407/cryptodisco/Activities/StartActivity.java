@@ -64,6 +64,7 @@ public class StartActivity extends AppCompatActivity {
         String FCMToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("UUID", UID);
 
+
         if (!LockManager.getInstance().getAppLock().isPasscodeSet()) {
             Intent intent = new Intent(this, PinActivity.class);
             intent.putExtra(AppLock.EXTRA_TYPE, AppLock.ENABLE_PINLOCK);
@@ -82,6 +83,7 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
 
         switch (requestCode) {
             case REQUEST_LOCK:

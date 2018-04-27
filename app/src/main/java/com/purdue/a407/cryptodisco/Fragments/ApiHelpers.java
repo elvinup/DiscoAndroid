@@ -9,6 +9,12 @@ import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.binance.BinanceExchange;
+import org.knowm.xchange.currency.Currency;
+import org.knowm.xchange.gateio.GateioExchange;
+import org.knowm.xchange.kucoin.KucoinExchange;
+
+import java.io.IOException;
+
 
 import org.knowm.xchange.hitbtc.v2.HitbtcExchange;
 import org.knowm.xchange.kraken.KrakenExchange;

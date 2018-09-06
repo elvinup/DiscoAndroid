@@ -1,2 +1,2 @@
 # DiscoAndroid
-Android of CryptoDisco
+Android Frontend of CryptoDisco
